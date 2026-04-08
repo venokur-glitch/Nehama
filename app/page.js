@@ -378,6 +378,16 @@ function Tog({ active, children, onClick, small }) {
   return <button onClick={onClick} style={{ flex: 1, padding: small ? '8px 6px' : '10px 14px', fontSize: small ? '13px' : '14px', fontFamily: "'DM Sans', sans-serif", fontWeight: active ? 500 : 400, border: 'none', cursor: 'pointer', background: active ? 'rgba(74,90,80,0.1)' : 'transparent', color: active ? '#4A5A50' : '#B0B0B0', transition: 'all 0.25s ease', letterSpacing: '0.2px' }}>{children}</button>;
 }
 
+function LangSwitch({ lang, setLang }) {
+  return (
+    <div style={{ position: 'absolute', top: '20px', right: '20px', display: 'flex', gap: '2px', fontSize: '12px', fontFamily: "'DM Sans', sans-serif" }}>
+      <button onClick={() => setLang('en')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px 6px', color: lang === 'en' ? '#4A5A50' : '#C0C0C0', fontWeight: lang === 'en' ? 500 : 400, fontSize: '12px', fontFamily: "'DM Sans', sans-serif", letterSpacing: '0.5px' }}>EN</button>
+      <span style={{ color: '#D0D0D0', fontSize: '12px', lineHeight: '28px' }}>|</span>
+      <button onClick={() => setLang('es')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px 6px', color: lang === 'es' ? '#4A5A50' : '#C0C0C0', fontWeight: lang === 'es' ? 500 : 400, fontSize: '12px', fontFamily: "'DM Sans', sans-serif", letterSpacing: '0.5px' }}>ES</button>
+    </div>
+  );
+}
+
 // ─── MAIN APP ───────────────────────────────────────────────────────
 export default function NehamaApp() {
   const [authorized, setAuthorized] = useState(false);
@@ -407,7 +417,9 @@ export default function NehamaApp() {
   const loadingMsgIndexRef = useRef(0);
   const t = T[lang];
 
-  useEffect(() => { if (typeof window !== 'undefined') { const s = localStorage.getItem('nehama-authorized'); if (s === 'true') setAuthorized(true); } }, []);
+  useEffect(() => { if (typeof window !== 'undefined') { const s = localStorage.getItem('nehama-authorized'); if (s === 'true') setAuthorized(true); const savedLang = localStorage.getItem('nehama-lang'); if (savedLang) setLang(savedLang); } }, []);
+
+  useEffect(() => { if (typeof window !== 'undefined') localStorage.setItem('nehama-lang', lang); }, [lang]);
 
   useEffect(() => {
     if (!authorized) return;
@@ -483,7 +495,8 @@ export default function NehamaApp() {
 
   // ─── INVITE CODE ─────
   if (!authorized) return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px', position: 'relative' }}>
+      <LangSwitch lang={lang} setLang={setLang} />
       <div style={{ textAlign: 'center', marginBottom: '48px' }}>
         <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '52px', fontWeight: 300, color: '#4A5A50', letterSpacing: '4px', marginBottom: '8px' }}>Nehama</div>
         <LogoLines width={140} />
@@ -491,10 +504,6 @@ export default function NehamaApp() {
       </div>
       <div style={{ width: '100%', maxWidth: '320px', textAlign: 'center' }}>
         <p style={{ fontSize: '13px', color: '#9A9A9A', marginBottom: '16px', lineHeight: 1.6, letterSpacing: '0.5px' }}>{t.invitePrompt}</p>
-        <div style={{ ...toggleGroupStyle, marginBottom: '20px', justifyContent: 'center' }}>
-          <Tog active={lang === 'en'} onClick={() => setLang('en')} small>English</Tog>
-          <Tog active={lang === 'es'} onClick={() => setLang('es')} small>Español</Tog>
-        </div>
         <input style={{ ...inputStyle, textAlign: 'center', fontSize: '18px', fontFamily: "'Cormorant Garamond', serif", letterSpacing: '4px', textTransform: 'uppercase', borderColor: codeError ? '#C48282' : 'rgba(0,0,0,0.08)' }} placeholder={t.invitePlaceholder} value={codeInput} onChange={e => { setCodeInput(e.target.value); setCodeError(false); }} onKeyDown={e => e.key === 'Enter' && handleCodeSubmit()} />
         {codeError && <p style={{ fontSize: '13px', color: '#C48282', marginTop: '10px' }}>{t.codeError}</p>}
         <button onClick={handleCodeSubmit} style={{ width: '100%', marginTop: '16px', padding: '13px', fontSize: '15px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9', letterSpacing: '1px' }}>{t.enter}</button>
@@ -506,6 +515,7 @@ export default function NehamaApp() {
   // ─── WELCOME ─────
   if (screen === 'welcome') return (
     <div style={{ minHeight: '100vh', position: 'relative' }}>
+      <LangSwitch lang={lang} setLang={setLang} />
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '64px 24px 40px', minHeight: '100vh' }}>
 
         {/* Logo */}
@@ -539,15 +549,6 @@ export default function NehamaApp() {
 
         {/* Two paths */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', width: '100%', maxWidth: '480px', opacity: anim.paths ? 1 : 0, transform: anim.paths ? 'translateY(0)' : 'translateY(16px)', transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)' }}>
-
-          {/* Language toggle */}
-          <div>
-            <label style={labelStyle}>{t.langLabel}</label>
-            <div style={toggleGroupStyle}>
-              <Tog active={lang === 'en'} onClick={() => setLang('en')}>English</Tog>
-              <Tog active={lang === 'es'} onClick={() => setLang('es')}>Español</Tog>
-            </div>
-          </div>
 
           {/* FREE */}
           <div style={{ borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '28px' }}>
