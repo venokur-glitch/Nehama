@@ -226,6 +226,14 @@ NARRATIVE MAPPING, NOT VERSE MATCHING. Find their STORY inside scripture.
 - CRITICAL: If you draw a parallel to a dark season in scripture (Job's suffering, the wilderness, exile, the cross), you MUST also show the resolution. Every valley has an exit. Job was restored. The wilderness ended. The exile produced return. The cross led to resurrection. NEVER leave someone sitting in the darkness without showing them what came next and what is coming for them.
 - For EACH mapping: a specific body/wellness practice (FREE, no equipment, specific technique), why it works physiologically, the connection to the spiritual reality, and a personal mantra.
 - Close with: "This is where I see you right now. But stories move. As yours does, I will be here."
+- AFTER your closing line, output a hidden reflection card block in EXACTLY this format (the user will not see this, the app uses it to generate a beautiful keepsake image):
+
+[REFLECTION_CARD]
+scripture: [The single most resonant scripture reference, e.g. Isaiah 43:1-3]
+verse: [A short excerpt from that scripture, under 15 words]
+season: [One sentence describing their current season, personal and specific]
+mantra: [Their personal mantra, under 12 words]
+[/REFLECTION_CARD]
 
 PHASE 5: ONGOING CHECK-INS
 Adjust the plan. Reference previous conversations. Celebrate progress. Call out avoidance with warmth.
@@ -297,6 +305,15 @@ After all five, deliver a scriptural reflection:
 
 At the end: "${name}, what you just shared matters, and where you are in the story is not where it ends. If you ever want to go deeper, the full Nehama journey builds a complete plan from everything you are carrying, and walks with you as things change. But what I shared with you today is yours to keep."
 
+AFTER your closing line, output a hidden reflection card block in EXACTLY this format (the user will not see this, the app uses it to generate a beautiful keepsake image):
+
+[REFLECTION_CARD]
+scripture: [The single most resonant scripture reference, e.g. Psalm 126:5]
+verse: [A short excerpt from that scripture, under 15 words]
+season: [One sentence describing their current season, personal and specific]
+mantra: [Their personal mantra, under 12 words]
+[/REFLECTION_CARD]
+
 CRISIS DETECTION:
 If you detect crisis: provide 988, Crisis Text Line (741741), DV Hotline (1-800-799-7233).
 
@@ -351,6 +368,79 @@ function renderMarkdown(text) {
   const inl = (t) => { const p = []; const rx = /\*\*(.+?)\*\*/g; let m, li = 0, ix = 0; while ((m = rx.exec(t)) !== null) { if (m.index > li) p.push(t.slice(li, m.index)); p.push(<strong key={`b${ix++}`} style={{ fontWeight: 500 }}>{m[1]}</strong>); li = rx.lastIndex; } if (li < t.length) p.push(t.slice(li)); return p.length > 0 ? p : t; };
   for (const line of lines) { const t = line.trim(); if (t.startsWith('|') && t.endsWith('|')) { if (!inTable) { flush(); inTable = true; } tableRows.push(t.split('|').filter((_, i) => i > 0 && i < t.split('|').length - 1)); continue; } else if (inTable) { inTable = false; flushTable(); } if (t.startsWith('### ')) { flush(); elements.push(<h4 key={key++} style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '17px', fontWeight: 500, color: '#4A5D4F', margin: '24px 0 8px 0', letterSpacing: '0.3px' }}>{inl(t.slice(4))}</h4>); } else if (t.startsWith('## ')) { flush(); elements.push(<h3 key={key++} style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '20px', fontWeight: 500, color: '#4A5D4F', margin: '28px 0 10px 0', letterSpacing: '0.3px' }}>{inl(t.slice(3))}</h3>); } else if (t.startsWith('# ')) { flush(); elements.push(<h2 key={key++} style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '24px', fontWeight: 500, color: '#2C2C2C', margin: '32px 0 12px 0' }}>{inl(t.slice(2))}</h2>); } else if (t.startsWith('- ') || t.startsWith('• ')) { flush(); elements.push(<div key={key++} style={{ display: 'flex', gap: '10px', margin: '4px 0 4px 4px', lineHeight: '1.8' }}><span style={{ color: '#8B9E8F', flexShrink: 0, fontSize: '10px', marginTop: '8px' }}>●</span><span>{inl(t.slice(2))}</span></div>); } else if (/^\d+\.\s/.test(t)) { flush(); const n = t.match(/^(\d+)\.\s/)[1]; elements.push(<div key={key++} style={{ display: 'flex', gap: '10px', margin: '4px 0 4px 4px', lineHeight: '1.8' }}><span style={{ color: '#8B9E8F', flexShrink: 0, fontWeight: 500, minWidth: '20px', fontFamily: "'Cormorant Garamond', serif" }}>{n}.</span><span>{inl(t.replace(/^\d+\.\s/, ''))}</span></div>); } else if (t.startsWith('> ')) { flush(); elements.push(<blockquote key={key++} style={{ borderLeft: '2px solid #8B9E8F', paddingLeft: '20px', margin: '16px 0', color: '#4A5D4F', fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontSize: '16px', lineHeight: '1.8' }}>{inl(t.slice(2))}</blockquote>); } else if (t === '') { flush(); } else { para.push(line); } }
   if (inTable) flushTable(); flush(); return elements;
+}
+
+// ─── REFLECTION CARD ────────────────────────────────────────────────
+function parseReflectionCard(text) {
+  const match = text.match(/\[REFLECTION_CARD\]([\s\S]*?)\[\/REFLECTION_CARD\]/);
+  if (!match) return null;
+  const block = match[1];
+  const get = (key) => { const m = block.match(new RegExp(key + ':\\s*(.+)')); return m ? m[1].trim() : ''; };
+  return { scripture: get('scripture'), verse: get('verse'), season: get('season'), mantra: get('mantra') };
+}
+
+function stripReflectionCard(text) {
+  return text.replace(/\[REFLECTION_CARD\][\s\S]*?\[\/REFLECTION_CARD\]/, '').trim();
+}
+
+function ReflectionCard({ card, onSave, format }) {
+  const isStory = format === 'story';
+  const w = isStory ? 270 : 320;
+  const h = isStory ? 480 : 320;
+  return (
+    <div style={{ background: '#FEFCF9', border: '1px solid rgba(0,0,0,0.06)', borderRadius: '8px', width: w, height: h, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: isStory ? '40px 28px' : '32px 28px', position: 'relative', boxShadow: '0 2px 16px rgba(0,0,0,0.04)' }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, border: '1px solid rgba(0,0,0,0.04)', borderRadius: '8px', margin: '8px', pointerEvents: 'none' }} />
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '13px', color: '#9BAA9F', letterSpacing: '3px', fontWeight: 300, marginBottom: '4px' }}>NEHAMA</div>
+      <svg width={50} height={6} viewBox="0 0 50 6" style={{ display: 'block', marginBottom: isStory ? '36px' : '24px' }}>
+        <path d="M0 2.1 C10 0, 20 4.8, 25 2.1 C30 0, 40 4.2, 50 2.1" stroke="#9BAA9F" strokeWidth="0.8" fill="none" strokeLinecap="round"/>
+        <path d="M0 3.9 C10 6, 20 1.2, 25 3.9 C30 6, 40 1.8, 50 3.9" stroke="#9BAA9F" strokeWidth="0.4" fill="none" strokeLinecap="round" opacity="0.35"/>
+      </svg>
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: isStory ? '22px' : '20px', color: '#4A5A50', fontWeight: 300, letterSpacing: '0.5px', marginBottom: '10px', textAlign: 'center' }}>{card.scripture}</div>
+      <div style={{ width: '40px', height: '1px', background: 'rgba(0,0,0,0.08)', marginBottom: isStory ? '24px' : '16px' }} />
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: isStory ? '15px' : '14px', color: '#5A5A5A', fontWeight: 300, fontStyle: 'italic', textAlign: 'center', lineHeight: 1.6, marginBottom: isStory ? '28px' : '20px', maxWidth: '85%' }}>{card.verse}</div>
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: isStory ? '13px' : '12px', color: '#8A8A8A', fontWeight: 400, textAlign: 'center', lineHeight: 1.6, marginBottom: isStory ? '28px' : '20px', maxWidth: '85%' }}>{card.season}</div>
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: isStory ? '14px' : '13px', color: '#4A5A50', fontWeight: 500, textAlign: 'center', letterSpacing: '0.3px', fontStyle: 'italic' }}>{card.mantra}</div>
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '9px', color: '#C0BAB0', letterSpacing: '2px', fontWeight: 300, position: 'absolute', bottom: isStory ? '24px' : '16px' }}>findnehama.com</div>
+    </div>
+  );
+}
+
+function saveCardAsPNG(card, format) {
+  const isStory = format === 'story';
+  const w = isStory ? 1080 : 1080;
+  const h = isStory ? 1920 : 1080;
+  const s = isStory ? 4 : 3.375;
+  const canvas = document.createElement('canvas');
+  canvas.width = w; canvas.height = h;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#FEFCF9'; ctx.fillRect(0, 0, w, h);
+  ctx.strokeStyle = 'rgba(0,0,0,0.06)'; ctx.lineWidth = 2;
+  ctx.strokeRect(30*s/3, 30*s/3, w - 60*s/3, h - 60*s/3);
+  ctx.fillStyle = '#9BAA9F'; ctx.font = `300 ${Math.round(13*s/3)}px "Cormorant Garamond", serif`; ctx.textAlign = 'center'; ctx.letterSpacing = '3px';
+  ctx.fillText('NEHAMA', w/2, isStory ? h*0.14 : h*0.18);
+  ctx.fillStyle = '#4A5A50'; ctx.font = `300 ${Math.round(isStory ? 22*s/3*1.5 : 20*s/3*1.5)}px "Cormorant Garamond", serif`;
+  ctx.fillText(card.scripture, w/2, isStory ? h*0.32 : h*0.36);
+  ctx.strokeStyle = 'rgba(0,0,0,0.08)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(w/2-30, isStory ? h*0.35 : h*0.40); ctx.lineTo(w/2+30, isStory ? h*0.35 : h*0.40); ctx.stroke();
+  ctx.fillStyle = '#5A5A5A'; ctx.font = `italic 300 ${Math.round(isStory ? 15*s/3*1.5 : 14*s/3*1.5)}px "Cormorant Garamond", serif`;
+  const verseLines = wrapText(ctx, card.verse, w * 0.7);
+  let vy = isStory ? h*0.42 : h*0.48;
+  verseLines.forEach(line => { ctx.fillText(line, w/2, vy); vy += Math.round(isStory ? 28*s/3 : 24*s/3); });
+  ctx.fillStyle = '#8A8A8A'; ctx.font = `400 ${Math.round(isStory ? 13*s/3*1.5 : 12*s/3*1.5)}px "Cormorant Garamond", serif`;
+  const seasonLines = wrapText(ctx, card.season, w * 0.7);
+  let sy = isStory ? h*0.56 : h*0.62;
+  seasonLines.forEach(line => { ctx.fillText(line, w/2, sy); sy += Math.round(isStory ? 26*s/3 : 22*s/3); });
+  ctx.fillStyle = '#4A5A50'; ctx.font = `italic 500 ${Math.round(isStory ? 14*s/3*1.5 : 13*s/3*1.5)}px "Cormorant Garamond", serif`;
+  ctx.fillText(card.mantra, w/2, isStory ? h*0.72 : h*0.78);
+  ctx.fillStyle = '#C0BAB0'; ctx.font = `300 ${Math.round(9*s/3*1.5)}px "Cormorant Garamond", serif`;
+  ctx.fillText('findnehama.com', w/2, isStory ? h*0.92 : h*0.92);
+  canvas.toBlob(blob => { const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `nehama-reflection-${format}.png`; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); }, 'image/png');
+}
+
+function wrapText(ctx, text, maxWidth) {
+  const words = text.split(' '); const lines = []; let line = '';
+  for (const word of words) { const test = line + (line ? ' ' : '') + word; if (ctx.measureText(test).width > maxWidth && line) { lines.push(line); line = word; } else { line = test; } }
+  if (line) lines.push(line); return lines;
 }
 
 // ─── PHASE INDICATOR ────────────────────────────────────────────────
@@ -633,9 +723,28 @@ export default function NehamaApp() {
         <div style={{ flex: 1, overflowY: 'auto', padding: '32px 24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
           {messages.filter(m => !m.hidden).map((msg, i) => (
             <div key={i} style={msg.role === 'user' ? { maxWidth: '80%', alignSelf: 'flex-end', background: '#4A5D4F', color: '#FEFCF9', padding: '14px 20px', borderRadius: '16px 16px 4px 16px', fontSize: '15px', lineHeight: '1.7' } : { maxWidth: '100%', alignSelf: 'flex-start', padding: '4px 0', fontSize: '15px', lineHeight: '1.8', color: '#2C2C2C' }}>
-              {msg.role === 'user' ? <div style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</div> : <div>{renderMarkdown(msg.content)}</div>}
+              {msg.role === 'user' ? <div style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</div> : <div>{renderMarkdown(stripReflectionCard(msg.content))}</div>}
             </div>
           ))}
+
+          {(() => {
+            const lastAi = [...messages].reverse().find(m => m.role === 'assistant');
+            const card = lastAi ? parseReflectionCard(lastAi.content) : null;
+            if (!card) return null;
+            return (
+              <div style={{ alignSelf: 'flex-start', paddingTop: '16px', animation: 'fadeIn 0.8s ease' }}>
+                <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#9A9A9A', fontStyle: 'italic', marginBottom: '16px' }}>This is yours to keep.</p>
+                <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+                  <ReflectionCard card={card} format="post" />
+                  <ReflectionCard card={card} format="story" />
+                </div>
+                <div style={{ display: 'flex', gap: '10px', marginTop: '14px' }}>
+                  <button onClick={() => saveCardAsPNG(card, 'post')} style={{ padding: '8px 18px', fontSize: '13px', fontFamily: "'DM Sans', sans-serif", fontWeight: 400, border: '1px solid rgba(0,0,0,0.1)', borderRadius: '6px', cursor: 'pointer', background: 'transparent', color: '#8A8A8A', transition: 'all 0.2s' }}>Save Square</button>
+                  <button onClick={() => saveCardAsPNG(card, 'story')} style={{ padding: '8px 18px', fontSize: '13px', fontFamily: "'DM Sans', sans-serif", fontWeight: 400, border: '1px solid rgba(0,0,0,0.1)', borderRadius: '6px', cursor: 'pointer', background: 'transparent', color: '#8A8A8A', transition: 'all 0.2s' }}>Save Story</button>
+                </div>
+              </div>
+            );
+          })()}
 
           {isLoading && (
             <div style={{ alignSelf: 'flex-start', padding: '12px 0', display: 'flex', alignItems: 'center', gap: '14px' }}>
