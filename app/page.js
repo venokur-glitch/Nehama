@@ -383,58 +383,54 @@ function stripReflectionCard(text) {
   return text.replace(/\[REFLECTION_CARD\][\s\S]*?\[\/REFLECTION_CARD\]/, '').trim();
 }
 
-function ReflectionCard({ card, onSave, format }) {
-  const isStory = format === 'story';
-  const w = isStory ? 270 : 320;
-  const h = isStory ? 480 : 320;
+function ReflectionCard({ card, onSave }) {
   return (
-    <div style={{ background: '#FEFCF9', border: '1px solid rgba(0,0,0,0.06)', borderRadius: '8px', width: w, height: h, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: isStory ? '40px 28px' : '32px 28px', position: 'relative', boxShadow: '0 2px 16px rgba(0,0,0,0.04)' }}>
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, border: '1px solid rgba(0,0,0,0.04)', borderRadius: '8px', margin: '8px', pointerEvents: 'none' }} />
-      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '13px', color: '#9BAA9F', letterSpacing: '3px', fontWeight: 300, marginBottom: '4px' }}>NEHAMA</div>
-      <svg width={50} height={6} viewBox="0 0 50 6" style={{ display: 'block', marginBottom: isStory ? '36px' : '24px' }}>
-        <path d="M0 2.1 C10 0, 20 4.8, 25 2.1 C30 0, 40 4.2, 50 2.1" stroke="#9BAA9F" strokeWidth="0.8" fill="none" strokeLinecap="round"/>
-        <path d="M0 3.9 C10 6, 20 1.2, 25 3.9 C30 6, 40 1.8, 50 3.9" stroke="#9BAA9F" strokeWidth="0.4" fill="none" strokeLinecap="round" opacity="0.35"/>
+    <div style={{ background: '#FEFCF9', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '8px', width: 320, height: 320, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '28px 24px', position: 'relative', boxShadow: '0 2px 20px rgba(0,0,0,0.06)' }}>
+      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, border: '1px solid rgba(0,0,0,0.05)', borderRadius: '8px', margin: '8px', pointerEvents: 'none' }} />
+      <button onClick={onSave} style={{ position: 'absolute', top: '14px', right: '14px', background: 'none', border: 'none', cursor: 'pointer', color: '#B0B0B0', fontSize: '16px', padding: '4px', lineHeight: 1 }} title="Save">↓</button>
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '12px', color: '#8B9E8F', letterSpacing: '4px', fontWeight: 400, marginBottom: '4px' }}>NEHAMA</div>
+      <svg width={44} height={5} viewBox="0 0 44 5" style={{ display: 'block', marginBottom: '20px' }}>
+        <path d="M0 1.8 C9 0, 18 4, 22 1.8 C26 0, 35 3.6, 44 1.8" stroke="#8B9E8F" strokeWidth="0.8" fill="none" strokeLinecap="round"/>
+        <path d="M0 3.2 C9 5, 18 1, 22 3.2 C26 5, 35 1.4, 44 3.2" stroke="#8B9E8F" strokeWidth="0.4" fill="none" strokeLinecap="round" opacity="0.4"/>
       </svg>
-      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: isStory ? '22px' : '20px', color: '#4A5A50', fontWeight: 300, letterSpacing: '0.5px', marginBottom: '10px', textAlign: 'center' }}>{card.scripture}</div>
-      <div style={{ width: '40px', height: '1px', background: 'rgba(0,0,0,0.08)', marginBottom: isStory ? '24px' : '16px' }} />
-      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: isStory ? '15px' : '14px', color: '#5A5A5A', fontWeight: 300, fontStyle: 'italic', textAlign: 'center', lineHeight: 1.6, marginBottom: isStory ? '28px' : '20px', maxWidth: '85%' }}>{card.verse}</div>
-      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: isStory ? '13px' : '12px', color: '#8A8A8A', fontWeight: 400, textAlign: 'center', lineHeight: 1.6, marginBottom: isStory ? '28px' : '20px', maxWidth: '85%' }}>{card.season}</div>
-      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: isStory ? '14px' : '13px', color: '#4A5A50', fontWeight: 500, textAlign: 'center', letterSpacing: '0.3px', fontStyle: 'italic' }}>{card.mantra}</div>
-      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '9px', color: '#C0BAB0', letterSpacing: '2px', fontWeight: 300, position: 'absolute', bottom: isStory ? '24px' : '16px' }}>findnehama.com</div>
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '22px', color: '#2C2C2C', fontWeight: 500, letterSpacing: '0.5px', marginBottom: '10px', textAlign: 'center' }}>{card.scripture}</div>
+      <div style={{ width: '36px', height: '1px', background: 'rgba(0,0,0,0.12)', marginBottom: '14px' }} />
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#3D3D3D', fontWeight: 400, fontStyle: 'italic', textAlign: 'center', lineHeight: 1.6, marginBottom: '16px', maxWidth: '88%' }}>{card.verse}</div>
+      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '12px', color: '#6A6A6A', fontWeight: 400, textAlign: 'center', lineHeight: 1.5, marginBottom: '16px', maxWidth: '88%' }}>{card.season}</div>
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '14px', color: '#2C2C2C', fontWeight: 600, textAlign: 'center', letterSpacing: '0.3px', fontStyle: 'italic' }}>{card.mantra}</div>
+      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '8px', color: '#B0B0B0', letterSpacing: '1.5px', fontWeight: 400, position: 'absolute', bottom: '14px' }}>findnehama.com</div>
     </div>
   );
 }
 
-function saveCardAsPNG(card, format) {
-  const isStory = format === 'story';
-  const w = isStory ? 1080 : 1080;
-  const h = isStory ? 1920 : 1080;
-  const s = isStory ? 4 : 3.375;
+function saveCardAsPNG(card) {
+  const w = 1080, h = 1080;
   const canvas = document.createElement('canvas');
   canvas.width = w; canvas.height = h;
   const ctx = canvas.getContext('2d');
   ctx.fillStyle = '#FEFCF9'; ctx.fillRect(0, 0, w, h);
-  ctx.strokeStyle = 'rgba(0,0,0,0.06)'; ctx.lineWidth = 2;
-  ctx.strokeRect(30*s/3, 30*s/3, w - 60*s/3, h - 60*s/3);
-  ctx.fillStyle = '#9BAA9F'; ctx.font = `300 ${Math.round(13*s/3)}px "Cormorant Garamond", serif`; ctx.textAlign = 'center'; ctx.letterSpacing = '3px';
-  ctx.fillText('NEHAMA', w/2, isStory ? h*0.14 : h*0.18);
-  ctx.fillStyle = '#4A5A50'; ctx.font = `300 ${Math.round(isStory ? 22*s/3*1.5 : 20*s/3*1.5)}px "Cormorant Garamond", serif`;
-  ctx.fillText(card.scripture, w/2, isStory ? h*0.32 : h*0.36);
-  ctx.strokeStyle = 'rgba(0,0,0,0.08)'; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(w/2-30, isStory ? h*0.35 : h*0.40); ctx.lineTo(w/2+30, isStory ? h*0.35 : h*0.40); ctx.stroke();
-  ctx.fillStyle = '#5A5A5A'; ctx.font = `italic 300 ${Math.round(isStory ? 15*s/3*1.5 : 14*s/3*1.5)}px "Cormorant Garamond", serif`;
-  const verseLines = wrapText(ctx, card.verse, w * 0.7);
-  let vy = isStory ? h*0.42 : h*0.48;
-  verseLines.forEach(line => { ctx.fillText(line, w/2, vy); vy += Math.round(isStory ? 28*s/3 : 24*s/3); });
-  ctx.fillStyle = '#8A8A8A'; ctx.font = `400 ${Math.round(isStory ? 13*s/3*1.5 : 12*s/3*1.5)}px "Cormorant Garamond", serif`;
-  const seasonLines = wrapText(ctx, card.season, w * 0.7);
-  let sy = isStory ? h*0.56 : h*0.62;
-  seasonLines.forEach(line => { ctx.fillText(line, w/2, sy); sy += Math.round(isStory ? 26*s/3 : 22*s/3); });
-  ctx.fillStyle = '#4A5A50'; ctx.font = `italic 500 ${Math.round(isStory ? 14*s/3*1.5 : 13*s/3*1.5)}px "Cormorant Garamond", serif`;
-  ctx.fillText(card.mantra, w/2, isStory ? h*0.72 : h*0.78);
-  ctx.fillStyle = '#C0BAB0'; ctx.font = `300 ${Math.round(9*s/3*1.5)}px "Cormorant Garamond", serif`;
-  ctx.fillText('findnehama.com', w/2, isStory ? h*0.92 : h*0.92);
-  canvas.toBlob(blob => { const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `nehama-reflection-${format}.png`; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); }, 'image/png');
+  ctx.strokeStyle = 'rgba(0,0,0,0.08)'; ctx.lineWidth = 2;
+  ctx.strokeRect(28, 28, w - 56, h - 56);
+  ctx.textAlign = 'center';
+  ctx.fillStyle = '#8B9E8F'; ctx.font = '400 36px "Cormorant Garamond", serif';
+  ctx.fillText('NEHAMA', w/2, 170);
+  ctx.fillStyle = '#2C2C2C'; ctx.font = '500 64px "Cormorant Garamond", serif';
+  ctx.fillText(card.scripture, w/2, 340);
+  ctx.strokeStyle = 'rgba(0,0,0,0.12)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(w/2 - 40, 370); ctx.lineTo(w/2 + 40, 370); ctx.stroke();
+  ctx.fillStyle = '#3D3D3D'; ctx.font = 'italic 400 42px "Cormorant Garamond", serif';
+  const verseLines = wrapText(ctx, card.verse, w * 0.72);
+  let vy = 440;
+  verseLines.forEach(line => { ctx.fillText(line, w/2, vy); vy += 52; });
+  ctx.fillStyle = '#6A6A6A'; ctx.font = '400 34px "DM Sans", sans-serif';
+  const seasonLines = wrapText(ctx, card.season, w * 0.72);
+  let sy = vy + 40;
+  seasonLines.forEach(line => { ctx.fillText(line, w/2, sy); sy += 44; });
+  ctx.fillStyle = '#2C2C2C'; ctx.font = 'italic 600 40px "Cormorant Garamond", serif';
+  ctx.fillText(card.mantra, w/2, Math.max(sy + 50, 820));
+  ctx.fillStyle = '#B0B0B0'; ctx.font = '400 24px "DM Sans", sans-serif';
+  ctx.fillText('findnehama.com', w/2, 1030);
+  canvas.toBlob(blob => { const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'nehama-reflection.png'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); }, 'image/png');
 }
 
 function wrapText(ctx, text, maxWidth) {
@@ -733,15 +729,7 @@ export default function NehamaApp() {
             if (!card) return null;
             return (
               <div style={{ alignSelf: 'flex-start', paddingTop: '16px', animation: 'fadeIn 0.8s ease' }}>
-                <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#9A9A9A', fontStyle: 'italic', marginBottom: '16px' }}>This is yours to keep.</p>
-                <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-                  <ReflectionCard card={card} format="post" />
-                  <ReflectionCard card={card} format="story" />
-                </div>
-                <div style={{ display: 'flex', gap: '10px', marginTop: '14px' }}>
-                  <button onClick={() => saveCardAsPNG(card, 'post')} style={{ padding: '8px 18px', fontSize: '13px', fontFamily: "'DM Sans', sans-serif", fontWeight: 400, border: '1px solid rgba(0,0,0,0.1)', borderRadius: '6px', cursor: 'pointer', background: 'transparent', color: '#8A8A8A', transition: 'all 0.2s' }}>Save Square</button>
-                  <button onClick={() => saveCardAsPNG(card, 'story')} style={{ padding: '8px 18px', fontSize: '13px', fontFamily: "'DM Sans', sans-serif", fontWeight: 400, border: '1px solid rgba(0,0,0,0.1)', borderRadius: '6px', cursor: 'pointer', background: 'transparent', color: '#8A8A8A', transition: 'all 0.2s' }}>Save Story</button>
-                </div>
+                <ReflectionCard card={card} onSave={() => saveCardAsPNG(card)} />
               </div>
             );
           })()}
