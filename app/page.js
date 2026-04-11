@@ -387,17 +387,19 @@ function ReflectionCard({ card, onSave }) {
   return (
     <div style={{ background: '#FEFCF9', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '8px', width: 260, height: 462, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '36px 26px', position: 'relative', boxShadow: '0 1px 12px rgba(0,0,0,0.05)' }}>
       <button onClick={onSave} style={{ position: 'absolute', top: '12px', right: '12px', background: 'none', border: 'none', cursor: 'pointer', color: '#C0C0C0', fontSize: '14px', padding: '4px', lineHeight: 1 }} title="Save">↓</button>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '32px' }}>
-        <svg width="10" height="10" viewBox="0 0 10 10" style={{ opacity: 0.4 }}>
-          <line x1="2" y1="2" x2="8" y2="8" stroke="#4A5A50" strokeWidth="1.2" strokeLinecap="round"/>
-          <line x1="8" y1="8" x2="4" y2="7.5" stroke="#4A5A50" strokeWidth="1.2" strokeLinecap="round"/>
-          <line x1="8" y1="8" x2="7.5" y2="4" stroke="#4A5A50" strokeWidth="1.2" strokeLinecap="round"/>
+      <div style={{ marginBottom: '28px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <svg width="72" height="90" viewBox="0 0 72 90">
+          <circle cx="36" cy="32" r="28" stroke="#4A5A50" strokeWidth="1.8" fill="none"/>
+          <polygon points="36,88 16,48 56,48" fill="none" stroke="#4A5A50" strokeWidth="1.8" strokeLinejoin="round"/>
+          <line x1="16" y1="48" x2="8.5" y2="32.5" stroke="#FEFCF9" strokeWidth="3"/>
+          <line x1="56" y1="48" x2="63.5" y2="32.5" stroke="#FEFCF9" strokeWidth="3"/>
+          <text x="36" y="28" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="9" fontWeight="600" fill="#4A5A50" letterSpacing="1.5">YOU ARE</text>
+          <text x="36" y="40" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="9" fontWeight="600" fill="#4A5A50" letterSpacing="1.5">HERE</text>
         </svg>
-        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '10px', color: '#9A9A9A', letterSpacing: '3px', fontWeight: 400 }}>YOU ARE HERE</div>
       </div>
-      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#2C2C2C', fontWeight: 600, textAlign: 'center', marginBottom: '26px', letterSpacing: '0.3px' }}>{card.scripture}</div>
-      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#2C2C2C', fontWeight: 400, textAlign: 'center', lineHeight: 1.6, marginBottom: '26px' }}>{card.verse}</div>
-      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#7A7A7A', fontWeight: 400, textAlign: 'center', lineHeight: 1.6, marginBottom: '26px' }}>{card.season}</div>
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#2C2C2C', fontWeight: 600, textAlign: 'center', marginBottom: '22px', letterSpacing: '0.3px' }}>{card.scripture}</div>
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#2C2C2C', fontWeight: 400, textAlign: 'center', lineHeight: 1.6, marginBottom: '22px' }}>{card.verse}</div>
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#7A7A7A', fontWeight: 400, textAlign: 'center', lineHeight: 1.6, marginBottom: '22px' }}>{card.season}</div>
       <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#2C2C2C', fontWeight: 600, textAlign: 'center', lineHeight: 1.5 }}>{card.mantra}</div>
       <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '9px', color: '#C0C0C0', letterSpacing: '3px', fontWeight: 400, position: 'absolute', bottom: '14px' }}>nehama</div>
     </div>
@@ -411,14 +413,18 @@ function saveCardAsPNG(card) {
   const ctx = canvas.getContext('2d');
   ctx.fillStyle = '#FEFCF9'; ctx.fillRect(0, 0, w, h);
   ctx.textAlign = 'center';
-  // Arrow
-  ctx.strokeStyle = 'rgba(74,90,80,0.4)'; ctx.lineWidth = 3; ctx.lineCap = 'round';
-  ctx.beginPath(); ctx.moveTo(w/2 - 58, 370); ctx.lineTo(w/2 - 40, 388); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(w/2 - 40, 388); ctx.lineTo(w/2 - 52, 380); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(w/2 - 40, 388); ctx.lineTo(w/2 - 42, 375); ctx.stroke();
-  // YOU ARE HERE
-  ctx.fillStyle = '#9A9A9A'; ctx.font = '400 30px "Cormorant Garamond", serif';
-  ctx.fillText('YOU ARE HERE', w/2 + 10, 390);
+  // Pin icon
+  const px = w/2, py = 260;
+  ctx.strokeStyle = '#4A5A50'; ctx.lineWidth = 5;
+  ctx.beginPath(); ctx.arc(px, py, 90, 0, Math.PI * 2); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(px, py + 170); ctx.lineTo(px - 52, py + 62); ctx.lineTo(px + 52, py + 62); ctx.closePath(); ctx.stroke();
+  // Erase circle-triangle overlap
+  ctx.strokeStyle = '#FEFCF9'; ctx.lineWidth = 8;
+  ctx.beginPath(); ctx.arc(px, py, 88, 0.35 * Math.PI, 0.65 * Math.PI); ctx.stroke();
+  // YOU ARE HERE inside pin
+  ctx.fillStyle = '#4A5A50'; ctx.font = '600 28px "Cormorant Garamond", serif';
+  ctx.fillText('YOU ARE', px, py - 4);
+  ctx.fillText('HERE', px, py + 28);
   // Scripture
   ctx.fillStyle = '#2C2C2C'; ctx.font = '600 52px "Cormorant Garamond", serif';
   ctx.fillText(card.scripture, w/2, 580);
