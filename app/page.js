@@ -385,20 +385,13 @@ function stripReflectionCard(text) {
 
 function ReflectionCard({ card, onSave }) {
   return (
-    <div style={{ background: '#FEFCF9', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '8px', width: 320, height: 320, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '28px 24px', position: 'relative', boxShadow: '0 2px 20px rgba(0,0,0,0.06)' }}>
-      <div style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, border: '1px solid rgba(0,0,0,0.05)', borderRadius: '8px', margin: '8px', pointerEvents: 'none' }} />
-      <button onClick={onSave} style={{ position: 'absolute', top: '14px', right: '14px', background: 'none', border: 'none', cursor: 'pointer', color: '#B0B0B0', fontSize: '16px', padding: '4px', lineHeight: 1 }} title="Save">↓</button>
-      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '12px', color: '#8B9E8F', letterSpacing: '4px', fontWeight: 400, marginBottom: '4px' }}>NEHAMA</div>
-      <svg width={44} height={5} viewBox="0 0 44 5" style={{ display: 'block', marginBottom: '20px' }}>
-        <path d="M0 1.8 C9 0, 18 4, 22 1.8 C26 0, 35 3.6, 44 1.8" stroke="#8B9E8F" strokeWidth="0.8" fill="none" strokeLinecap="round"/>
-        <path d="M0 3.2 C9 5, 18 1, 22 3.2 C26 5, 35 1.4, 44 3.2" stroke="#8B9E8F" strokeWidth="0.4" fill="none" strokeLinecap="round" opacity="0.4"/>
-      </svg>
-      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '22px', color: '#2C2C2C', fontWeight: 500, letterSpacing: '0.5px', marginBottom: '10px', textAlign: 'center' }}>{card.scripture}</div>
-      <div style={{ width: '36px', height: '1px', background: 'rgba(0,0,0,0.12)', marginBottom: '14px' }} />
-      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#3D3D3D', fontWeight: 400, fontStyle: 'italic', textAlign: 'center', lineHeight: 1.6, marginBottom: '16px', maxWidth: '88%' }}>{card.verse}</div>
-      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '12px', color: '#6A6A6A', fontWeight: 400, textAlign: 'center', lineHeight: 1.5, marginBottom: '16px', maxWidth: '88%' }}>{card.season}</div>
-      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '14px', color: '#2C2C2C', fontWeight: 600, textAlign: 'center', letterSpacing: '0.3px', fontStyle: 'italic' }}>{card.mantra}</div>
-      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '8px', color: '#B0B0B0', letterSpacing: '1.5px', fontWeight: 400, position: 'absolute', bottom: '14px' }}>findnehama.com</div>
+    <div style={{ background: '#FEFCF9', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '4px', width: 320, height: 320, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '36px 32px', position: 'relative', boxShadow: '0 1px 12px rgba(0,0,0,0.05)' }}>
+      <button onClick={onSave} style={{ position: 'absolute', top: '12px', right: '12px', background: 'none', border: 'none', cursor: 'pointer', color: '#C0C0C0', fontSize: '14px', padding: '4px', lineHeight: 1 }} title="Save">↓</button>
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '26px', color: '#2C2C2C', fontWeight: 600, letterSpacing: '0.5px', marginBottom: '12px', textAlign: 'center', lineHeight: 1.2 }}>{card.scripture}</div>
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '16px', color: '#2C2C2C', fontWeight: 400, fontStyle: 'italic', textAlign: 'center', lineHeight: 1.5, marginBottom: '20px' }}>{card.verse}</div>
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '14px', color: '#5A5A5A', fontWeight: 400, textAlign: 'center', lineHeight: 1.5, marginBottom: '20px' }}>{card.season}</div>
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#2C2C2C', fontWeight: 600, textAlign: 'center', fontStyle: 'italic', lineHeight: 1.4 }}>{card.mantra}</div>
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '9px', color: '#C0C0C0', letterSpacing: '2px', fontWeight: 400, position: 'absolute', bottom: '12px' }}>nehama</div>
     </div>
   );
 }
@@ -409,27 +402,21 @@ function saveCardAsPNG(card) {
   canvas.width = w; canvas.height = h;
   const ctx = canvas.getContext('2d');
   ctx.fillStyle = '#FEFCF9'; ctx.fillRect(0, 0, w, h);
-  ctx.strokeStyle = 'rgba(0,0,0,0.08)'; ctx.lineWidth = 2;
-  ctx.strokeRect(28, 28, w - 56, h - 56);
   ctx.textAlign = 'center';
-  ctx.fillStyle = '#8B9E8F'; ctx.font = '400 36px "Cormorant Garamond", serif';
-  ctx.fillText('NEHAMA', w/2, 170);
-  ctx.fillStyle = '#2C2C2C'; ctx.font = '500 64px "Cormorant Garamond", serif';
-  ctx.fillText(card.scripture, w/2, 340);
-  ctx.strokeStyle = 'rgba(0,0,0,0.12)'; ctx.lineWidth = 1;
-  ctx.beginPath(); ctx.moveTo(w/2 - 40, 370); ctx.lineTo(w/2 + 40, 370); ctx.stroke();
-  ctx.fillStyle = '#3D3D3D'; ctx.font = 'italic 400 42px "Cormorant Garamond", serif';
+  ctx.fillStyle = '#2C2C2C'; ctx.font = '600 84px "Cormorant Garamond", serif';
+  ctx.fillText(card.scripture, w/2, 320);
+  ctx.fillStyle = '#2C2C2C'; ctx.font = 'italic 400 52px "Cormorant Garamond", serif';
   const verseLines = wrapText(ctx, card.verse, w * 0.72);
-  let vy = 440;
-  verseLines.forEach(line => { ctx.fillText(line, w/2, vy); vy += 52; });
-  ctx.fillStyle = '#6A6A6A'; ctx.font = '400 34px "DM Sans", sans-serif';
+  let vy = 420;
+  verseLines.forEach(line => { ctx.fillText(line, w/2, vy); vy += 64; });
+  ctx.fillStyle = '#5A5A5A'; ctx.font = '400 40px "Cormorant Garamond", serif';
   const seasonLines = wrapText(ctx, card.season, w * 0.72);
-  let sy = vy + 40;
-  seasonLines.forEach(line => { ctx.fillText(line, w/2, sy); sy += 44; });
-  ctx.fillStyle = '#2C2C2C'; ctx.font = 'italic 600 40px "Cormorant Garamond", serif';
+  let sy = vy + 36;
+  seasonLines.forEach(line => { ctx.fillText(line, w/2, sy); sy += 50; });
+  ctx.fillStyle = '#2C2C2C'; ctx.font = 'italic 600 48px "Cormorant Garamond", serif';
   ctx.fillText(card.mantra, w/2, Math.max(sy + 50, 820));
-  ctx.fillStyle = '#B0B0B0'; ctx.font = '400 24px "DM Sans", sans-serif';
-  ctx.fillText('findnehama.com', w/2, 1030);
+  ctx.fillStyle = '#C0C0C0'; ctx.font = '400 28px "Cormorant Garamond", serif'; ctx.letterSpacing = '4px';
+  ctx.fillText('nehama', w/2, 1030);
   canvas.toBlob(blob => { const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'nehama-reflection.png'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); }, 'image/png');
 }
 
