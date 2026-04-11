@@ -10,7 +10,7 @@ export async function POST(req) {
       mode: "subscription",
       payment_method_types: ["card"],
       line_items: [{ price: priceId, quantity: 1 }],
-      subscription_data: { trial_period_days: 7 },
+      subscription_data: { trial_period_days: 3 },
       success_url: `${process.env.NEXT_PUBLIC_URL || "https://nehama.vercel.app"}?paid=true`,
       cancel_url: `${process.env.NEXT_PUBLIC_URL || "https://nehama.vercel.app"}?paid=cancel`,
     });
