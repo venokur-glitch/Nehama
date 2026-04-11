@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
 const INVITE_CODE = "LOVE";
+const GIFT_CODE = "GIFT4U";
 
 // ─── TRANSLATIONS ───────────────────────────────────────────────────
 const T = {
@@ -587,7 +588,7 @@ export default function NehamaApp() {
     setIsLoading(false);
   }, [messages, tier, userName, partnerName, mode, testament, lang, saveSession]);
 
-  const handleCodeSubmit = () => { if (codeInput.trim().toUpperCase() === INVITE_CODE.toUpperCase()) { setAuthorized(true); localStorage.setItem('nehama-authorized', 'true'); setCodeError(false); setTimeout(() => setAnim(a => ({ ...a, text: true })), 200); setTimeout(() => setAnim(a => ({ ...a, paths: true })), 600); } else setCodeError(true); };
+  const handleCodeSubmit = () => { const code = codeInput.trim().toUpperCase(); if (code === INVITE_CODE.toUpperCase()) { setAuthorized(true); localStorage.setItem('nehama-authorized', 'true'); localStorage.setItem('nehama-access', 'beta'); setCodeError(false); setTimeout(() => setAnim(a => ({ ...a, text: true })), 200); setTimeout(() => setAnim(a => ({ ...a, paths: true })), 600); } else if (code === GIFT_CODE.toUpperCase()) { setAuthorized(true); localStorage.setItem('nehama-authorized', 'true'); localStorage.setItem('nehama-access', 'lifetime'); setCodeError(false); setTimeout(() => setAnim(a => ({ ...a, text: true })), 200); setTimeout(() => setAnim(a => ({ ...a, paths: true })), 600); } else setCodeError(true); };
   const handleStartFree = () => { if (!userName.trim()) return; setTier('free'); setScreen('chat'); const intro = lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + '. Estoy aquí para la reflexión gratuita.' : 'Hello. My name is ' + userName.trim() + '. I am here for the free reflection.'; setTimeout(() => sendMessage(intro, true), 300); };
   const handleStartFull = () => { if (!userName.trim()) return; if (mode === 'couple' && !partnerName.trim()) return; setTier('full'); setScreen('chat'); const intro = mode === 'couple' ? (lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + ' y estoy aquí con mi pareja, ' + partnerName.trim() + '. Nos gustaría comenzar el viaje completo juntos.' : 'Hello. My name is ' + userName.trim() + ' and I am here with my partner, ' + partnerName.trim() + '. We would like to begin the full journey together.') : (lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + '. Estoy listo para comenzar el viaje completo.' : 'Hello. My name is ' + userName.trim() + '. I am ready to begin the full journey.'); setTimeout(() => sendMessage(intro, true), 300); };
   const handleReset = () => { try { localStorage.removeItem('nehama-session'); } catch (e) {} setMessages([]); setUserName(''); setPartnerName(''); setTier(null); setMode('individual'); setTestament('both'); setShowSettings(false); setEmailSubmitted(false); setFeedbackEmail(''); setScreen('welcome'); setTimeout(() => setAnim(a => ({ ...a, text: true })), 200); setTimeout(() => setAnim(a => ({ ...a, paths: true })), 600); };
