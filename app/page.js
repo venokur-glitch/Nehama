@@ -602,7 +602,7 @@ export default function NehamaApp() {
   const labelStyle = { display: 'block', fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.5px', color: '#9A9A9A', marginBottom: '8px', fontFamily: "'DM Sans', sans-serif" };
 
   // ─── CONTACT MODAL ─────
-  const ContactModal = () => showContact ? (<>
+  const contactModalJSX = showContact ? (<>
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.12)', zIndex: 200, backdropFilter: 'blur(4px)' }} onClick={() => { setShowContact(false); setContactSent(false); }} />
     <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: '#FEFCF9', borderRadius: '12px', padding: '36px', width: '90%', maxWidth: '380px', zIndex: 201, boxShadow: '0 24px 48px rgba(0,0,0,0.08)' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
@@ -727,7 +727,7 @@ export default function NehamaApp() {
           <p style={{ fontSize: '11px', color: '#D0D0D0', margin: 0 }}><a href="/terms" style={{ color: '#B0B0B0', textDecoration: 'none' }}>Terms</a><span style={{ margin: '0 10px' }}>·</span><a href="/privacy" style={{ color: '#B0B0B0', textDecoration: 'none' }}>Privacy</a></p>
         </div>
       </div>
-      <ContactModal />
+      {contactModalJSX}
     </div>
   );
 
@@ -838,7 +838,7 @@ export default function NehamaApp() {
           <button style={{ padding: '11px', fontSize: '13px', fontFamily: "'DM Sans', sans-serif", fontWeight: 400, border: '1px solid rgba(0,0,0,0.1)', borderRadius: '8px', cursor: 'pointer', background: 'transparent', color: '#9A9A9A', marginTop: 'auto' }} onClick={() => { if (confirm(t.newSessionConfirm)) handleReset(); }}>{t.newSession}</button>
         </div>
       </>}
-      <ContactModal />
+      {contactModalJSX}
     </div>
   );
 }
