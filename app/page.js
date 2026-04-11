@@ -614,7 +614,7 @@ export default function NehamaApp() {
       ) : (<>
         <input style={{ ...inputStyle, marginBottom: '12px' }} placeholder={t.emailLabel} type="email" value={contactEmail} onChange={e => setContactEmail(e.target.value)} onFocus={e => e.target.style.borderColor = 'rgba(0,0,0,0.2)'} onBlur={e => e.target.style.borderColor = 'rgba(0,0,0,0.08)'} />
         <textarea style={{ ...inputStyle, minHeight: '100px', resize: 'vertical', lineHeight: '1.6', marginBottom: '16px' }} placeholder={t.msgLabel} value={contactMsg} onChange={e => setContactMsg(e.target.value)} onFocus={e => e.target.style.borderColor = 'rgba(0,0,0,0.2)'} onBlur={e => e.target.style.borderColor = 'rgba(0,0,0,0.08)'} />
-        <button onClick={() => { if (contactEmail.includes('@') && contactMsg.trim()) { setContactSent(true); setContactEmail(''); setContactMsg(''); } }} style={{ width: '100%', padding: '13px', fontSize: '15px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9', letterSpacing: '0.5px', opacity: contactEmail.includes('@') && contactMsg.trim() ? 1 : 0.4 }}>{t.send}</button>
+        <button onClick={() => { if (contactEmail.includes('@') && contactMsg.trim()) { fetch('https://formspree.io/f/mdapqwqb', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: contactEmail, message: contactMsg, _subject: 'Nehama Contact Form' }) }); setContactSent(true); setContactEmail(''); setContactMsg(''); } }} style={{ width: '100%', padding: '13px', fontSize: '15px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9', letterSpacing: '0.5px', opacity: contactEmail.includes('@') && contactMsg.trim() ? 1 : 0.4 }}>{t.send}</button>
       </>)}
     </div>
   </>) : null;
@@ -780,7 +780,7 @@ export default function NehamaApp() {
               <p style={{ fontSize: '13px', color: '#9A9A9A', margin: '0 0 14px 0' }}>{t.emailCaptureDesc}</p>
               <div style={{ display: 'flex', gap: '8px' }}>
                 <input style={{ ...inputStyle, flex: 1 }} placeholder="your@email.com" type="email" value={feedbackEmail} onChange={e => setFeedbackEmail(e.target.value)} onFocus={e => e.target.style.borderColor = 'rgba(0,0,0,0.2)'} onBlur={e => e.target.style.borderColor = 'rgba(0,0,0,0.08)'} />
-                <button onClick={() => { if (feedbackEmail.includes('@')) setEmailSubmitted(true); }} style={{ padding: '12px 24px', fontSize: '14px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9', flexShrink: 0 }}>{t.send}</button>
+                <button onClick={() => { if (feedbackEmail.includes('@')) { fetch('https://formspree.io/f/mdapqwqb', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: feedbackEmail, _subject: 'Nehama Email Signup' }) }); setEmailSubmitted(true); } }} style={{ padding: '12px 24px', fontSize: '14px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9', flexShrink: 0 }}>{t.send}</button>
               </div>
             </div>
           )}
