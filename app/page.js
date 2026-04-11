@@ -388,13 +388,10 @@ function ReflectionCard({ card, onSave }) {
     <div style={{ background: '#FEFCF9', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '8px', width: 260, height: 462, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '36px 26px', position: 'relative', boxShadow: '0 1px 12px rgba(0,0,0,0.05)' }}>
       <button onClick={onSave} style={{ position: 'absolute', top: '12px', right: '12px', background: 'none', border: 'none', cursor: 'pointer', color: '#C0C0C0', fontSize: '14px', padding: '4px', lineHeight: 1 }} title="Save">↓</button>
       <div style={{ marginBottom: '28px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <svg width="72" height="90" viewBox="0 0 72 90">
-          <circle cx="36" cy="32" r="28" stroke="#4A5A50" strokeWidth="1.8" fill="none"/>
-          <polygon points="36,88 16,48 56,48" fill="none" stroke="#4A5A50" strokeWidth="1.8" strokeLinejoin="round"/>
-          <line x1="16" y1="48" x2="8.5" y2="32.5" stroke="#FEFCF9" strokeWidth="3"/>
-          <line x1="56" y1="48" x2="63.5" y2="32.5" stroke="#FEFCF9" strokeWidth="3"/>
-          <text x="36" y="28" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="9" fontWeight="600" fill="#4A5A50" letterSpacing="1.5">YOU ARE</text>
-          <text x="36" y="40" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="9" fontWeight="600" fill="#4A5A50" letterSpacing="1.5">HERE</text>
+        <svg width="56" height="78" viewBox="-28 0 56 78">
+          <path d="M0,74 C-20,50 -26,38 -26,28 A26,26 0 1,1 26,28 C26,38 20,50 0,74 Z" fill="#9BAA9F"/>
+          <text x="0" y="24" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="8.5" fontWeight="600" fill="#FEFCF9" letterSpacing="1.5">YOU ARE</text>
+          <text x="0" y="35" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="8.5" fontWeight="600" fill="#FEFCF9" letterSpacing="1.5">HERE</text>
         </svg>
       </div>
       <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#2C2C2C', fontWeight: 600, textAlign: 'center', marginBottom: '22px', letterSpacing: '0.3px' }}>{card.scripture}</div>
@@ -413,18 +410,20 @@ function saveCardAsPNG(card) {
   const ctx = canvas.getContext('2d');
   ctx.fillStyle = '#FEFCF9'; ctx.fillRect(0, 0, w, h);
   ctx.textAlign = 'center';
-  // Pin icon
-  const px = w/2, py = 260;
-  ctx.strokeStyle = '#4A5A50'; ctx.lineWidth = 5;
-  ctx.beginPath(); ctx.arc(px, py, 90, 0, Math.PI * 2); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(px, py + 170); ctx.lineTo(px - 52, py + 62); ctx.lineTo(px + 52, py + 62); ctx.closePath(); ctx.stroke();
-  // Erase circle-triangle overlap
-  ctx.strokeStyle = '#FEFCF9'; ctx.lineWidth = 8;
-  ctx.beginPath(); ctx.arc(px, py, 88, 0.35 * Math.PI, 0.65 * Math.PI); ctx.stroke();
+  // Teardrop pin
+  const px = w/2, py = 220;
+  ctx.fillStyle = '#9BAA9F';
+  ctx.beginPath();
+  ctx.moveTo(px, py + 200);
+  ctx.bezierCurveTo(px - 55, py + 135, px - 75, py + 95, px - 75, py);
+  ctx.arc(px, py, 75, Math.PI, 0, false);
+  ctx.bezierCurveTo(px + 75, py + 95, px + 55, py + 135, px, py + 200);
+  ctx.closePath();
+  ctx.fill();
   // YOU ARE HERE inside pin
-  ctx.fillStyle = '#4A5A50'; ctx.font = '600 28px "Cormorant Garamond", serif';
+  ctx.fillStyle = '#FEFCF9'; ctx.font = '600 26px "Cormorant Garamond", serif';
   ctx.fillText('YOU ARE', px, py - 4);
-  ctx.fillText('HERE', px, py + 28);
+  ctx.fillText('HERE', px, py + 26);
   // Scripture
   ctx.fillStyle = '#2C2C2C'; ctx.font = '600 52px "Cormorant Garamond", serif';
   ctx.fillText(card.scripture, w/2, 580);
