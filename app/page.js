@@ -408,43 +408,55 @@ function saveCardAsPNG(card) {
   const canvas = document.createElement('canvas');
   canvas.width = w; canvas.height = h;
   const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#FEFCF9'; ctx.fillRect(0, 0, w, h);
+  // Outer background
+  ctx.fillStyle = '#F0EDE8'; ctx.fillRect(0, 0, w, h);
+  // Card with shadow
+  const m = 60, cr = 20;
+  ctx.shadowColor = 'rgba(0,0,0,0.12)'; ctx.shadowBlur = 40; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 8;
+  ctx.fillStyle = '#FEFCF9';
+  ctx.beginPath();
+  ctx.moveTo(m + cr, m); ctx.lineTo(w - m - cr, m); ctx.quadraticCurveTo(w - m, m, w - m, m + cr);
+  ctx.lineTo(w - m, h - m - cr); ctx.quadraticCurveTo(w - m, h - m, w - m - cr, h - m);
+  ctx.lineTo(m + cr, h - m); ctx.quadraticCurveTo(m, h - m, m, h - m - cr);
+  ctx.lineTo(m, m + cr); ctx.quadraticCurveTo(m, m, m + cr, m);
+  ctx.closePath(); ctx.fill();
+  ctx.shadowColor = 'transparent';
   ctx.textAlign = 'center';
   // Teardrop pin
-  const px = w/2, py = 220;
+  const px = w/2, py = 300, r = 65;
   ctx.fillStyle = '#9BAA9F';
   ctx.beginPath();
-  ctx.moveTo(px, py + 200);
-  ctx.bezierCurveTo(px - 55, py + 135, px - 75, py + 95, px - 75, py);
-  ctx.arc(px, py, 75, Math.PI, 0, false);
-  ctx.bezierCurveTo(px + 75, py + 95, px + 55, py + 135, px, py + 200);
+  ctx.moveTo(px, py + r * 2.6);
+  ctx.quadraticCurveTo(px - r * 0.8, py + r * 1.2, px - r, py);
+  ctx.arc(px, py, r, Math.PI, 0, false);
+  ctx.quadraticCurveTo(px + r * 0.8, py + r * 1.2, px, py + r * 2.6);
   ctx.closePath();
   ctx.fill();
   // YOU ARE HERE inside pin
-  ctx.fillStyle = '#FEFCF9'; ctx.font = '600 26px "Cormorant Garamond", serif';
+  ctx.fillStyle = '#FEFCF9'; ctx.font = '600 24px "Cormorant Garamond", serif';
   ctx.fillText('YOU ARE', px, py - 4);
-  ctx.fillText('HERE', px, py + 26);
+  ctx.fillText('HERE', px, py + 24);
   // Scripture
   ctx.fillStyle = '#2C2C2C'; ctx.font = '600 52px "Cormorant Garamond", serif';
-  ctx.fillText(card.scripture, w/2, 580);
+  ctx.fillText(card.scripture, w/2, 600);
   // Verse
   ctx.fillStyle = '#2C2C2C'; ctx.font = '400 46px "Cormorant Garamond", serif';
-  const verseLines = wrapText(ctx, card.verse, w * 0.72);
-  let vy = 690;
+  const verseLines = wrapText(ctx, card.verse, w * 0.68);
+  let vy = 710;
   verseLines.forEach(line => { ctx.fillText(line, w/2, vy); vy += 60; });
   // Season
   ctx.fillStyle = '#7A7A7A'; ctx.font = '400 44px "Cormorant Garamond", serif';
-  const seasonLines = wrapText(ctx, card.season, w * 0.72);
-  let sy = vy + 60;
+  const seasonLines = wrapText(ctx, card.season, w * 0.68);
+  let sy = vy + 55;
   seasonLines.forEach(line => { ctx.fillText(line, w/2, sy); sy += 56; });
   // Mantra
   ctx.fillStyle = '#2C2C2C'; ctx.font = '600 48px "Cormorant Garamond", serif';
-  const mantraLines = wrapText(ctx, card.mantra, w * 0.72);
-  let my = Math.max(sy + 60, 1200);
+  const mantraLines = wrapText(ctx, card.mantra, w * 0.68);
+  let my = Math.max(sy + 55, 1180);
   mantraLines.forEach(line => { ctx.fillText(line, w/2, my); my += 60; });
   // Branding
   ctx.fillStyle = '#C0C0C0'; ctx.font = '400 28px "Cormorant Garamond", serif';
-  ctx.fillText('nehama', w/2, 1820);
+  ctx.fillText('nehama', w/2, 1780);
   canvas.toBlob(blob => { const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'nehama-reflection.png'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); }, 'image/png');
 }
 
