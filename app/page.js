@@ -387,11 +387,11 @@ function ReflectionCard({ card, onSave }) {
   return (
     <div style={{ background: '#FEFCF9', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '8px', width: 260, height: 462, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '36px 26px', position: 'relative', boxShadow: '0 1px 12px rgba(0,0,0,0.05)' }}>
       <button onClick={onSave} style={{ position: 'absolute', top: '12px', right: '12px', background: 'none', border: 'none', cursor: 'pointer', color: '#C0C0C0', fontSize: '14px', padding: '4px', lineHeight: 1 }} title="Save">↓</button>
-      <div style={{ marginBottom: '28px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <svg width="56" height="78" viewBox="-28 0 56 78">
-          <path d="M0,74 C-20,50 -26,38 -26,28 A26,26 0 1,1 26,28 C26,38 20,50 0,74 Z" fill="#9BAA9F"/>
-          <text x="0" y="24" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="8.5" fontWeight="600" fill="#FEFCF9" letterSpacing="1.5">YOU ARE</text>
-          <text x="0" y="35" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="8.5" fontWeight="600" fill="#FEFCF9" letterSpacing="1.5">HERE</text>
+      <div style={{ marginBottom: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <svg width="72" height="100" viewBox="-36 0 72 100">
+          <path d="M0,96 C-26,65 -34,50 -34,36 A34,34 0 1,1 34,36 C34,50 26,65 0,96 Z" fill="#9BAA9F"/>
+          <text x="0" y="31" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="10" fontWeight="600" fill="#FEFCF9" letterSpacing="1.5">YOU ARE</text>
+          <text x="0" y="44" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="10" fontWeight="600" fill="#FEFCF9" letterSpacing="1.5">HERE</text>
         </svg>
       </div>
       <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#2C2C2C', fontWeight: 600, textAlign: 'center', marginBottom: '22px', letterSpacing: '0.3px' }}>{card.scripture}</div>
@@ -422,20 +422,20 @@ function saveCardAsPNG(card) {
   ctx.closePath(); ctx.fill();
   ctx.shadowColor = 'transparent';
   ctx.textAlign = 'center';
-  // Teardrop pin
-  const px = w/2, py = 300, r = 65;
+  // Teardrop pin (cubic beziers matching SVG path)
+  const px = w/2, py = 280, r = 78;
   ctx.fillStyle = '#9BAA9F';
   ctx.beginPath();
-  ctx.moveTo(px, py + r * 2.6);
-  ctx.quadraticCurveTo(px - r * 0.8, py + r * 1.2, px - r, py);
+  ctx.moveTo(px, py + 138);
+  ctx.bezierCurveTo(px - 60, py + 67, px - r, py + 32, px - r, py);
   ctx.arc(px, py, r, Math.PI, 0, false);
-  ctx.quadraticCurveTo(px + r * 0.8, py + r * 1.2, px, py + r * 2.6);
+  ctx.bezierCurveTo(px + r, py + 32, px + 60, py + 67, px, py + 138);
   ctx.closePath();
   ctx.fill();
   // YOU ARE HERE inside pin
-  ctx.fillStyle = '#FEFCF9'; ctx.font = '600 24px "Cormorant Garamond", serif';
-  ctx.fillText('YOU ARE', px, py - 4);
-  ctx.fillText('HERE', px, py + 24);
+  ctx.fillStyle = '#FEFCF9'; ctx.font = '600 28px "Cormorant Garamond", serif';
+  ctx.fillText('YOU ARE', px, py - 6);
+  ctx.fillText('HERE', px, py + 26);
   // Scripture
   ctx.fillStyle = '#2C2C2C'; ctx.font = '600 52px "Cormorant Garamond", serif';
   ctx.fillText(card.scripture, w/2, 600);
