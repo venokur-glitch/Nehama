@@ -62,6 +62,13 @@ const T = {
     emailCaptureDesc: 'Leave your email. Nothing else.',
     messages: 'messages',
     save: 'Save',
+    pricingTitle: 'Choose your path',
+    pricingMonthly: '$24.99 / month',
+    pricingAnnual: '$199.99 / year',
+    pricingAnnualSave: 'Save 33%',
+    pricingTrial: '7-day free trial, cancel anytime',
+    pricingScholarship: 'If the cost is a barrier, reach out. We\'ll make it work.',
+    pricingBack: '← Back',
   },
   es: {
     tagline: 'Encuentra Consuelo',
@@ -119,6 +126,13 @@ const T = {
     emailCaptureDesc: 'Deja tu correo. Nada más.',
     messages: 'mensajes',
     save: 'Guardar',
+    pricingTitle: 'Elige tu camino',
+    pricingMonthly: '$24.99 / mes',
+    pricingAnnual: '$199.99 / año',
+    pricingAnnualSave: 'Ahorra 33%',
+    pricingTrial: '7 días de prueba gratis, cancela cuando quieras',
+    pricingScholarship: 'Si el costo es un obstáculo, escríbenos. Lo haremos funcionar.',
+    pricingBack: '← Atrás',
   }
 };
 
@@ -544,7 +558,7 @@ export default function NehamaApp() {
   const loadingMsgIndexRef = useRef(0);
   const t = T[lang];
 
-  useEffect(() => { if (typeof window !== 'undefined') { const s = localStorage.getItem('nehama-authorized'); if (s === 'true') setAuthorized(true); const savedLang = localStorage.getItem('nehama-lang'); if (savedLang) setLang(savedLang); } }, []);
+  useEffect(() => { if (typeof window !== 'undefined') { const s = localStorage.getItem('nehama-authorized'); if (s === 'true') setAuthorized(true); const savedLang = localStorage.getItem('nehama-lang'); if (savedLang) setLang(savedLang); const params = new URLSearchParams(window.location.search); if (params.get('paid') === 'true') { localStorage.setItem('nehama-access', 'paid'); window.history.replaceState({}, '', window.location.pathname); } } }, []);
 
   useEffect(() => { if (typeof window !== 'undefined') localStorage.setItem('nehama-lang', lang); }, [lang]);
 
@@ -590,7 +604,10 @@ export default function NehamaApp() {
 
   const handleCodeSubmit = () => { const code = codeInput.trim().toUpperCase(); const accept = (access) => { setAuthorized(true); localStorage.setItem('nehama-authorized', 'true'); localStorage.setItem('nehama-access', access); if (access === 'scholarship') localStorage.setItem('nehama-code', code); setCodeError(false); setTimeout(() => setAnim(a => ({ ...a, text: true })), 200); setTimeout(() => setAnim(a => ({ ...a, paths: true })), 600); }; if (code === INVITE_CODE.toUpperCase()) accept('beta'); else if (code === GIFT_CODE.toUpperCase()) accept('lifetime'); else if (code.startsWith('GRACE')) { accept('scholarship'); fetch('https://formspree.io/f/mdapqwqb', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ _subject: 'Nehama Scholarship Code Used', code: code }) }); } else setCodeError(true); };
   const handleStartFree = () => { if (!userName.trim()) return; setTier('free'); setScreen('chat'); const intro = lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + '. Estoy aquí para la reflexión gratuita.' : 'Hello. My name is ' + userName.trim() + '. I am here for the free reflection.'; setTimeout(() => sendMessage(intro, true), 300); };
-  const handleStartFull = () => { if (!userName.trim()) return; if (mode === 'couple' && !partnerName.trim()) return; setTier('full'); setScreen('chat'); const intro = mode === 'couple' ? (lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + ' y estoy aquí con mi pareja, ' + partnerName.trim() + '. Nos gustaría comenzar el viaje completo juntos.' : 'Hello. My name is ' + userName.trim() + ' and I am here with my partner, ' + partnerName.trim() + '. We would like to begin the full journey together.') : (lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + '. Estoy listo para comenzar el viaje completo.' : 'Hello. My name is ' + userName.trim() + '. I am ready to begin the full journey.'); setTimeout(() => sendMessage(intro, true), 300); };
+  const hasFullAccess = () => { const access = localStorage.getItem('nehama-access'); return ['beta', 'lifetime', 'scholarship', 'paid'].includes(access); };
+  const launchFullJourney = () => { setTier('full'); setScreen('chat'); const intro = mode === 'couple' ? (lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + ' y estoy aquí con mi pareja, ' + partnerName.trim() + '. Nos gustaría comenzar el viaje completo juntos.' : 'Hello. My name is ' + userName.trim() + ' and I am here with my partner, ' + partnerName.trim() + '. We would like to begin the full journey together.') : (lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + '. Estoy listo para comenzar el viaje completo.' : 'Hello. My name is ' + userName.trim() + '. I am ready to begin the full journey.'); setTimeout(() => sendMessage(intro, true), 300); };
+  const handleStartFull = () => { if (!userName.trim()) return; if (mode === 'couple' && !partnerName.trim()) return; if (hasFullAccess()) { launchFullJourney(); } else { setScreen('pricing'); } };
+  const handleCheckout = async (priceId) => { try { const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ priceId }) }); const data = await res.json(); if (data.url) window.location.href = data.url; } catch (e) { console.error('Checkout error:', e); } };
   const handleReset = () => { try { localStorage.removeItem('nehama-session'); } catch (e) {} setMessages([]); setUserName(''); setPartnerName(''); setTier(null); setMode('individual'); setTestament('both'); setShowSettings(false); setEmailSubmitted(false); setFeedbackEmail(''); setScreen('welcome'); setTimeout(() => setAnim(a => ({ ...a, text: true })), 200); setTimeout(() => setAnim(a => ({ ...a, paths: true })), 600); };
   const handleDownload = () => { const ai = messages.filter(m => m.role === 'assistant').map(m => m.content).join('\n\n---\n\n'); const d = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); const ttl = tier === 'free' ? 'Your Scriptural Reflection' : 'Your Life Architecture Session'; const doc = 'NEHAMA: FIND COMFORT\n' + ttl + '\n' + d + '\n' + userName + (mode === 'couple' ? ' & ' + partnerName : '') + '\n\n' + '='.repeat(48) + '\n\n' + ai + '\n\n' + '='.repeat(48) + '\n\nThis is yours to keep.\n'; const b = new Blob([doc], { type: 'text/plain' }); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = 'nehama-' + (tier === 'free' ? 'reflection' : 'session') + '.txt'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(u); };
   const handleSend = () => { if (!input.trim() || isLoading) return; sendMessage(input.trim()); };
@@ -636,6 +653,28 @@ export default function NehamaApp() {
         <button onClick={handleCodeSubmit} style={{ width: '100%', marginTop: '16px', padding: '13px', fontSize: '15px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9', letterSpacing: '1px' }}>{t.enter}</button>
         <p style={{ fontSize: '11px', color: '#C0C0C0', marginTop: '20px' }}>{t.privacyNote}</p>
       </div>
+    </div>
+  );
+
+  // ─── PRICING ─────
+  if (screen === 'pricing') return (
+    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px', position: 'relative' }}>
+      <LangSwitch lang={lang} setLang={setLang} />
+      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '40px', fontWeight: 300, color: '#4A5A50', letterSpacing: '3px', marginBottom: '8px' }}>Nehama</div>
+        <LogoLines width={100} />
+      </div>
+      <div style={{ width: '100%', maxWidth: '380px' }}>
+        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '22px', color: '#2C2C2C', textAlign: 'center', marginBottom: '32px', fontWeight: 400 }}>{t.pricingTitle}</p>
+        <button onClick={() => handleCheckout('price_1TL4r839LzIoC52oMTeUpDtE')} style={{ width: '100%', padding: '18px', fontSize: '16px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9', letterSpacing: '0.5px', marginBottom: '12px' }}>{t.pricingMonthly}</button>
+        <button onClick={() => handleCheckout('price_1TL4rV39LzIoC52ouQ0oKbKZ')} style={{ width: '100%', padding: '18px', fontSize: '16px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: '1px solid #4A5D4F', borderRadius: '8px', cursor: 'pointer', background: 'transparent', color: '#4A5D4F', letterSpacing: '0.5px', marginBottom: '8px', position: 'relative' }}>{t.pricingAnnual} <span style={{ fontSize: '12px', color: '#8B9E8F', marginLeft: '8px' }}>{t.pricingAnnualSave}</span></button>
+        <p style={{ fontSize: '13px', color: '#B0B0B0', textAlign: 'center', marginTop: '12px', marginBottom: '28px' }}>{t.pricingTrial}</p>
+        <div style={{ borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '20px', textAlign: 'center' }}>
+          <p style={{ fontSize: '14px', color: '#9A9A9A', lineHeight: 1.6, cursor: 'pointer' }} onClick={() => setShowContact(true)}>{t.pricingScholarship}</p>
+        </div>
+        <button onClick={() => { setScreen('welcome'); setTimeout(() => setAnim(a => ({ ...a, text: true, paths: true })), 100); }} style={{ display: 'block', margin: '28px auto 0', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#B0B0B0' }}>{t.pricingBack}</button>
+      </div>
+      {contactModalJSX}
     </div>
   );
 
