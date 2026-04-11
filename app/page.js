@@ -66,8 +66,10 @@ const T = {
     pricingMonthly: '$24.99 / month',
     pricingAnnual: '$199.99 / year',
     pricingAnnualSave: 'Save 33%',
-    pricingTrial: '7-day free trial, cancel anytime',
-    pricingScholarship: 'If the cost is a barrier, reach out. We\'ll make it work.',
+    pricingTrial: '3-day free trial, cancel anytime',
+    pricingScholarship1: 'If the cost is a barrier, ',
+    pricingScholarshipLink: 'reach out',
+    pricingScholarship2: '. We\'ll make it work.',
     pricingBack: '← Back',
   },
   es: {
@@ -130,8 +132,10 @@ const T = {
     pricingMonthly: '$24.99 / mes',
     pricingAnnual: '$199.99 / año',
     pricingAnnualSave: 'Ahorra 33%',
-    pricingTrial: '7 días de prueba gratis, cancela cuando quieras',
-    pricingScholarship: 'Si el costo es un obstáculo, escríbenos. Lo haremos funcionar.',
+    pricingTrial: '3 días de prueba gratis, cancela cuando quieras',
+    pricingScholarship1: 'Si el costo es un obstáculo, ',
+    pricingScholarshipLink: 'escríbenos',
+    pricingScholarship2: '. Lo haremos funcionar.',
     pricingBack: '← Atrás',
   }
 };
@@ -670,7 +674,7 @@ export default function NehamaApp() {
         <button onClick={() => handleCheckout('price_1TL4rV39LzIoC52ouQ0oKbKZ')} style={{ width: '100%', padding: '18px', fontSize: '16px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: '1px solid #4A5D4F', borderRadius: '8px', cursor: 'pointer', background: 'transparent', color: '#4A5D4F', letterSpacing: '0.5px', marginBottom: '8px', position: 'relative' }}>{t.pricingAnnual} <span style={{ fontSize: '12px', color: '#8B9E8F', marginLeft: '8px' }}>{t.pricingAnnualSave}</span></button>
         <p style={{ fontSize: '13px', color: '#B0B0B0', textAlign: 'center', marginTop: '12px', marginBottom: '28px' }}>{t.pricingTrial}</p>
         <div style={{ borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '20px', textAlign: 'center' }}>
-          <p style={{ fontSize: '14px', color: '#9A9A9A', lineHeight: 1.6, cursor: 'pointer' }} onClick={() => setShowContact(true)}>{t.pricingScholarship}</p>
+          <p style={{ fontSize: '14px', color: '#9A9A9A', lineHeight: 1.6 }}>{t.pricingScholarship1}<span style={{ color: '#4A5D4F', cursor: 'pointer', textDecoration: 'underline', textUnderlineOffset: '3px' }} onClick={() => setShowContact(true)}>{t.pricingScholarshipLink}</span>{t.pricingScholarship2}</p>
         </div>
         <button onClick={() => { setScreen('welcome'); setTimeout(() => setAnim(a => ({ ...a, text: true, paths: true })), 100); }} style={{ display: 'block', margin: '28px auto 0', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#B0B0B0' }}>{t.pricingBack}</button>
       </div>
