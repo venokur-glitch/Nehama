@@ -452,11 +452,12 @@ function ReflectionCard({ card, onSave }) {
         <text x="0" y="31" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="7" fontWeight="600" fill="#FEFCF9" letterSpacing="1">HERE</text>
       </svg>
       <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '16px', color: '#3A4A40', fontWeight: 400, fontStyle: 'italic', textAlign: 'center', lineHeight: 1.45, marginBottom: '14px' }}>{card.seasonStatement}</div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexShrink: 0, width: '100%', overflow: 'hidden', justifyContent: 'center' }}>
-        <div style={{ flex: '0 0 20px', height: '1px', background: '#9BAA9F', opacity: 0.5 }} />
-        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '12px', color: '#6B7F72', fontWeight: 400, textAlign: 'center', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{card.verseQuote}</div>
-        <div style={{ flex: '0 0 20px', height: '1px', background: '#9BAA9F', opacity: 0.5 }} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', justifyContent: 'center', width: '60%' }}>
+        <div style={{ flex: 1, height: '1px', background: '#9BAA9F', opacity: 0.5 }} />
+        <div style={{ flex: '0 0 4px' }} />
+        <div style={{ flex: 1, height: '1px', background: '#9BAA9F', opacity: 0.5 }} />
       </div>
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '12px', color: '#6B7F72', fontWeight: 400, textAlign: 'center', lineHeight: 1.5, marginBottom: '4px', padding: '0 8px' }}>{card.verseQuote}</div>
       <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '10px', color: '#9BAA9F', textAlign: 'center', letterSpacing: '1.5px', marginBottom: '16px', flexShrink: 0 }}>{card.scripture}</div>
       <div style={{ flex: 1 }} />
       <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '12px', color: '#4A5A50', fontWeight: 500, textAlign: 'center', lineHeight: 1.5, marginBottom: '20px' }}>{card.mantra}</div>
@@ -494,63 +495,85 @@ function saveCardAsPNG(card) {
   ctx.closePath(); ctx.fill();
   ctx.shadowColor = 'transparent';
   ctx.textAlign = 'center';
-  // Teardrop pin - exact SVG path: M0,96 C-26,65 -34,50 -34,36 A34,34 0 1,1 34,36 C34,50 26,65 0,96 Z
-  // SVG circle center at (0,36), radius 34. We scale and translate.
-  const pinCX = w / 2, pinCY = 180;
-  const sc = 1.8; // scale factor: 34 SVG units * 1.8 = 61px radius
-  const sx = (svgX) => pinCX + svgX * sc;
-  const sy = (svgY) => pinCY + (svgY - 36) * sc;
+  // Teardrop pin - EXACT in-app SVG path: M0,68 C-19,46 -24,36 -24,25 A24,24 0 1,1 24,25 C24,36 19,46 0,68 Z
+  // Circle center at (0,25), radius 24, tip at (0,68)
+  const pinCX = w / 2;
+  const pinTopY = 120; // top of pin on canvas
+  const sc = 3.2; // scale: 24 SVG radius * 3.2 = 76.8px canvas radius
+  // SVG top of circle is at y=1 (25-24). Canvas top = pinTopY. So offset: pinTopY - 1*sc
+  const oY = pinTopY - 1 * sc;
+  const psx = (svgX) => pinCX + svgX * sc;
+  const psy = (svgY) => oY + svgY * sc;
+  const pinCY = psy(25); // circle center on canvas
   ctx.fillStyle = '#9BAA9F';
   ctx.beginPath();
-  ctx.moveTo(sx(0), sy(96));
-  ctx.bezierCurveTo(sx(-26), sy(65), sx(-34), sy(50), sx(-34), sy(36));
-  ctx.arc(pinCX, pinCY, 34 * sc, Math.PI, 0, false);
-  ctx.bezierCurveTo(sx(34), sy(50), sx(26), sy(65), sx(0), sy(96));
+  ctx.moveTo(psx(0), psy(68));
+  ctx.bezierCurveTo(psx(-19), psy(46), psx(-24), psy(36), psx(-24), psy(25));
+  ctx.arc(pinCX, pinCY, 24 * sc, Math.PI, 0, false);
+  ctx.bezierCurveTo(psx(24), psy(36), psx(19), psy(46), psx(0), psy(68));
   ctx.closePath();
   ctx.fill();
   // Text inside pin
-  ctx.fillStyle = '#FEFCF9'; ctx.font = '600 22px "Cormorant Garamond", serif';
+  ctx.fillStyle = '#FEFCF9'; ctx.font = '600 24px "Cormorant Garamond", serif';
   ctx.fillText('YOU ARE', pinCX, pinCY - 6);
-  ctx.fillText('HERE', pinCX, pinCY + 20);
-  // Season statement (HERO) - starts right after pin tip
-  const contentTop = sy(96) + 50;
+  ctx.fillText('HERE', pinCX, pinCY + 22);
+  // Season statement - starts after pin
+  const pinTipY = psy(68);
+  let y = pinTipY + 60;
   const ssLen = card.seasonStatement.length;
-  const ssFontSize = ssLen > 180 ? 42 : ssLen > 120 ? 48 : 54;
+  const ssFontSize = ssLen > 180 ? 44 : ssLen > 120 ? 50 : 56;
   ctx.fillStyle = '#3A4A40'; ctx.font = 'italic 400 ' + ssFontSize + 'px "Cormorant Garamond", serif';
-  const ssLines = wrapText(ctx, card.seasonStatement, w * 0.76);
-  let ssy = contentTop;
-  ssLines.forEach(line => { ctx.fillText(line, w/2, ssy); ssy += Math.round(ssFontSize * 1.4); });
+  const ssLines = wrapText(ctx, card.seasonStatement, w * 0.78);
+  ssLines.forEach(line => { ctx.fillText(line, w/2, y); y += Math.round(ssFontSize * 1.4); });
   // Divider + verse quote
-  const divY = ssy + 36;
+  y += 30;
   ctx.strokeStyle = '#9BAA9F'; ctx.lineWidth = 1; ctx.globalAlpha = 0.5;
   ctx.font = '400 28px "Cormorant Garamond", serif';
   const vqWidth = ctx.measureText(card.verseQuote).width;
   const lineLen = Math.min(50, (w * 0.7 - vqWidth) / 2 - 16);
   if (lineLen > 8) {
-    ctx.beginPath(); ctx.moveTo(w/2 - vqWidth/2 - lineLen - 14, divY); ctx.lineTo(w/2 - vqWidth/2 - 14, divY); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(w/2 + vqWidth/2 + 14, divY); ctx.lineTo(w/2 + vqWidth/2 + lineLen + 14, divY); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(w/2 - vqWidth/2 - lineLen - 14, y); ctx.lineTo(w/2 - vqWidth/2 - 14, y); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(w/2 + vqWidth/2 + 14, y); ctx.lineTo(w/2 + vqWidth/2 + lineLen + 14, y); ctx.stroke();
   }
   ctx.globalAlpha = 1;
   ctx.fillStyle = '#6B7F72'; ctx.font = '400 28px "Cormorant Garamond", serif';
-  ctx.fillText(card.verseQuote, w/2, divY + 5);
+  ctx.fillText(card.verseQuote, w/2, y + 5);
   // Scripture reference
+  y += 44;
   ctx.fillStyle = '#9BAA9F'; ctx.font = '400 18px "DM Sans", sans-serif';
-  ctx.fillText(card.scripture, w/2, divY + 44);
-  // Mantra - flows naturally after scripture, not pinned to a fixed position
-  const mantraY = divY + 130;
-  ctx.fillStyle = '#4A5A50'; ctx.font = '500 26px "DM Sans", sans-serif';
+  ctx.fillText(card.scripture, w/2, y);
+  // Mantra - centered in remaining space between scripture and footer
+  const footerBottomY = h - m - 40;
+  const footerTopY = footerBottomY - 60;
+  const mantraZoneTop = y + 40;
+  const mantraZoneBottom = footerTopY - 30;
+  const mantraCenterY = (mantraZoneTop + mantraZoneBottom) / 2;
+  ctx.fillStyle = '#4A5A50'; ctx.font = '500 28px "DM Sans", sans-serif';
   const mantraLines = wrapText(ctx, card.mantra, w * 0.72);
-  let my = mantraY;
+  const mantraHeight = mantraLines.length * 38;
+  let my = mantraCenterY - mantraHeight / 2;
   mantraLines.forEach(line => { ctx.fillText(line, w/2, my); my += 38; });
-  // Footer - positioned after mantra with breathing room, not pinned to absolute bottom
-  const footerY = Math.min(my + 100, h - m - 80);
+  // Footer
   ctx.fillStyle = '#9BAA9F'; ctx.font = '400 20px "Cormorant Garamond", serif';
-  ctx.fillText('nehama', w/2, footerY);
+  ctx.fillText('nehama', w/2, footerTopY);
   ctx.fillStyle = '#B5C0B8'; ctx.font = '400 15px "DM Sans", sans-serif';
-  ctx.fillText('findnehama.com', w/2, footerY + 28);
+  ctx.fillText('findnehama.com', w/2, footerTopY + 26);
   ctx.font = 'italic 400 15px "DM Sans", sans-serif';
-  ctx.fillText('5 questions. Your story in scripture.', w/2, footerY + 50);
-  canvas.toBlob(blob => { const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'nehama-reflection.png'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); }, 'image/png');
+  ctx.fillText('5 questions. Your story in scripture.', w/2, footerTopY + 48);
+  canvas.toBlob(async (blob) => {
+    if (navigator.share && navigator.canShare) {
+      try {
+        const file = new File([blob], 'nehama-reflection.png', { type: 'image/png' });
+        if (navigator.canShare({ files: [file] })) {
+          await navigator.share({ files: [file] });
+          return;
+        }
+      } catch (e) { /* fall through to download */ }
+    }
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = 'nehama-reflection.png';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+  }, 'image/png');
 }
 
 function wrapText(ctx, text, maxWidth) {
@@ -908,7 +931,7 @@ export default function NehamaApp() {
                   <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '13px', color: '#9BAA9F', textAlign: 'center', lineHeight: 1.6, margin: '16px 0 14px', maxWidth: '260px' }}>{t.cardSharePrompt}</p>
                   <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
                     <button onClick={() => saveCardAsPNG(card)} style={{ flex: 1, padding: '10px', fontSize: '13px', fontFamily: "'DM Sans', sans-serif", fontWeight: 500, border: 'none', borderRadius: '6px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9' }}>{t.cardSave}</button>
-                    <button onClick={() => { if (navigator.share) { saveCardAsPNG(card); navigator.share({ title: 'Nehama', text: 'Someone who cares about you wanted you to have this.', url: 'https://nehama.vercel.app' }).catch(() => {}); } else { saveCardAsPNG(card); } }} style={{ flex: 1, padding: '10px', fontSize: '13px', fontFamily: "'DM Sans', sans-serif", fontWeight: 500, border: '1px solid #4A5D4F', borderRadius: '6px', cursor: 'pointer', background: 'transparent', color: '#4A5D4F' }}>{t.cardShare}</button>
+                    <button onClick={() => { if (navigator.share) { navigator.share({ title: 'Nehama', text: 'Someone who cares about you wanted you to have this.', url: 'https://nehama.vercel.app' }).catch(() => {}); } else { window.open('https://nehama.vercel.app', '_blank'); } }} style={{ flex: 1, padding: '10px', fontSize: '13px', fontFamily: "'DM Sans', sans-serif", fontWeight: 500, border: '1px solid #4A5D4F', borderRadius: '6px', cursor: 'pointer', background: 'transparent', color: '#4A5D4F' }}>{t.cardShare}</button>
                   </div>
                 </div>
               </div>
