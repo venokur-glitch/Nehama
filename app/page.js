@@ -417,36 +417,36 @@ function stripReflectionCard(text) {
 }
 
 const CARD_THEMES = {
-  wilderness: { bg: '#FBF7F0', accent: '#C4B5A0', pin: '#C4B5A0' },
-  growth: { bg: '#F5F8F4', accent: '#9BAA9F', pin: '#9BAA9F' },
-  grief: { bg: '#F3F5F8', accent: '#8E9FAD', pin: '#8E9FAD' },
-  breakthrough: { bg: '#FDF9EF', accent: '#C4AA78', pin: '#C4AA78' },
-  default: { bg: '#FEFCF9', accent: '#9BAA9F', pin: '#9BAA9F' },
+  wilderness: { bg: '#FBF7F0', accent: '#C4B5A0' },
+  growth: { bg: '#F5F8F4', accent: '#9BAA9F' },
+  grief: { bg: '#F3F5F8', accent: '#8E9FAD' },
+  breakthrough: { bg: '#FDF9EF', accent: '#C4AA78' },
+  default: { bg: '#FEFCF9', accent: '#9BAA9F' },
 };
 
 function ReflectionCard({ card, onSave }) {
   const theme = CARD_THEMES[card.theme] || CARD_THEMES.default;
   return (
-    <div style={{ background: theme.bg, border: '1px solid rgba(0,0,0,0.06)', borderRadius: '8px', width: 260, height: 462, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '36px 22px 32px', position: 'relative', boxShadow: '0 1px 12px rgba(0,0,0,0.05)' }}>
+    <div style={{ background: theme.bg, border: '1px solid rgba(0,0,0,0.06)', borderRadius: '8px', width: 260, height: 462, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '28px 22px 28px', position: 'relative', boxShadow: '0 1px 12px rgba(0,0,0,0.05)' }}>
       <button onClick={onSave} style={{ position: 'absolute', top: '10px', right: '10px', background: 'none', border: 'none', cursor: 'pointer', color: '#C0C0C0', fontSize: '14px', padding: '4px', lineHeight: 1 }} title="Save">↓</button>
-      <svg width="28" height="38" viewBox="-14 0 28 38" style={{ marginBottom: '20px', flexShrink: 0 }}>
-        <path d="M0,36 C-10,24 -13,19 -13,13 A13,13 0 1,1 13,13 C13,19 10,24 0,36 Z" fill={theme.pin}/>
-        <text x="0" y="11" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="4.5" fontWeight="600" fill="#FEFCF9" letterSpacing="0.8">YOU ARE</text>
-        <text x="0" y="17" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="4.5" fontWeight="600" fill="#FEFCF9" letterSpacing="0.8">HERE</text>
+      <svg width="52" height="72" viewBox="-26 0 52 72" style={{ marginBottom: '16px', flexShrink: 0 }}>
+        <path d="M0,68 C-19,46 -24,36 -24,25 A24,24 0 1,1 24,25 C24,36 19,46 0,68 Z" fill="#9BAA9F"/>
+        <text x="0" y="22" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="7" fontWeight="600" fill="#FEFCF9" letterSpacing="1">YOU ARE</text>
+        <text x="0" y="31" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="7" fontWeight="600" fill="#FEFCF9" letterSpacing="1">HERE</text>
       </svg>
-      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '17px', color: '#3A4A40', fontWeight: 400, fontStyle: 'italic', textAlign: 'center', lineHeight: 1.45, marginBottom: '20px', flex: '0 0 auto' }}>{card.seasonStatement}</div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px', flexShrink: 0 }}>
-        <div style={{ width: '36px', height: '1px', background: theme.accent, opacity: 0.5 }} />
-        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '13px', color: '#6B7F72', fontWeight: 400, textAlign: 'center', whiteSpace: 'nowrap' }}>{card.verseQuote}</div>
-        <div style={{ width: '36px', height: '1px', background: theme.accent, opacity: 0.5 }} />
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '16px', color: '#3A4A40', fontWeight: 400, fontStyle: 'italic', textAlign: 'center', lineHeight: 1.45, marginBottom: '14px' }}>{card.seasonStatement}</div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexShrink: 0 }}>
+        <div style={{ width: '32px', height: '1px', background: '#9BAA9F', opacity: 0.5 }} />
+        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '12px', color: '#6B7F72', fontWeight: 400, textAlign: 'center', whiteSpace: 'nowrap' }}>{card.verseQuote}</div>
+        <div style={{ width: '32px', height: '1px', background: '#9BAA9F', opacity: 0.5 }} />
       </div>
-      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '11px', color: theme.accent, textAlign: 'center', letterSpacing: '1.5px', marginBottom: '24px', flexShrink: 0 }}>{card.scripture}</div>
+      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '10px', color: '#9BAA9F', textAlign: 'center', letterSpacing: '1.5px', marginBottom: '16px', flexShrink: 0 }}>{card.scripture}</div>
       <div style={{ flex: 1 }} />
-      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '12px', color: '#4A5A50', fontWeight: 500, textAlign: 'center', lineHeight: 1.5, marginBottom: '28px' }}>{card.mantra}</div>
+      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '12px', color: '#4A5A50', fontWeight: 500, textAlign: 'center', lineHeight: 1.5, marginBottom: '20px' }}>{card.mantra}</div>
       <div style={{ textAlign: 'center', flexShrink: 0 }}>
-        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '11px', color: theme.accent, letterSpacing: '3px' }}>nehama</div>
-        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '9px', color: '#B5C0B8', marginTop: '3px' }}>findnehama.com</div>
-        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '9px', color: '#B5C0B8', fontStyle: 'italic', marginTop: '2px' }}>5 questions. Your story in scripture.</div>
+        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '10px', color: '#9BAA9F', letterSpacing: '3px' }}>nehama</div>
+        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '8px', color: '#B5C0B8', marginTop: '3px' }}>findnehama.com</div>
+        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '8px', color: '#B5C0B8', fontStyle: 'italic', marginTop: '2px' }}>5 questions. Your story in scripture.</div>
       </div>
     </div>
   );
@@ -455,11 +455,11 @@ function ReflectionCard({ card, onSave }) {
 function saveCardAsPNG(card) {
   const w = 1080, h = 1920;
   const themes = {
-    wilderness: { bg: '#FBF7F0', accent: '#C4B5A0' },
-    growth: { bg: '#F5F8F4', accent: '#9BAA9F' },
-    grief: { bg: '#F3F5F8', accent: '#8E9FAD' },
-    breakthrough: { bg: '#FDF9EF', accent: '#C4AA78' },
-    default: { bg: '#FEFCF9', accent: '#9BAA9F' },
+    wilderness: { bg: '#FBF7F0' },
+    growth: { bg: '#F5F8F4' },
+    grief: { bg: '#F3F5F8' },
+    breakthrough: { bg: '#FDF9EF' },
+    default: { bg: '#FEFCF9' },
   };
   const th = themes[card.theme] || themes.default;
   const canvas = document.createElement('canvas');
@@ -479,51 +479,52 @@ function saveCardAsPNG(card) {
   ctx.closePath(); ctx.fill();
   ctx.shadowColor = 'transparent';
   ctx.textAlign = 'center';
-  // Teardrop pin (small)
-  const px = w/2, pinY = 160, pinR = 36;
-  ctx.fillStyle = th.accent;
+  // Teardrop pin (big, always sage)
+  const px = w/2, pinY = 240, pinR = 65;
+  ctx.fillStyle = '#9BAA9F';
   ctx.beginPath();
   ctx.moveTo(px, pinY + pinR * 2.6);
   ctx.bezierCurveTo(px - pinR * 0.76, pinY + pinR * 0.85, px - pinR, pinY + pinR * 0.45, px - pinR, pinY);
   ctx.arc(px, pinY, pinR, Math.PI, 0, false);
   ctx.bezierCurveTo(px + pinR, pinY + pinR * 0.45, px + pinR * 0.76, pinY + pinR * 0.85, px, pinY + pinR * 2.6);
   ctx.closePath(); ctx.fill();
-  ctx.fillStyle = '#FEFCF9'; ctx.font = '600 13px "Cormorant Garamond", serif';
-  ctx.fillText('YOU ARE', px, pinY - 2);
-  ctx.fillText('HERE', px, pinY + 14);
+  ctx.fillStyle = '#FEFCF9'; ctx.font = '600 24px "Cormorant Garamond", serif';
+  ctx.fillText('YOU ARE', px, pinY - 4);
+  ctx.fillText('HERE', px, pinY + 24);
   // Season statement (HERO)
   const ssLen = card.seasonStatement.length;
-  const ssFontSize = ssLen > 180 ? 38 : ssLen > 120 ? 42 : 48;
+  const ssFontSize = ssLen > 180 ? 42 : ssLen > 120 ? 48 : 54;
   ctx.fillStyle = '#3A4A40'; ctx.font = 'italic 400 ' + ssFontSize + 'px "Cormorant Garamond", serif';
-  const ssLines = wrapText(ctx, card.seasonStatement, w * 0.78);
-  let ssy = 380;
-  ssLines.forEach(line => { ctx.fillText(line, w/2, ssy); ssy += Math.round(ssFontSize * 1.45); });
+  const ssLines = wrapText(ctx, card.seasonStatement, w * 0.76);
+  let ssy = 520;
+  ssLines.forEach(line => { ctx.fillText(line, w/2, ssy); ssy += Math.round(ssFontSize * 1.4); });
   // Divider + verse quote
-  const divY = ssy + 40;
-  ctx.strokeStyle = th.accent; ctx.lineWidth = 1; ctx.globalAlpha = 0.5;
-  ctx.font = '400 30px "Cormorant Garamond", serif';
+  const divY = ssy + 50;
+  ctx.strokeStyle = '#9BAA9F'; ctx.lineWidth = 1; ctx.globalAlpha = 0.5;
+  ctx.font = '400 34px "Cormorant Garamond", serif';
   const vqWidth = ctx.measureText(card.verseQuote).width;
   ctx.beginPath(); ctx.moveTo(w/2 - vqWidth/2 - 80, divY); ctx.lineTo(w/2 - vqWidth/2 - 16, divY); ctx.stroke();
   ctx.beginPath(); ctx.moveTo(w/2 + vqWidth/2 + 16, divY); ctx.lineTo(w/2 + vqWidth/2 + 80, divY); ctx.stroke();
   ctx.globalAlpha = 1;
-  ctx.fillStyle = '#6B7F72'; ctx.font = '400 30px "Cormorant Garamond", serif';
-  ctx.fillText(card.verseQuote, w/2, divY + 5);
+  ctx.fillStyle = '#6B7F72'; ctx.font = '400 34px "Cormorant Garamond", serif';
+  ctx.fillText(card.verseQuote, w/2, divY + 6);
   // Scripture reference
-  ctx.fillStyle = th.accent; ctx.font = '400 18px "DM Sans", sans-serif';
-  ctx.fillText(card.scripture, w/2, divY + 46);
-  // Mantra (lower third)
-  const mantraY = Math.max(divY + 200, 1280);
-  ctx.fillStyle = '#4A5A50'; ctx.font = '500 22px "DM Sans", sans-serif';
+  ctx.fillStyle = '#9BAA9F'; ctx.font = '400 22px "DM Sans", sans-serif';
+  ctx.fillText(card.scripture, w/2, divY + 56);
+  // Mantra (flows after scripture, not pinned to bottom)
+  const mantraY = divY + 160;
+  ctx.fillStyle = '#4A5A50'; ctx.font = '500 32px "DM Sans", sans-serif';
   const mantraLines = wrapText(ctx, card.mantra, w * 0.72);
   let my = mantraY;
-  mantraLines.forEach(line => { ctx.fillText(line, w/2, my); my += 32; });
-  // Footer
-  ctx.fillStyle = th.accent; ctx.font = '400 20px "Cormorant Garamond", serif';
-  ctx.fillText('nehama', w/2, 1730);
-  ctx.fillStyle = '#B5C0B8'; ctx.font = '400 15px "DM Sans", sans-serif';
-  ctx.fillText('findnehama.com', w/2, 1760);
-  ctx.font = 'italic 400 15px "DM Sans", sans-serif';
-  ctx.fillText('5 questions. Your story in scripture.', w/2, 1785);
+  mantraLines.forEach(line => { ctx.fillText(line, w/2, my); my += 44; });
+  // Footer (centered between mantra and bottom of card)
+  const footerY = Math.max(my + 80, (my + h - m) / 2 + 40);
+  ctx.fillStyle = '#9BAA9F'; ctx.font = '400 24px "Cormorant Garamond", serif';
+  ctx.fillText('nehama', w/2, footerY);
+  ctx.fillStyle = '#B5C0B8'; ctx.font = '400 18px "DM Sans", sans-serif';
+  ctx.fillText('findnehama.com', w/2, footerY + 35);
+  ctx.font = 'italic 400 18px "DM Sans", sans-serif';
+  ctx.fillText('5 questions. Your story in scripture.', w/2, footerY + 62);
   canvas.toBlob(blob => { const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'nehama-reflection.png'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); }, 'image/png');
 }
 
@@ -659,7 +660,7 @@ export default function NehamaApp() {
   const handleSend = () => { if (!input.trim() || isLoading) return; sendMessage(input.trim()); };
   const handleKeyDown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } };
 
-  const freeSessionComplete = tier === 'free' && messages.some(m => m.role === 'assistant' && (m.content.toLowerCase().includes('yours to keep') || m.content.toLowerCase().includes('full nehama journey') || m.content.toLowerCase().includes('tuyo para guardar') || m.content.toLowerCase().includes('viaje completo')));
+  const freeSessionComplete = tier === 'free' && messages.filter(m => m.role === 'assistant').length >= 3 && messages.some(m => m.role === 'assistant' && (m.content.toLowerCase().includes('what you just shared matters') || m.content.toLowerCase().includes('lo que acabas de compartir importa') || m.content.includes('[/REFLECTION_CARD]')));
 
   const inputStyle = { width: '100%', padding: '13px 16px', fontSize: '15px', fontFamily: "'DM Sans', sans-serif", border: '1px solid rgba(0,0,0,0.08)', borderRadius: '8px', background: '#fff', color: '#2C2C2C', outline: 'none', transition: 'border-color 0.2s', boxSizing: 'border-box' };
   const toggleGroupStyle = { display: 'flex', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(0,0,0,0.08)' };
