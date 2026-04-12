@@ -21,7 +21,7 @@ const T = {
     freeTag: 'No account needed',
     freeDesc: 'Five honest questions, then your life reflected through scripture. About 10 minutes.',
     fullTitle: 'Full Journey',
-    fullTag: 'Beta access',
+    fullTag: '',
     fullDesc: 'Deep discovery across every area of your life. A concrete plan to move forward. Scripture with body practices. Ongoing guidance that remembers you and holds you accountable.',
     fullDesc2: 'Come back weekly, or as often as you like. The life-plan adjusts. The accountability holds. The scripture deepens as your story moves.',
     namePlaceholder: 'Your first name',
@@ -36,7 +36,7 @@ const T = {
     withPartner: 'With Partner',
     startFree: 'Start Your Reflection',
     startFull: 'Begin Your Journey',
-    invitePrompt: 'Private beta. Enter your invitation code.',
+    invitePrompt: 'Enter your invitation code.',
     invitePlaceholder: 'INVITE CODE',
     codeError: 'Code not recognized.',
     enter: 'Enter',
@@ -91,7 +91,7 @@ const T = {
     freeTag: 'Sin cuenta necesaria',
     freeDesc: 'Cinco preguntas honestas, luego tu vida reflejada a través de las escrituras. Aproximadamente 10 minutos.',
     fullTitle: 'Viaje Completo',
-    fullTag: 'Acceso beta',
+    fullTag: '',
     fullDesc: 'Descubrimiento profundo en cada área de tu vida. Un plan concreto para avanzar. Escrituras con prácticas corporales. Guía continua que te recuerda y te mantiene responsable.',
     fullDesc2: 'Regresa semanalmente, o tan seguido como quieras. El plan de vida se ajusta. La responsabilidad se mantiene. Las escrituras se profundizan a medida que tu historia avanza.',
     namePlaceholder: 'Tu nombre',
@@ -106,7 +106,7 @@ const T = {
     withPartner: 'Con Pareja',
     startFree: 'Comienza Tu Reflexión',
     startFull: 'Comienza Tu Viaje',
-    invitePrompt: 'Beta privada. Ingresa tu código de invitación.',
+    invitePrompt: 'Ingresa tu código de invitación.',
     invitePlaceholder: 'CÓDIGO DE INVITACIÓN',
     codeError: 'Código no reconocido.',
     enter: 'Entrar',
@@ -788,7 +788,7 @@ export default function NehamaApp() {
           <div style={{ borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '28px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
               <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '22px', fontWeight: 400, color: '#2C2C2C' }}>{t.fullTitle}</span>
-              <span style={{ fontSize: '10px', fontWeight: 500, color: '#FEFCF9', background: '#4A5D4F', padding: '3px 10px', borderRadius: '4px', letterSpacing: '1.5px', textTransform: 'uppercase' }}>{t.fullTag}</span>
+              {t.fullTag && <span style={{ fontSize: '10px', fontWeight: 500, color: '#FEFCF9', background: '#4A5D4F', padding: '3px 10px', borderRadius: '4px', letterSpacing: '1.5px', textTransform: 'uppercase' }}>{t.fullTag}</span>}
             </div>
             <p style={{ fontSize: '14px', color: '#5A5A5A', lineHeight: 1.7, margin: '0 0 4px 0' }}>{t.fullDesc}</p>
             <p style={{ fontSize: '13px', color: '#9A9A9A', lineHeight: 1.6, margin: '0 0 20px 0' }}>{t.fullDesc2}</p>
