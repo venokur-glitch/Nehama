@@ -78,6 +78,7 @@ const T = {
     cardSharePrompt: 'This reflection is yours. If someone comes to mind who\'s carrying something heavy, you can send them here.',
     cardSave: 'Save to Photos',
     cardShare: 'Share',
+    cardCTA: '5 questions. Your story in scripture.',
     installPrompt: 'Add Nehama to your home screen',
     installIOS: 'Tap the share button, then "Add to Home Screen"',
     installAndroid: 'Tap the menu, then "Add to Home Screen"',
@@ -155,6 +156,7 @@ const T = {
     cardSharePrompt: 'Esta reflexión es tuya. Si alguien viene a tu mente que está cargando algo pesado, puedes enviarle esto.',
     cardSave: 'Guardar en Fotos',
     cardShare: 'Compartir',
+    cardCTA: '5 preguntas. Tu historia en las escrituras.',
     installPrompt: 'Agrega Nehama a tu pantalla de inicio',
     installIOS: 'Toca el botón de compartir, luego "Agregar a Inicio"',
     installAndroid: 'Toca el menú, luego "Agregar a Inicio"',
@@ -441,7 +443,7 @@ const CARD_THEMES = {
   default: { bg: '#FEFCF9', accent: '#9BAA9F' },
 };
 
-function ReflectionCard({ card, onSave }) {
+function ReflectionCard({ card, onSave, cta }) {
   const theme = CARD_THEMES[card.theme] || CARD_THEMES.default;
   return (
     <div style={{ background: theme.bg, border: '1px solid rgba(0,0,0,0.06)', borderRadius: '8px', width: 260, height: 462, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '28px 22px 28px', position: 'relative', boxShadow: '0 1px 12px rgba(0,0,0,0.05)' }}>
@@ -464,13 +466,13 @@ function ReflectionCard({ card, onSave }) {
       <div style={{ textAlign: 'center', flexShrink: 0 }}>
         <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '10px', color: '#9BAA9F', letterSpacing: '3px' }}>nehama</div>
         <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '8px', color: '#B5C0B8', marginTop: '3px' }}>findnehama.com</div>
-        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '8px', color: '#B5C0B8', fontStyle: 'italic', marginTop: '2px' }}>5 questions. Your story in scripture.</div>
+        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '8px', color: '#B5C0B8', fontStyle: 'italic', marginTop: '2px' }}>{cta}</div>
       </div>
     </div>
   );
 }
 
-function saveCardAsPNG(card) {
+function saveCardAsPNG(card, cta) {
   const w = 1080, h = 1920;
   const themes = {
     wilderness: { bg: '#FBF7F0' },
@@ -569,7 +571,7 @@ function saveCardAsPNG(card) {
   ctx.fillStyle = '#B5C0B8'; ctx.font = '400 ' + Math.round(8*s) + 'px "DM Sans", sans-serif';
   ctx.fillText('findnehama.com', cx, fTop + 3*s + Math.round(8*s));
   ctx.font = 'italic 400 ' + Math.round(8*s) + 'px "DM Sans", sans-serif';
-  ctx.fillText('5 questions. Your story in scripture.', cx, fTop + 5*s + Math.round(16*s));
+  ctx.fillText(cta || '5 questions. Your story in scripture.', cx, fTop + 5*s + Math.round(16*s));
   canvas.toBlob(async (blob) => {
     if (navigator.share && navigator.canShare) {
       try {
@@ -936,11 +938,11 @@ export default function NehamaApp() {
             if (!card) return null;
             return (
               <div style={{ alignSelf: 'center', paddingTop: '16px', animation: 'fadeIn 1s ease 0.5s both' }}>
-                <ReflectionCard card={card} onSave={() => saveCardAsPNG(card)} />
+                <ReflectionCard card={card} onSave={() => saveCardAsPNG(card, t.cardCTA)} cta={t.cardCTA} />
                 <div style={{ animation: 'fadeIn 0.8s ease 1.5s both' }}>
                   <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '13px', color: '#9BAA9F', textAlign: 'center', lineHeight: 1.6, margin: '16px 0 14px', maxWidth: '260px' }}>{t.cardSharePrompt}</p>
                   <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-                    <button onClick={() => saveCardAsPNG(card)} style={{ flex: 1, padding: '10px', fontSize: '13px', fontFamily: "'DM Sans', sans-serif", fontWeight: 500, border: 'none', borderRadius: '6px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9' }}>{t.cardSave}</button>
+                    <button onClick={() => saveCardAsPNG(card, t.cardCTA)} style={{ flex: 1, padding: '10px', fontSize: '13px', fontFamily: "'DM Sans', sans-serif", fontWeight: 500, border: 'none', borderRadius: '6px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9' }}>{t.cardSave}</button>
                     <button onClick={() => { if (navigator.share) { navigator.share({ title: 'Nehama', text: 'Someone who cares about you wanted you to have this.', url: 'https://nehama.vercel.app' }).catch(() => {}); } else { window.open('https://nehama.vercel.app', '_blank'); } }} style={{ flex: 1, padding: '10px', fontSize: '13px', fontFamily: "'DM Sans', sans-serif", fontWeight: 500, border: '1px solid #4A5D4F', borderRadius: '6px', cursor: 'pointer', background: 'transparent', color: '#4A5D4F' }}>{t.cardShare}</button>
                   </div>
                 </div>
