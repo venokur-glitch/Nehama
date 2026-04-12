@@ -448,8 +448,8 @@ function ReflectionCard({ card, onSave }) {
       <button onClick={onSave} style={{ position: 'absolute', top: '10px', right: '10px', background: 'none', border: 'none', cursor: 'pointer', color: '#C0C0C0', fontSize: '14px', padding: '4px', lineHeight: 1 }} title="Save">↓</button>
       <svg width="52" height="72" viewBox="-26 0 52 72" style={{ marginBottom: '16px', flexShrink: 0 }}>
         <path d="M0,68 C-19,46 -24,36 -24,25 A24,24 0 1,1 24,25 C24,36 19,46 0,68 Z" fill="#9BAA9F"/>
-        <text x="0" y="22" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="7" fontWeight="600" fill="#FEFCF9" letterSpacing="1">YOU ARE</text>
-        <text x="0" y="31" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="7" fontWeight="600" fill="#FEFCF9" letterSpacing="1">HERE</text>
+        <text x="0" y="21" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="7" fontWeight="600" fill="#FEFCF9" letterSpacing="1">YOU ARE</text>
+        <text x="0" y="32" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="8.5" fontWeight="600" fill="#FEFCF9" letterSpacing="3">HERE</text>
       </svg>
       <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '16px', color: '#3A4A40', fontWeight: 400, fontStyle: 'italic', textAlign: 'center', lineHeight: 1.45, marginBottom: '14px' }}>{card.seasonStatement}</div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', justifyContent: 'center', width: '60%' }}>
@@ -484,7 +484,7 @@ function saveCardAsPNG(card) {
   canvas.width = w; canvas.height = h;
   const ctx = canvas.getContext('2d');
   ctx.fillStyle = '#F0EDE8'; ctx.fillRect(0, 0, w, h);
-  const m = 40, cr = 16;
+  const m = 36, cr = 16;
   ctx.shadowColor = 'rgba(0,0,0,0.1)'; ctx.shadowBlur = 36; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 6;
   ctx.fillStyle = th.bg;
   ctx.beginPath();
@@ -495,71 +495,81 @@ function saveCardAsPNG(card) {
   ctx.closePath(); ctx.fill();
   ctx.shadowColor = 'transparent';
   ctx.textAlign = 'center';
-  // Teardrop pin - EXACT in-app SVG path: M0,68 C-19,46 -24,36 -24,25 A24,24 0 1,1 24,25 C24,36 19,46 0,68 Z
-  // Circle center at (0,25), radius 24, tip at (0,68)
-  const pinCX = w / 2;
-  const pinTopY = 120; // top of pin on canvas
-  const sc = 3.2; // scale: 24 SVG radius * 3.2 = 76.8px canvas radius
-  // SVG top of circle is at y=1 (25-24). Canvas top = pinTopY. So offset: pinTopY - 1*sc
-  const oY = pinTopY - 1 * sc;
-  const psx = (svgX) => pinCX + svgX * sc;
-  const psy = (svgY) => oY + svgY * sc;
-  const pinCY = psy(25); // circle center on canvas
+  // Everything scaled from in-app card (260x462) to PNG card area (~1008x1848)
+  const s = (1080 - 2 * m) / 260;
+  const cx = w / 2;
+  let y = m + 28 * s;
+  // Pin: in-app SVG viewBox -26..26 x 0..72, path M0,68 C-19,46 -24,36 -24,25 A24,24
+  const ps = s;
+  const pinTopY = y;
+  const pinCX = cx;
+  const pinCY = pinTopY + 25 * ps;
   ctx.fillStyle = '#9BAA9F';
   ctx.beginPath();
-  ctx.moveTo(psx(0), psy(68));
-  ctx.bezierCurveTo(psx(-19), psy(46), psx(-24), psy(36), psx(-24), psy(25));
-  ctx.arc(pinCX, pinCY, 24 * sc, Math.PI, 0, false);
-  ctx.bezierCurveTo(psx(24), psy(36), psx(19), psy(46), psx(0), psy(68));
-  ctx.closePath();
-  ctx.fill();
-  // Text inside pin
-  ctx.fillStyle = '#FEFCF9'; ctx.font = '600 24px "Cormorant Garamond", serif';
-  ctx.fillText('YOU ARE', pinCX, pinCY - 6);
-  ctx.fillText('HERE', pinCX, pinCY + 22);
-  // Season statement - starts after pin
-  const pinTipY = psy(68);
-  let y = pinTipY + 60;
+  ctx.moveTo(pinCX, pinTopY + 68 * ps);
+  ctx.bezierCurveTo(pinCX - 19*ps, pinTopY + 46*ps, pinCX - 24*ps, pinTopY + 36*ps, pinCX - 24*ps, pinTopY + 25*ps);
+  ctx.arc(pinCX, pinCY, 24 * ps, Math.PI, 0, false);
+  ctx.bezierCurveTo(pinCX + 24*ps, pinTopY + 36*ps, pinCX + 19*ps, pinTopY + 46*ps, pinCX, pinTopY + 68*ps);
+  ctx.closePath(); ctx.fill();
+  // Pin text: YOU ARE 7*s, HERE 8.5*s letterspaced
+  ctx.fillStyle = '#FEFCF9'; ctx.font = '600 ' + Math.round(7*s) + 'px "Cormorant Garamond", serif';
+  const yaW = ctx.measureText('YOU ARE').width;
+  ctx.fillText('YOU ARE', pinCX, pinCY - 3*s);
+  ctx.font = '600 ' + Math.round(8.5*s) + 'px "Cormorant Garamond", serif';
+  const hc = ['H','E','R','E'];
+  const hn = hc.reduce((a,c) => a + ctx.measureText(c).width, 0);
+  const hg = (yaW - hn) / 3;
+  let hx = pinCX - yaW / 2;
+  hc.forEach(c => { ctx.fillText(c, hx + ctx.measureText(c).width/2, pinCY + 7*s); hx += ctx.measureText(c).width + hg; });
+  // Season statement: in-app 16px italic
+  y = pinTopY + 68*ps + 16*s;
   const ssLen = card.seasonStatement.length;
-  const ssFontSize = ssLen > 180 ? 44 : ssLen > 120 ? 50 : 56;
-  ctx.fillStyle = '#3A4A40'; ctx.font = 'italic 400 ' + ssFontSize + 'px "Cormorant Garamond", serif';
-  const ssLines = wrapText(ctx, card.seasonStatement, w * 0.78);
-  ssLines.forEach(line => { ctx.fillText(line, w/2, y); y += Math.round(ssFontSize * 1.4); });
-  // Divider + verse quote
-  y += 30;
+  const ssFs = Math.round((ssLen > 180 ? 14 : ssLen > 120 ? 15 : 16) * s);
+  ctx.fillStyle = '#3A4A40'; ctx.font = 'italic 400 ' + ssFs + 'px "Cormorant Garamond", serif';
+  const ssL = wrapText(ctx, card.seasonStatement, w * 0.82);
+  ssL.forEach(l => { ctx.fillText(l, cx, y); y += Math.round(ssFs * 1.45); });
+  // Verse dividers + quote: in-app 12px
+  y += 14*s;
+  const vqFs = Math.round(12*s);
+  ctx.font = '400 ' + vqFs + 'px "Cormorant Garamond", serif';
+  const vqW = ctx.measureText(card.verseQuote).width;
   ctx.strokeStyle = '#9BAA9F'; ctx.lineWidth = 1; ctx.globalAlpha = 0.5;
-  ctx.font = '400 28px "Cormorant Garamond", serif';
-  const vqWidth = ctx.measureText(card.verseQuote).width;
-  const lineLen = Math.min(50, (w * 0.7 - vqWidth) / 2 - 16);
-  if (lineLen > 8) {
-    ctx.beginPath(); ctx.moveTo(w/2 - vqWidth/2 - lineLen - 14, y); ctx.lineTo(w/2 - vqWidth/2 - 14, y); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(w/2 + vqWidth/2 + 14, y); ctx.lineTo(w/2 + vqWidth/2 + lineLen + 14, y); ctx.stroke();
+  const ll = Math.min(20*s, (w*0.82 - vqW)/2 - 8*s);
+  if (ll > 4) {
+    ctx.beginPath(); ctx.moveTo(cx - vqW/2 - ll - 8*s, y); ctx.lineTo(cx - vqW/2 - 8*s, y); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx + vqW/2 + 8*s, y); ctx.lineTo(cx + vqW/2 + ll + 8*s, y); ctx.stroke();
   }
   ctx.globalAlpha = 1;
-  ctx.fillStyle = '#6B7F72'; ctx.font = '400 28px "Cormorant Garamond", serif';
-  ctx.fillText(card.verseQuote, w/2, y + 5);
-  // Scripture reference
-  y += 44;
-  ctx.fillStyle = '#9BAA9F'; ctx.font = '400 18px "DM Sans", sans-serif';
-  ctx.fillText(card.scripture, w/2, y);
-  // Mantra - centered in remaining space between scripture and footer
-  const footerBottomY = h - m - 40;
-  const footerTopY = footerBottomY - 60;
-  const mantraZoneTop = y + 40;
-  const mantraZoneBottom = footerTopY - 30;
-  const mantraCenterY = (mantraZoneTop + mantraZoneBottom) / 2;
-  ctx.fillStyle = '#4A5A50'; ctx.font = '500 28px "DM Sans", sans-serif';
-  const mantraLines = wrapText(ctx, card.mantra, w * 0.72);
-  const mantraHeight = mantraLines.length * 38;
-  let my = mantraCenterY - mantraHeight / 2;
-  mantraLines.forEach(line => { ctx.fillText(line, w/2, my); my += 38; });
+  ctx.fillStyle = '#6B7F72';
+  ctx.fillText(card.verseQuote, cx, y + 4);
+  // Scripture ref: in-app 10px DM Sans
+  y += 4*s + vqFs*0.3;
+  ctx.fillStyle = '#9BAA9F'; ctx.font = '400 ' + Math.round(10*s) + 'px "DM Sans", sans-serif';
+  ctx.fillText(card.scripture, cx, y);
+  // Mantra: in-app 12px DM Sans 500, centered in remaining space
+  y += 16*s;
+  const mFs = Math.round(12*s);
+  ctx.font = '500 ' + mFs + 'px "DM Sans", sans-serif';
+  const mL = wrapText(ctx, card.mantra, w * 0.78);
+  const mH = mL.length * Math.round(mFs * 1.5);
+  // Footer: in-app ~28px from bottom
+  const fY = h - m - 28*s;
+  const fH = Math.round(10*s) + Math.round(8*s)*2 + 10*s;
+  const fTop = fY - fH;
+  // Center mantra between content and footer
+  const mZoneTop = y;
+  const mZoneBot = fTop - 20*s;
+  const mY = mZoneTop + (mZoneBot - mZoneTop - mH) / 2;
+  ctx.fillStyle = '#4A5A50'; ctx.font = '500 ' + mFs + 'px "DM Sans", sans-serif';
+  let my = mY;
+  mL.forEach(l => { ctx.fillText(l, cx, my); my += Math.round(mFs * 1.5); });
   // Footer
-  ctx.fillStyle = '#9BAA9F'; ctx.font = '400 20px "Cormorant Garamond", serif';
-  ctx.fillText('nehama', w/2, footerTopY);
-  ctx.fillStyle = '#B5C0B8'; ctx.font = '400 15px "DM Sans", sans-serif';
-  ctx.fillText('findnehama.com', w/2, footerTopY + 26);
-  ctx.font = 'italic 400 15px "DM Sans", sans-serif';
-  ctx.fillText('5 questions. Your story in scripture.', w/2, footerTopY + 48);
+  ctx.fillStyle = '#9BAA9F'; ctx.font = '400 ' + Math.round(10*s) + 'px "Cormorant Garamond", serif';
+  ctx.fillText('nehama', cx, fTop);
+  ctx.fillStyle = '#B5C0B8'; ctx.font = '400 ' + Math.round(8*s) + 'px "DM Sans", sans-serif';
+  ctx.fillText('findnehama.com', cx, fTop + 3*s + Math.round(8*s));
+  ctx.font = 'italic 400 ' + Math.round(8*s) + 'px "DM Sans", sans-serif';
+  ctx.fillText('5 questions. Your story in scripture.', cx, fTop + 5*s + Math.round(16*s));
   canvas.toBlob(async (blob) => {
     if (navigator.share && navigator.canShare) {
       try {
