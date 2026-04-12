@@ -270,10 +270,10 @@ NARRATIVE MAPPING, NOT VERSE MATCHING. Find their STORY inside scripture.
 - AFTER your closing line, output a hidden reflection card block in EXACTLY this format (the user will not see this, the app uses it to generate a beautiful keepsake image):
 
 [REFLECTION_CARD]
-season_statement: [A vivid, personal narrative mapping in one sentence. This is the HERO of the card. Example: "You are Ruth, gleaning in a field that isn't yours yet, trusting that the harvest is coming." Make it feel like a declaration, not a label. Max 120 characters ideal, never more than 180.]
+season_statement: [A vivid, personal narrative mapping in one sentence. This is the HERO of the card and the reason people will share it. Example: "You are Ruth, gleaning in a field that isn't yours yet, trusting that the harvest is coming." It must connect the scripture to THIS person's specific situation so deeply that they feel seen. Generic spiritual platitudes will not be shared. Make it feel like a declaration, not a label. Max 120 characters ideal, never more than 180.]
 verse_quote: [A short pull quote from the scripture, 4-10 words only. Example: "I will restore the years"]
 scripture: [The reference. Example: Ruth 2:11-12]
-mantra: [Their personal mantra, under 12 words]
+mantra: [A personal declaration that could ONLY belong to this person based on what they shared. NOT a generic affirmation. NOT bullet points. It should read like the thing they would write on their mirror. Example: "The years I spent carrying everyone else were not wasted. They were training." Bad example: "Present over productive, faithful with little" because it means nothing personal. Under 20 words.]
 theme: [One of: wilderness, growth, grief, breakthrough, default. Choose based on the dominant emotional season.]
 [/REFLECTION_CARD]
 
@@ -355,10 +355,10 @@ At the end: "${name}, what you just shared matters, and where you are in the sto
 AFTER your closing line, output a hidden reflection card block in EXACTLY this format (the user will not see this, the app uses it to generate a beautiful keepsake image):
 
 [REFLECTION_CARD]
-season_statement: [A vivid, personal narrative mapping in one sentence. This is the HERO of the card. Example: "You are Ruth, gleaning in a field that isn't yours yet, trusting that the harvest is coming." Make it feel like a declaration, not a label. Max 120 characters ideal, never more than 180.]
+season_statement: [A vivid, personal narrative mapping in one sentence. This is the HERO of the card and the reason people will share it. Example: "You are Ruth, gleaning in a field that isn't yours yet, trusting that the harvest is coming." It must connect the scripture to THIS person's specific situation so deeply that they feel seen. Generic spiritual platitudes will not be shared. Make it feel like a declaration, not a label. Max 120 characters ideal, never more than 180.]
 verse_quote: [A short pull quote from the scripture, 4-10 words only. Example: "I will restore the years"]
 scripture: [The reference. Example: Psalm 126:5]
-mantra: [Their personal mantra, under 12 words]
+mantra: [A personal declaration that could ONLY belong to this person based on what they shared. NOT a generic affirmation. NOT bullet points. It should read like the thing they would write on their mirror. Example: "The years I spent carrying everyone else were not wasted. They were training." Bad example: "Present over productive, faithful with little" because it means nothing personal. Under 20 words.]
 theme: [One of: wilderness, growth, grief, breakthrough, default. Choose based on the dominant emotional season.]
 [/REFLECTION_CARD]
 
@@ -494,58 +494,62 @@ function saveCardAsPNG(card) {
   ctx.closePath(); ctx.fill();
   ctx.shadowColor = 'transparent';
   ctx.textAlign = 'center';
-  // Pin (matching in-app proportions: 52x72 in 260-wide card = 20% width)
-  const px = w/2, pinR = 42;
-  const pinY = 180;
+  // Teardrop pin - exact SVG path: M0,96 C-26,65 -34,50 -34,36 A34,34 0 1,1 34,36 C34,50 26,65 0,96 Z
+  // SVG circle center at (0,36), radius 34. We scale and translate.
+  const pinCX = w / 2, pinCY = 180;
+  const sc = 1.8; // scale factor: 34 SVG units * 1.8 = 61px radius
+  const sx = (svgX) => pinCX + svgX * sc;
+  const sy = (svgY) => pinCY + (svgY - 36) * sc;
   ctx.fillStyle = '#9BAA9F';
   ctx.beginPath();
-  // SVG path: M0,96 C-26,65 -34,50 -34,36 A34,34 0 1,1 34,36 C34,50 26,65 0,96 Z scaled
-  const ps = pinR / 34; // scale from SVG units
-  ctx.moveTo(px, pinY + 96 * ps);
-  ctx.bezierCurveTo(px - 26 * ps, pinY + (65 - 36) * ps + 36 * ps, px - 34 * ps, pinY + (50 - 36) * ps + 36 * ps, px - 34 * ps, pinY);
-  ctx.arc(px, pinY, pinR, Math.PI, 0, false);
-  ctx.bezierCurveTo(px + 34 * ps, pinY + (50 - 36) * ps + 36 * ps, px + 26 * ps, pinY + (65 - 36) * ps + 36 * ps, px, pinY + 96 * ps);
-  ctx.closePath(); ctx.fill();
-  ctx.fillStyle = '#FEFCF9'; ctx.font = '600 16px "Cormorant Garamond", serif';
-  ctx.fillText('YOU ARE', px, pinY - 3);
-  ctx.fillText('HERE', px, pinY + 16);
-  // Season statement (HERO)
+  ctx.moveTo(sx(0), sy(96));
+  ctx.bezierCurveTo(sx(-26), sy(65), sx(-34), sy(50), sx(-34), sy(36));
+  ctx.arc(pinCX, pinCY, 34 * sc, Math.PI, 0, false);
+  ctx.bezierCurveTo(sx(34), sy(50), sx(26), sy(65), sx(0), sy(96));
+  ctx.closePath();
+  ctx.fill();
+  // Text inside pin
+  ctx.fillStyle = '#FEFCF9'; ctx.font = '600 22px "Cormorant Garamond", serif';
+  ctx.fillText('YOU ARE', pinCX, pinCY - 6);
+  ctx.fillText('HERE', pinCX, pinCY + 20);
+  // Season statement (HERO) - starts right after pin tip
+  const contentTop = sy(96) + 50;
   const ssLen = card.seasonStatement.length;
   const ssFontSize = ssLen > 180 ? 42 : ssLen > 120 ? 48 : 54;
   ctx.fillStyle = '#3A4A40'; ctx.font = 'italic 400 ' + ssFontSize + 'px "Cormorant Garamond", serif';
   const ssLines = wrapText(ctx, card.seasonStatement, w * 0.76);
-  let ssy = 420;
+  let ssy = contentTop;
   ssLines.forEach(line => { ctx.fillText(line, w/2, ssy); ssy += Math.round(ssFontSize * 1.4); });
   // Divider + verse quote
-  const divY = ssy + 40;
+  const divY = ssy + 36;
   ctx.strokeStyle = '#9BAA9F'; ctx.lineWidth = 1; ctx.globalAlpha = 0.5;
-  ctx.font = '400 30px "Cormorant Garamond", serif';
+  ctx.font = '400 28px "Cormorant Garamond", serif';
   const vqWidth = ctx.measureText(card.verseQuote).width;
-  const lineLen = Math.min(60, (w * 0.7 - vqWidth) / 2 - 20);
-  if (lineLen > 10) {
-    ctx.beginPath(); ctx.moveTo(w/2 - vqWidth/2 - lineLen - 16, divY); ctx.lineTo(w/2 - vqWidth/2 - 16, divY); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(w/2 + vqWidth/2 + 16, divY); ctx.lineTo(w/2 + vqWidth/2 + lineLen + 16, divY); ctx.stroke();
+  const lineLen = Math.min(50, (w * 0.7 - vqWidth) / 2 - 16);
+  if (lineLen > 8) {
+    ctx.beginPath(); ctx.moveTo(w/2 - vqWidth/2 - lineLen - 14, divY); ctx.lineTo(w/2 - vqWidth/2 - 14, divY); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(w/2 + vqWidth/2 + 14, divY); ctx.lineTo(w/2 + vqWidth/2 + lineLen + 14, divY); ctx.stroke();
   }
   ctx.globalAlpha = 1;
-  ctx.fillStyle = '#6B7F72'; ctx.font = '400 30px "Cormorant Garamond", serif';
+  ctx.fillStyle = '#6B7F72'; ctx.font = '400 28px "Cormorant Garamond", serif';
   ctx.fillText(card.verseQuote, w/2, divY + 5);
   // Scripture reference
-  ctx.fillStyle = '#9BAA9F'; ctx.font = '400 20px "DM Sans", sans-serif';
-  ctx.fillText(card.scripture, w/2, divY + 50);
-  // Mantra (positioned at ~70% of card height)
-  const mantraY = Math.max(divY + 180, h * 0.62);
-  ctx.fillStyle = '#4A5A50'; ctx.font = '500 28px "DM Sans", sans-serif';
+  ctx.fillStyle = '#9BAA9F'; ctx.font = '400 18px "DM Sans", sans-serif';
+  ctx.fillText(card.scripture, w/2, divY + 44);
+  // Mantra - flows naturally after scripture, not pinned to a fixed position
+  const mantraY = divY + 130;
+  ctx.fillStyle = '#4A5A50'; ctx.font = '500 26px "DM Sans", sans-serif';
   const mantraLines = wrapText(ctx, card.mantra, w * 0.72);
   let my = mantraY;
-  mantraLines.forEach(line => { ctx.fillText(line, w/2, my); my += 40; });
-  // Footer
-  const footerY = h - m - 120;
-  ctx.fillStyle = '#9BAA9F'; ctx.font = '400 22px "Cormorant Garamond", serif';
+  mantraLines.forEach(line => { ctx.fillText(line, w/2, my); my += 38; });
+  // Footer - positioned after mantra with breathing room, not pinned to absolute bottom
+  const footerY = Math.min(my + 100, h - m - 80);
+  ctx.fillStyle = '#9BAA9F'; ctx.font = '400 20px "Cormorant Garamond", serif';
   ctx.fillText('nehama', w/2, footerY);
-  ctx.fillStyle = '#B5C0B8'; ctx.font = '400 16px "DM Sans", sans-serif';
-  ctx.fillText('findnehama.com', w/2, footerY + 30);
-  ctx.font = 'italic 400 16px "DM Sans", sans-serif';
-  ctx.fillText('5 questions. Your story in scripture.', w/2, footerY + 54);
+  ctx.fillStyle = '#B5C0B8'; ctx.font = '400 15px "DM Sans", sans-serif';
+  ctx.fillText('findnehama.com', w/2, footerY + 28);
+  ctx.font = 'italic 400 15px "DM Sans", sans-serif';
+  ctx.fillText('5 questions. Your story in scripture.', w/2, footerY + 50);
   canvas.toBlob(blob => { const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'nehama-reflection.png'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); }, 'image/png');
 }
 
