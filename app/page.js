@@ -64,8 +64,9 @@ const T = {
     save: 'Save',
     pricingTitle: 'Choose your path',
     pricingMonthly: '$24.99 / month',
+    pricingMonthlyNote: 'Less than a dollar a day, even in February.',
     pricingAnnual: '$199.99 / year',
-    pricingAnnualSave: 'Save 33%',
+    pricingAnnualNote: 'Less than a single hour with a therapist.',
     pricingTrial: '3-day free trial, cancel anytime',
     pricingScholarship1: 'If the cost is a barrier, ',
     pricingScholarshipLink: 'reach out',
@@ -133,8 +134,9 @@ const T = {
     save: 'Guardar',
     pricingTitle: 'Elige tu camino',
     pricingMonthly: '$24.99 / mes',
+    pricingMonthlyNote: 'Menos de un dólar al día, incluso en febrero.',
     pricingAnnual: '$199.99 / año',
-    pricingAnnualSave: 'Ahorra 33%',
+    pricingAnnualNote: 'Menos que una sola hora con un terapeuta.',
     pricingTrial: '3 días de prueba gratis, cancela cuando quieras',
     pricingScholarship1: 'Si el costo es un obstáculo, ',
     pricingScholarshipLink: 'escríbenos',
@@ -713,8 +715,10 @@ export default function NehamaApp() {
       </div>
       <div style={{ width: '100%', maxWidth: '380px' }}>
         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '22px', color: '#2C2C2C', textAlign: 'center', marginBottom: '32px', fontWeight: 400 }}>{t.pricingTitle}</p>
-        <button onClick={() => handleCheckout('price_1TL4r839LzIoC52oMTeUpDtE')} style={{ width: '100%', padding: '18px', fontSize: '16px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9', letterSpacing: '0.5px', marginBottom: '12px' }}>{t.pricingMonthly}</button>
-        <button onClick={() => handleCheckout('price_1TL4rV39LzIoC52ouQ0oKbKZ')} style={{ width: '100%', padding: '18px', fontSize: '16px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: '1px solid #4A5D4F', borderRadius: '8px', cursor: 'pointer', background: 'transparent', color: '#4A5D4F', letterSpacing: '0.5px', marginBottom: '8px', position: 'relative' }}>{t.pricingAnnual} <span style={{ fontSize: '12px', color: '#8B9E8F', marginLeft: '8px' }}>{t.pricingAnnualSave}</span></button>
+        <button onClick={() => handleCheckout('price_1TL4r839LzIoC52oMTeUpDtE')} style={{ width: '100%', padding: '18px', fontSize: '16px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9', letterSpacing: '0.5px', marginBottom: '4px' }}>{t.pricingMonthly}</button>
+        <p style={{ fontSize: '12px', color: '#9BAA9F', textAlign: 'center', marginBottom: '20px', fontStyle: 'italic' }}>{t.pricingMonthlyNote}</p>
+        <button onClick={() => handleCheckout('price_1TL4rV39LzIoC52ouQ0oKbKZ')} style={{ width: '100%', padding: '18px', fontSize: '16px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: '1px solid #4A5D4F', borderRadius: '8px', cursor: 'pointer', background: 'transparent', color: '#4A5D4F', letterSpacing: '0.5px', marginBottom: '4px' }}>{t.pricingAnnual}</button>
+        <p style={{ fontSize: '12px', color: '#9BAA9F', textAlign: 'center', marginBottom: '8px', fontStyle: 'italic' }}>{t.pricingAnnualNote}</p>
         <p style={{ fontSize: '13px', color: '#B0B0B0', textAlign: 'center', marginTop: '12px', marginBottom: '28px' }}>{t.pricingTrial}</p>
         <div style={{ borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '20px', textAlign: 'center' }}>
           <p style={{ fontSize: '14px', color: '#9A9A9A', lineHeight: 1.6 }}>{t.pricingScholarship1}<span style={{ color: '#4A5D4F', cursor: 'pointer', textDecoration: 'underline', textUnderlineOffset: '3px' }} onClick={() => setShowContact(true)}>{t.pricingScholarshipLink}</span>{t.pricingScholarship2}</p>
