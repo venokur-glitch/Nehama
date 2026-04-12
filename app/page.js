@@ -348,6 +348,7 @@ After all five, deliver a scriptural reflection:
 - Make it personal and specific
 - CRITICAL: If you draw a parallel to a dark season in scripture, you MUST also show the resolution and the path forward. Every valley has an exit. Never leave someone in the darkness without the light that follows.
 - Your reflection should leave them feeling lighter, not heavier. Give hope. Show them what is beautiful in their story, not just what is broken.
+- Include ONE specific body or wellness practice paired with the scriptural reflection. It must be free, require no equipment, and be doable immediately. Be specific about technique (breathing counts, duration, body position). Explain briefly why it works physiologically and how it connects to the spiritual reality. This gives the free user a taste of what the full journey offers.
 
 At the end: "${name}, what you just shared matters, and where you are in the story is not where it ends. If you ever want to go deeper, the full Nehama journey builds a complete plan from everything you are carrying, and walks with you as things change. But what I shared with you today is yours to keep."
 
@@ -451,10 +452,10 @@ function ReflectionCard({ card, onSave }) {
         <text x="0" y="31" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="7" fontWeight="600" fill="#FEFCF9" letterSpacing="1">HERE</text>
       </svg>
       <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '16px', color: '#3A4A40', fontWeight: 400, fontStyle: 'italic', textAlign: 'center', lineHeight: 1.45, marginBottom: '14px' }}>{card.seasonStatement}</div>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexShrink: 0 }}>
-        <div style={{ width: '32px', height: '1px', background: '#9BAA9F', opacity: 0.5 }} />
-        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '12px', color: '#6B7F72', fontWeight: 400, textAlign: 'center', whiteSpace: 'nowrap' }}>{card.verseQuote}</div>
-        <div style={{ width: '32px', height: '1px', background: '#9BAA9F', opacity: 0.5 }} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexShrink: 0, width: '100%', overflow: 'hidden', justifyContent: 'center' }}>
+        <div style={{ flex: '0 0 20px', height: '1px', background: '#9BAA9F', opacity: 0.5 }} />
+        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '12px', color: '#6B7F72', fontWeight: 400, textAlign: 'center', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{card.verseQuote}</div>
+        <div style={{ flex: '0 0 20px', height: '1px', background: '#9BAA9F', opacity: 0.5 }} />
       </div>
       <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '10px', color: '#9BAA9F', textAlign: 'center', letterSpacing: '1.5px', marginBottom: '16px', flexShrink: 0 }}>{card.scripture}</div>
       <div style={{ flex: 1 }} />
@@ -481,9 +482,7 @@ function saveCardAsPNG(card) {
   const canvas = document.createElement('canvas');
   canvas.width = w; canvas.height = h;
   const ctx = canvas.getContext('2d');
-  // Outer background
   ctx.fillStyle = '#F0EDE8'; ctx.fillRect(0, 0, w, h);
-  // Card with shadow
   const m = 40, cr = 16;
   ctx.shadowColor = 'rgba(0,0,0,0.1)'; ctx.shadowBlur = 36; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 6;
   ctx.fillStyle = th.bg;
@@ -495,52 +494,58 @@ function saveCardAsPNG(card) {
   ctx.closePath(); ctx.fill();
   ctx.shadowColor = 'transparent';
   ctx.textAlign = 'center';
-  // Teardrop pin (big, always sage)
-  const px = w/2, pinY = 240, pinR = 65;
+  // Pin (matching in-app proportions: 52x72 in 260-wide card = 20% width)
+  const px = w/2, pinR = 42;
+  const pinY = 180;
   ctx.fillStyle = '#9BAA9F';
   ctx.beginPath();
-  ctx.moveTo(px, pinY + pinR * 2.6);
-  ctx.bezierCurveTo(px - pinR * 0.76, pinY + pinR * 0.85, px - pinR, pinY + pinR * 0.45, px - pinR, pinY);
+  // SVG path: M0,96 C-26,65 -34,50 -34,36 A34,34 0 1,1 34,36 C34,50 26,65 0,96 Z scaled
+  const ps = pinR / 34; // scale from SVG units
+  ctx.moveTo(px, pinY + 96 * ps);
+  ctx.bezierCurveTo(px - 26 * ps, pinY + (65 - 36) * ps + 36 * ps, px - 34 * ps, pinY + (50 - 36) * ps + 36 * ps, px - 34 * ps, pinY);
   ctx.arc(px, pinY, pinR, Math.PI, 0, false);
-  ctx.bezierCurveTo(px + pinR, pinY + pinR * 0.45, px + pinR * 0.76, pinY + pinR * 0.85, px, pinY + pinR * 2.6);
+  ctx.bezierCurveTo(px + 34 * ps, pinY + (50 - 36) * ps + 36 * ps, px + 26 * ps, pinY + (65 - 36) * ps + 36 * ps, px, pinY + 96 * ps);
   ctx.closePath(); ctx.fill();
-  ctx.fillStyle = '#FEFCF9'; ctx.font = '600 24px "Cormorant Garamond", serif';
-  ctx.fillText('YOU ARE', px, pinY - 4);
-  ctx.fillText('HERE', px, pinY + 24);
+  ctx.fillStyle = '#FEFCF9'; ctx.font = '600 16px "Cormorant Garamond", serif';
+  ctx.fillText('YOU ARE', px, pinY - 3);
+  ctx.fillText('HERE', px, pinY + 16);
   // Season statement (HERO)
   const ssLen = card.seasonStatement.length;
   const ssFontSize = ssLen > 180 ? 42 : ssLen > 120 ? 48 : 54;
   ctx.fillStyle = '#3A4A40'; ctx.font = 'italic 400 ' + ssFontSize + 'px "Cormorant Garamond", serif';
   const ssLines = wrapText(ctx, card.seasonStatement, w * 0.76);
-  let ssy = 520;
+  let ssy = 420;
   ssLines.forEach(line => { ctx.fillText(line, w/2, ssy); ssy += Math.round(ssFontSize * 1.4); });
   // Divider + verse quote
-  const divY = ssy + 50;
+  const divY = ssy + 40;
   ctx.strokeStyle = '#9BAA9F'; ctx.lineWidth = 1; ctx.globalAlpha = 0.5;
-  ctx.font = '400 34px "Cormorant Garamond", serif';
+  ctx.font = '400 30px "Cormorant Garamond", serif';
   const vqWidth = ctx.measureText(card.verseQuote).width;
-  ctx.beginPath(); ctx.moveTo(w/2 - vqWidth/2 - 80, divY); ctx.lineTo(w/2 - vqWidth/2 - 16, divY); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(w/2 + vqWidth/2 + 16, divY); ctx.lineTo(w/2 + vqWidth/2 + 80, divY); ctx.stroke();
+  const lineLen = Math.min(60, (w * 0.7 - vqWidth) / 2 - 20);
+  if (lineLen > 10) {
+    ctx.beginPath(); ctx.moveTo(w/2 - vqWidth/2 - lineLen - 16, divY); ctx.lineTo(w/2 - vqWidth/2 - 16, divY); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(w/2 + vqWidth/2 + 16, divY); ctx.lineTo(w/2 + vqWidth/2 + lineLen + 16, divY); ctx.stroke();
+  }
   ctx.globalAlpha = 1;
-  ctx.fillStyle = '#6B7F72'; ctx.font = '400 34px "Cormorant Garamond", serif';
-  ctx.fillText(card.verseQuote, w/2, divY + 6);
+  ctx.fillStyle = '#6B7F72'; ctx.font = '400 30px "Cormorant Garamond", serif';
+  ctx.fillText(card.verseQuote, w/2, divY + 5);
   // Scripture reference
-  ctx.fillStyle = '#9BAA9F'; ctx.font = '400 22px "DM Sans", sans-serif';
-  ctx.fillText(card.scripture, w/2, divY + 56);
-  // Mantra (flows after scripture, not pinned to bottom)
-  const mantraY = divY + 160;
-  ctx.fillStyle = '#4A5A50'; ctx.font = '500 32px "DM Sans", sans-serif';
+  ctx.fillStyle = '#9BAA9F'; ctx.font = '400 20px "DM Sans", sans-serif';
+  ctx.fillText(card.scripture, w/2, divY + 50);
+  // Mantra (positioned at ~70% of card height)
+  const mantraY = Math.max(divY + 180, h * 0.62);
+  ctx.fillStyle = '#4A5A50'; ctx.font = '500 28px "DM Sans", sans-serif';
   const mantraLines = wrapText(ctx, card.mantra, w * 0.72);
   let my = mantraY;
-  mantraLines.forEach(line => { ctx.fillText(line, w/2, my); my += 44; });
-  // Footer (centered between mantra and bottom of card)
-  const footerY = Math.max(my + 80, (my + h - m) / 2 + 40);
-  ctx.fillStyle = '#9BAA9F'; ctx.font = '400 24px "Cormorant Garamond", serif';
+  mantraLines.forEach(line => { ctx.fillText(line, w/2, my); my += 40; });
+  // Footer
+  const footerY = h - m - 120;
+  ctx.fillStyle = '#9BAA9F'; ctx.font = '400 22px "Cormorant Garamond", serif';
   ctx.fillText('nehama', w/2, footerY);
-  ctx.fillStyle = '#B5C0B8'; ctx.font = '400 18px "DM Sans", sans-serif';
-  ctx.fillText('findnehama.com', w/2, footerY + 35);
-  ctx.font = 'italic 400 18px "DM Sans", sans-serif';
-  ctx.fillText('5 questions. Your story in scripture.', w/2, footerY + 62);
+  ctx.fillStyle = '#B5C0B8'; ctx.font = '400 16px "DM Sans", sans-serif';
+  ctx.fillText('findnehama.com', w/2, footerY + 30);
+  ctx.font = 'italic 400 16px "DM Sans", sans-serif';
+  ctx.fillText('5 questions. Your story in scripture.', w/2, footerY + 54);
   canvas.toBlob(blob => { const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'nehama-reflection.png'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); }, 'image/png');
 }
 
@@ -619,6 +624,7 @@ export default function NehamaApp() {
   const [emailSubmitted, setEmailSubmitted] = useState(false);
   const [anim, setAnim] = useState({ text: false, paths: false });
   const messagesEndRef = useRef(null);
+  const lastMsgRef = useRef(null);
   const loadingMsgIndexRef = useRef(0);
   const t = T[lang];
 
@@ -640,7 +646,14 @@ export default function NehamaApp() {
     setScreen('welcome'); setTimeout(() => setAnim(a => ({ ...a, text: true })), 200); setTimeout(() => setAnim(a => ({ ...a, paths: true })), 600);
   }, [authorized]);
 
-  useEffect(() => { if (messagesEndRef.current) messagesEndRef.current.scrollIntoView({ behavior: 'smooth' }); }, [messages, isLoading]);
+  useEffect(() => {
+    const lastAi = [...messages].reverse().find(m => m.role === 'assistant');
+    if (lastAi && lastAi.content.includes('[/REFLECTION_CARD]') && lastMsgRef.current) {
+      lastMsgRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages, isLoading]);
 
   const saveSession = useCallback((msgs) => { try { localStorage.setItem('nehama-session', JSON.stringify({ tier, mode, testament, lang, userName, partnerName, messages: msgs })); } catch (e) {} }, [tier, mode, testament, lang, userName, partnerName]);
 
@@ -681,7 +694,7 @@ export default function NehamaApp() {
   const handleStartFull = () => { if (!userName.trim()) return; if (mode === 'couple' && !partnerName.trim()) return; if (hasFullAccess()) { launchFullJourney(); } else { setScreen('pricing'); } };
   const handleCheckout = async (priceId) => { try { const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ priceId }) }); const data = await res.json(); if (data.url) window.location.href = data.url; } catch (e) { console.error('Checkout error:', e); } };
   const handleReset = () => { try { localStorage.removeItem('nehama-session'); } catch (e) {} setMessages([]); setUserName(''); setPartnerName(''); setTier(null); setMode('individual'); setTestament('both'); setShowSettings(false); setEmailSubmitted(false); setFeedbackEmail(''); setScreen('welcome'); setTimeout(() => setAnim(a => ({ ...a, text: true })), 200); setTimeout(() => setAnim(a => ({ ...a, paths: true })), 600); };
-  const handleDownload = () => { const ai = messages.filter(m => m.role === 'assistant').map(m => m.content).join('\n\n---\n\n'); const d = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); const ttl = tier === 'free' ? 'Your Scriptural Reflection' : 'Your Life Architecture Session'; const doc = 'NEHAMA: FIND COMFORT\n' + ttl + '\n' + d + '\n' + userName + (mode === 'couple' ? ' & ' + partnerName : '') + '\n\n' + '='.repeat(48) + '\n\n' + ai + '\n\n' + '='.repeat(48) + '\n\nThis is yours to keep.\n'; const b = new Blob([doc], { type: 'text/plain' }); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = 'nehama-' + (tier === 'free' ? 'reflection' : 'session') + '.txt'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(u); };
+  const handleDownload = () => { const convo = messages.filter(m => !m.hidden).map(m => (m.role === 'user' ? 'You: ' : 'Nehama: ') + stripReflectionCard(m.content)).join('\n\n'); const d = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); const ttl = tier === 'free' ? 'Your Scriptural Reflection' : 'Your Life Architecture Session'; const doc = 'NEHAMA: YOU ARE HERE\n' + ttl + '\n' + d + '\n' + userName + (mode === 'couple' ? ' & ' + partnerName : '') + '\n\n' + '='.repeat(48) + '\n\n' + convo + '\n\n' + '='.repeat(48) + '\n\nThis is yours to keep.\n'; const b = new Blob([doc], { type: 'text/plain' }); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = 'nehama-' + (tier === 'free' ? 'reflection' : 'session') + '.txt'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(u); };
   const handleSend = () => { if (!input.trim() || isLoading) return; sendMessage(input.trim()); };
   const handleKeyDown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } };
 
@@ -874,11 +887,11 @@ export default function NehamaApp() {
 
         {/* Messages */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '32px 24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          {messages.filter(m => !m.hidden).map((msg, i) => (
-            <div key={i} style={msg.role === 'user' ? { maxWidth: '80%', alignSelf: 'flex-end', background: '#4A5D4F', color: '#FEFCF9', padding: '14px 20px', borderRadius: '16px 16px 4px 16px', fontSize: '15px', lineHeight: '1.7' } : { maxWidth: '100%', alignSelf: 'flex-start', padding: '4px 0', fontSize: '15px', lineHeight: '1.8', color: '#2C2C2C' }}>
+          {(() => { const visible = messages.filter(m => !m.hidden); const lastAiIdx = visible.map((m, i) => m.role === 'assistant' ? i : -1).filter(i => i >= 0).pop(); return visible.map((msg, i) => (
+            <div key={i} ref={i === lastAiIdx ? lastMsgRef : null} style={msg.role === 'user' ? { maxWidth: '80%', alignSelf: 'flex-end', background: '#4A5D4F', color: '#FEFCF9', padding: '14px 20px', borderRadius: '16px 16px 4px 16px', fontSize: '15px', lineHeight: '1.7' } : { maxWidth: '100%', alignSelf: 'flex-start', padding: '4px 0', fontSize: '15px', lineHeight: '1.8', color: '#2C2C2C' }}>
               {msg.role === 'user' ? <div style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</div> : <div>{renderMarkdown(stripReflectionCard(msg.content))}</div>}
             </div>
-          ))}
+          )); })()}
 
           {(() => {
             const lastAi = [...messages].reverse().find(m => m.role === 'assistant');
