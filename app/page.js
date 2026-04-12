@@ -1,4 +1,4 @@
-"use client";
+\"use client";
 import { useState, useEffect, useRef, useCallback } from "react";
 
 const INVITE_CODE = "LOVE";
@@ -75,6 +75,10 @@ const T = {
     cardSharePrompt: 'This reflection is yours. If someone comes to mind who\'s carrying something heavy, you can send them here.',
     cardSave: 'Save to Photos',
     cardShare: 'Share',
+    installPrompt: 'Add Nehama to your home screen',
+    installIOS: 'Tap the share button, then "Add to Home Screen"',
+    installAndroid: 'Tap the menu, then "Add to Home Screen"',
+    installDismiss: 'Got it',
   },
   es: {
     tagline: 'Estás Aquí',
@@ -145,6 +149,10 @@ const T = {
     cardSharePrompt: 'Esta reflexión es tuya. Si alguien viene a tu mente que está cargando algo pesado, puedes enviarle esto.',
     cardSave: 'Guardar en Fotos',
     cardShare: 'Compartir',
+    installPrompt: 'Agrega Nehama a tu pantalla de inicio',
+    installIOS: 'Toca el botón de compartir, luego "Agregar a Inicio"',
+    installAndroid: 'Toca el menú, luego "Agregar a Inicio"',
+    installDismiss: 'Entendido',
   }
 };
 
@@ -597,6 +605,7 @@ export default function NehamaApp() {
   const [showSettings, setShowSettings] = useState(false);
   const [showAbout, setShowAbout] = useState(false);
   const [showContact, setShowContact] = useState(false);
+  const [showInstall, setShowInstall] = useState(false);
   const [contactEmail, setContactEmail] = useState('');
   const [contactMsg, setContactMsg] = useState('');
   const [contactSent, setContactSent] = useState(false);
@@ -610,6 +619,14 @@ export default function NehamaApp() {
   useEffect(() => { if (typeof window !== 'undefined') { const s = localStorage.getItem('nehama-authorized'); if (s === 'true') setAuthorized(true); const savedLang = localStorage.getItem('nehama-lang'); if (savedLang) setLang(savedLang); const params = new URLSearchParams(window.location.search); if (params.get('paid') === 'true') { localStorage.setItem('nehama-access', 'paid'); window.history.replaceState({}, '', window.location.pathname); } } }, []);
 
   useEffect(() => { if (typeof window !== 'undefined') localStorage.setItem('nehama-lang', lang); }, [lang]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+    const dismissed = localStorage.getItem('nehama-install-dismissed');
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    if (isMobile && !isStandalone && !dismissed && authorized) setShowInstall(true);
+  }, [authorized]);
 
   useEffect(() => {
     if (!authorized) return;
@@ -819,6 +836,15 @@ export default function NehamaApp() {
         </div>
       </div>
       {contactModalJSX}
+      {showInstall && (
+        <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#4A5D4F', padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', zIndex: 100, animation: 'fadeIn 0.5s ease 2s both' }}>
+          <div>
+            <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#FEFCF9', margin: '0 0 4px 0', fontWeight: 500 }}>{t.installPrompt}</p>
+            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '12px', color: 'rgba(254,252,249,0.7)', margin: 0 }}>{/iPhone|iPad|iPod/i.test(navigator.userAgent) ? t.installIOS : t.installAndroid}</p>
+          </div>
+          <button onClick={() => { setShowInstall(false); localStorage.setItem('nehama-install-dismissed', 'true'); }} style={{ background: 'rgba(254,252,249,0.2)', border: 'none', borderRadius: '6px', padding: '8px 14px', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontSize: '12px', color: '#FEFCF9', flexShrink: 0 }}>{t.installDismiss}</button>
+        </div>
+      )}
     </div>
   );
 
