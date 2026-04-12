@@ -1,7 +1,7 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'Nehama — Find Comfort',
+  title: 'Nehama — You Are Here',
   description: 'A guided life architecture experience. Real questions, a concrete plan, your story reflected through scripture.',
 };
 
