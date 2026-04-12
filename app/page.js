@@ -7,7 +7,7 @@ const GIFT_CODE = "GIFT4U";
 // ─── TRANSLATIONS ───────────────────────────────────────────────────
 const T = {
   en: {
-    tagline: 'Find Comfort',
+    tagline: 'You Are Here',
     taglineHebrew: 'נֶחָמָה',
     blurbIntro: 'Life moves fast. Nehama means comfort. The deep kind.',
     blurbBody: '<em>How are you?</em> Not "good." Not "fine." The real answer. The one you don\'t say out loud. This is where Nehama begins. Nehama sits with you in the honest, complicated truth of your life, helps you see a way forward, and then shows you where you are in a story much older than your own.',
@@ -71,9 +71,12 @@ const T = {
     pricingScholarshipLink: 'reach out',
     pricingScholarship2: '. We\'ll make it work.',
     pricingBack: '← Back',
+    cardSharePrompt: 'This reflection is yours. If someone comes to mind who\'s carrying something heavy, you can send them here.',
+    cardSave: 'Save to Photos',
+    cardShare: 'Share',
   },
   es: {
-    tagline: 'Encuentra Consuelo',
+    tagline: 'Estás Aquí',
     taglineHebrew: 'נֶחָמָה',
     blurbIntro: 'La vida va rápido. Nehama significa consuelo. Del tipo profundo.',
     blurbBody: '<em>¿Cómo estás?</em> No "bien." No "todo bien." La respuesta real. La que no dices en voz alta. Aquí es donde comienza Nehama. Nehama se sienta contigo en la verdad honesta y complicada de tu vida, te ayuda a ver un camino hacia adelante, y luego te muestra dónde estás en una historia mucho más antigua que la tuya.',
@@ -137,6 +140,9 @@ const T = {
     pricingScholarshipLink: 'escríbenos',
     pricingScholarship2: '. Lo haremos funcionar.',
     pricingBack: '← Atrás',
+    cardSharePrompt: 'Esta reflexión es tuya. Si alguien viene a tu mente que está cargando algo pesado, puedes enviarle esto.',
+    cardSave: 'Guardar en Fotos',
+    cardShare: 'Compartir',
   }
 };
 
@@ -248,10 +254,11 @@ NARRATIVE MAPPING, NOT VERSE MATCHING. Find their STORY inside scripture.
 - AFTER your closing line, output a hidden reflection card block in EXACTLY this format (the user will not see this, the app uses it to generate a beautiful keepsake image):
 
 [REFLECTION_CARD]
-scripture: [The single most resonant scripture reference, e.g. Isaiah 43:1-3]
-verse: [A short excerpt from that scripture, under 15 words]
-season: [One sentence describing their current season, personal and specific]
+season_statement: [A vivid, personal narrative mapping in one sentence. This is the HERO of the card. Example: "You are Ruth, gleaning in a field that isn't yours yet, trusting that the harvest is coming." Make it feel like a declaration, not a label. Max 120 characters ideal, never more than 180.]
+verse_quote: [A short pull quote from the scripture, 4-10 words only. Example: "I will restore the years"]
+scripture: [The reference. Example: Ruth 2:11-12]
 mantra: [Their personal mantra, under 12 words]
+theme: [One of: wilderness, growth, grief, breakthrough, default. Choose based on the dominant emotional season.]
 [/REFLECTION_CARD]
 
 PHASE 5: ONGOING CHECK-INS
@@ -331,10 +338,11 @@ At the end: "${name}, what you just shared matters, and where you are in the sto
 AFTER your closing line, output a hidden reflection card block in EXACTLY this format (the user will not see this, the app uses it to generate a beautiful keepsake image):
 
 [REFLECTION_CARD]
-scripture: [The single most resonant scripture reference, e.g. Psalm 126:5]
-verse: [A short excerpt from that scripture, under 15 words]
-season: [One sentence describing their current season, personal and specific]
+season_statement: [A vivid, personal narrative mapping in one sentence. This is the HERO of the card. Example: "You are Ruth, gleaning in a field that isn't yours yet, trusting that the harvest is coming." Make it feel like a declaration, not a label. Max 120 characters ideal, never more than 180.]
+verse_quote: [A short pull quote from the scripture, 4-10 words only. Example: "I will restore the years"]
+scripture: [The reference. Example: Psalm 126:5]
 mantra: [Their personal mantra, under 12 words]
+theme: [One of: wilderness, growth, grief, breakthrough, default. Choose based on the dominant emotional season.]
 [/REFLECTION_CARD]
 
 CRISIS DETECTION:
@@ -401,44 +409,68 @@ function parseReflectionCard(text) {
   if (!match) return null;
   const block = match[1];
   const get = (key) => { const m = block.match(new RegExp(key + ':\\s*(.+)')); return m ? m[1].trim() : ''; };
-  return { scripture: get('scripture'), verse: get('verse'), season: get('season'), mantra: get('mantra') };
+  return { seasonStatement: get('season_statement'), verseQuote: get('verse_quote'), scripture: get('scripture'), mantra: get('mantra'), theme: get('theme') || 'default' };
 }
 
 function stripReflectionCard(text) {
   return text.replace(/\[REFLECTION_CARD\][\s\S]*?\[\/REFLECTION_CARD\]/, '').trim();
 }
 
+const CARD_THEMES = {
+  wilderness: { bg: '#FBF7F0', accent: '#C4B5A0', pin: '#C4B5A0' },
+  growth: { bg: '#F5F8F4', accent: '#9BAA9F', pin: '#9BAA9F' },
+  grief: { bg: '#F3F5F8', accent: '#8E9FAD', pin: '#8E9FAD' },
+  breakthrough: { bg: '#FDF9EF', accent: '#C4AA78', pin: '#C4AA78' },
+  default: { bg: '#FEFCF9', accent: '#9BAA9F', pin: '#9BAA9F' },
+};
+
 function ReflectionCard({ card, onSave }) {
+  const theme = CARD_THEMES[card.theme] || CARD_THEMES.default;
   return (
-    <div style={{ background: '#FEFCF9', border: '1px solid rgba(0,0,0,0.08)', borderRadius: '8px', width: 260, height: 462, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '36px 26px', position: 'relative', boxShadow: '0 1px 12px rgba(0,0,0,0.05)' }}>
-      <button onClick={onSave} style={{ position: 'absolute', top: '12px', right: '12px', background: 'none', border: 'none', cursor: 'pointer', color: '#C0C0C0', fontSize: '14px', padding: '4px', lineHeight: 1 }} title="Save">↓</button>
-      <div style={{ marginBottom: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <svg width="72" height="100" viewBox="-36 0 72 100">
-          <path d="M0,96 C-26,65 -34,50 -34,36 A34,34 0 1,1 34,36 C34,50 26,65 0,96 Z" fill="#9BAA9F"/>
-          <text x="0" y="31" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="10" fontWeight="600" fill="#FEFCF9" letterSpacing="1.5">YOU ARE</text>
-          <text x="0" y="44" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="10" fontWeight="600" fill="#FEFCF9" letterSpacing="1.5">HERE</text>
-        </svg>
+    <div style={{ background: theme.bg, border: '1px solid rgba(0,0,0,0.06)', borderRadius: '8px', width: 260, height: 462, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '36px 22px 32px', position: 'relative', boxShadow: '0 1px 12px rgba(0,0,0,0.05)' }}>
+      <button onClick={onSave} style={{ position: 'absolute', top: '10px', right: '10px', background: 'none', border: 'none', cursor: 'pointer', color: '#C0C0C0', fontSize: '14px', padding: '4px', lineHeight: 1 }} title="Save">↓</button>
+      <svg width="28" height="38" viewBox="-14 0 28 38" style={{ marginBottom: '20px', flexShrink: 0 }}>
+        <path d="M0,36 C-10,24 -13,19 -13,13 A13,13 0 1,1 13,13 C13,19 10,24 0,36 Z" fill={theme.pin}/>
+        <text x="0" y="11" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="4.5" fontWeight="600" fill="#FEFCF9" letterSpacing="0.8">YOU ARE</text>
+        <text x="0" y="17" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="4.5" fontWeight="600" fill="#FEFCF9" letterSpacing="0.8">HERE</text>
+      </svg>
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '17px', color: '#3A4A40', fontWeight: 400, fontStyle: 'italic', textAlign: 'center', lineHeight: 1.45, marginBottom: '20px', flex: '0 0 auto' }}>{card.seasonStatement}</div>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px', flexShrink: 0 }}>
+        <div style={{ width: '36px', height: '1px', background: theme.accent, opacity: 0.5 }} />
+        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '13px', color: '#6B7F72', fontWeight: 400, textAlign: 'center', whiteSpace: 'nowrap' }}>{card.verseQuote}</div>
+        <div style={{ width: '36px', height: '1px', background: theme.accent, opacity: 0.5 }} />
       </div>
-      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#2C2C2C', fontWeight: 600, textAlign: 'center', marginBottom: '22px', letterSpacing: '0.3px' }}>{card.scripture}</div>
-      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#2C2C2C', fontWeight: 400, textAlign: 'center', lineHeight: 1.6, marginBottom: '22px' }}>{card.verse}</div>
-      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#7A7A7A', fontWeight: 400, textAlign: 'center', lineHeight: 1.6, marginBottom: '22px' }}>{card.season}</div>
-      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#2C2C2C', fontWeight: 600, textAlign: 'center', lineHeight: 1.5 }}>{card.mantra}</div>
-      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '9px', color: '#C0C0C0', letterSpacing: '3px', fontWeight: 400, position: 'absolute', bottom: '14px' }}>nehama</div>
+      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '11px', color: theme.accent, textAlign: 'center', letterSpacing: '1.5px', marginBottom: '24px', flexShrink: 0 }}>{card.scripture}</div>
+      <div style={{ flex: 1 }} />
+      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '12px', color: '#4A5A50', fontWeight: 500, textAlign: 'center', lineHeight: 1.5, marginBottom: '28px' }}>{card.mantra}</div>
+      <div style={{ textAlign: 'center', flexShrink: 0 }}>
+        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '11px', color: theme.accent, letterSpacing: '3px' }}>nehama</div>
+        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '9px', color: '#B5C0B8', marginTop: '3px' }}>findnehama.com</div>
+        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '9px', color: '#B5C0B8', fontStyle: 'italic', marginTop: '2px' }}>5 questions. Your story in scripture.</div>
+      </div>
     </div>
   );
 }
 
 function saveCardAsPNG(card) {
   const w = 1080, h = 1920;
+  const themes = {
+    wilderness: { bg: '#FBF7F0', accent: '#C4B5A0' },
+    growth: { bg: '#F5F8F4', accent: '#9BAA9F' },
+    grief: { bg: '#F3F5F8', accent: '#8E9FAD' },
+    breakthrough: { bg: '#FDF9EF', accent: '#C4AA78' },
+    default: { bg: '#FEFCF9', accent: '#9BAA9F' },
+  };
+  const th = themes[card.theme] || themes.default;
   const canvas = document.createElement('canvas');
   canvas.width = w; canvas.height = h;
   const ctx = canvas.getContext('2d');
   // Outer background
   ctx.fillStyle = '#F0EDE8'; ctx.fillRect(0, 0, w, h);
   // Card with shadow
-  const m = 60, cr = 20;
-  ctx.shadowColor = 'rgba(0,0,0,0.12)'; ctx.shadowBlur = 40; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 8;
-  ctx.fillStyle = '#FEFCF9';
+  const m = 40, cr = 16;
+  ctx.shadowColor = 'rgba(0,0,0,0.1)'; ctx.shadowBlur = 36; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 6;
+  ctx.fillStyle = th.bg;
   ctx.beginPath();
   ctx.moveTo(m + cr, m); ctx.lineTo(w - m - cr, m); ctx.quadraticCurveTo(w - m, m, w - m, m + cr);
   ctx.lineTo(w - m, h - m - cr); ctx.quadraticCurveTo(w - m, h - m, w - m - cr, h - m);
@@ -447,41 +479,51 @@ function saveCardAsPNG(card) {
   ctx.closePath(); ctx.fill();
   ctx.shadowColor = 'transparent';
   ctx.textAlign = 'center';
-  // Teardrop pin (cubic beziers matching SVG path)
-  const px = w/2, py = 280, r = 78;
-  ctx.fillStyle = '#9BAA9F';
+  // Teardrop pin (small)
+  const px = w/2, pinY = 160, pinR = 36;
+  ctx.fillStyle = th.accent;
   ctx.beginPath();
-  ctx.moveTo(px, py + 138);
-  ctx.bezierCurveTo(px - 60, py + 67, px - r, py + 32, px - r, py);
-  ctx.arc(px, py, r, Math.PI, 0, false);
-  ctx.bezierCurveTo(px + r, py + 32, px + 60, py + 67, px, py + 138);
-  ctx.closePath();
-  ctx.fill();
-  // YOU ARE HERE inside pin
-  ctx.fillStyle = '#FEFCF9'; ctx.font = '600 28px "Cormorant Garamond", serif';
-  ctx.fillText('YOU ARE', px, py - 6);
-  ctx.fillText('HERE', px, py + 26);
-  // Scripture
-  ctx.fillStyle = '#2C2C2C'; ctx.font = '600 52px "Cormorant Garamond", serif';
-  ctx.fillText(card.scripture, w/2, 600);
-  // Verse
-  ctx.fillStyle = '#2C2C2C'; ctx.font = '400 46px "Cormorant Garamond", serif';
-  const verseLines = wrapText(ctx, card.verse, w * 0.68);
-  let vy = 710;
-  verseLines.forEach(line => { ctx.fillText(line, w/2, vy); vy += 60; });
-  // Season
-  ctx.fillStyle = '#7A7A7A'; ctx.font = '400 44px "Cormorant Garamond", serif';
-  const seasonLines = wrapText(ctx, card.season, w * 0.68);
-  let sy = vy + 55;
-  seasonLines.forEach(line => { ctx.fillText(line, w/2, sy); sy += 56; });
-  // Mantra
-  ctx.fillStyle = '#2C2C2C'; ctx.font = '600 48px "Cormorant Garamond", serif';
-  const mantraLines = wrapText(ctx, card.mantra, w * 0.68);
-  let my = Math.max(sy + 55, 1180);
-  mantraLines.forEach(line => { ctx.fillText(line, w/2, my); my += 60; });
-  // Branding
-  ctx.fillStyle = '#C0C0C0'; ctx.font = '400 28px "Cormorant Garamond", serif';
-  ctx.fillText('nehama', w/2, 1780);
+  ctx.moveTo(px, pinY + pinR * 2.6);
+  ctx.bezierCurveTo(px - pinR * 0.76, pinY + pinR * 0.85, px - pinR, pinY + pinR * 0.45, px - pinR, pinY);
+  ctx.arc(px, pinY, pinR, Math.PI, 0, false);
+  ctx.bezierCurveTo(px + pinR, pinY + pinR * 0.45, px + pinR * 0.76, pinY + pinR * 0.85, px, pinY + pinR * 2.6);
+  ctx.closePath(); ctx.fill();
+  ctx.fillStyle = '#FEFCF9'; ctx.font = '600 13px "Cormorant Garamond", serif';
+  ctx.fillText('YOU ARE', px, pinY - 2);
+  ctx.fillText('HERE', px, pinY + 14);
+  // Season statement (HERO)
+  const ssLen = card.seasonStatement.length;
+  const ssFontSize = ssLen > 180 ? 38 : ssLen > 120 ? 42 : 48;
+  ctx.fillStyle = '#3A4A40'; ctx.font = 'italic 400 ' + ssFontSize + 'px "Cormorant Garamond", serif';
+  const ssLines = wrapText(ctx, card.seasonStatement, w * 0.78);
+  let ssy = 380;
+  ssLines.forEach(line => { ctx.fillText(line, w/2, ssy); ssy += Math.round(ssFontSize * 1.45); });
+  // Divider + verse quote
+  const divY = ssy + 40;
+  ctx.strokeStyle = th.accent; ctx.lineWidth = 1; ctx.globalAlpha = 0.5;
+  ctx.font = '400 30px "Cormorant Garamond", serif';
+  const vqWidth = ctx.measureText(card.verseQuote).width;
+  ctx.beginPath(); ctx.moveTo(w/2 - vqWidth/2 - 80, divY); ctx.lineTo(w/2 - vqWidth/2 - 16, divY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(w/2 + vqWidth/2 + 16, divY); ctx.lineTo(w/2 + vqWidth/2 + 80, divY); ctx.stroke();
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = '#6B7F72'; ctx.font = '400 30px "Cormorant Garamond", serif';
+  ctx.fillText(card.verseQuote, w/2, divY + 5);
+  // Scripture reference
+  ctx.fillStyle = th.accent; ctx.font = '400 18px "DM Sans", sans-serif';
+  ctx.fillText(card.scripture, w/2, divY + 46);
+  // Mantra (lower third)
+  const mantraY = Math.max(divY + 200, 1280);
+  ctx.fillStyle = '#4A5A50'; ctx.font = '500 22px "DM Sans", sans-serif';
+  const mantraLines = wrapText(ctx, card.mantra, w * 0.72);
+  let my = mantraY;
+  mantraLines.forEach(line => { ctx.fillText(line, w/2, my); my += 32; });
+  // Footer
+  ctx.fillStyle = th.accent; ctx.font = '400 20px "Cormorant Garamond", serif';
+  ctx.fillText('nehama', w/2, 1730);
+  ctx.fillStyle = '#B5C0B8'; ctx.font = '400 15px "DM Sans", sans-serif';
+  ctx.fillText('findnehama.com', w/2, 1760);
+  ctx.font = 'italic 400 15px "DM Sans", sans-serif';
+  ctx.fillText('5 questions. Your story in scripture.', w/2, 1785);
   canvas.toBlob(blob => { const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'nehama-reflection.png'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url); }, 'image/png');
 }
 
@@ -606,7 +648,7 @@ export default function NehamaApp() {
     setIsLoading(false);
   }, [messages, tier, userName, partnerName, mode, testament, lang, saveSession]);
 
-  const handleCodeSubmit = () => { const code = codeInput.trim().toUpperCase(); const accept = (access) => { setAuthorized(true); localStorage.setItem('nehama-authorized', 'true'); localStorage.setItem('nehama-access', access); if (access === 'scholarship') localStorage.setItem('nehama-code', code); setCodeError(false); setTimeout(() => setAnim(a => ({ ...a, text: true })), 200); setTimeout(() => setAnim(a => ({ ...a, paths: true })), 600); }; if (code === INVITE_CODE.toUpperCase()) accept('beta'); else if (code === GIFT_CODE.toUpperCase()) accept('lifetime'); else if (code.startsWith('GRACE')) { accept('scholarship'); fetch('https://formspree.io/f/mdapqwqb', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ _subject: 'Nehama Scholarship Code Used', code: code }) }); } else setCodeError(true); };
+  const handleCodeSubmit = () => { const code = codeInput.trim().toUpperCase(); const accept = (access) => { setAuthorized(true); localStorage.setItem('nehama-authorized', 'true'); localStorage.setItem('nehama-access', access); setCodeError(false); setTimeout(() => setAnim(a => ({ ...a, text: true })), 200); setTimeout(() => setAnim(a => ({ ...a, paths: true })), 600); }; if (code === INVITE_CODE.toUpperCase()) accept('beta'); else if (code === GIFT_CODE.toUpperCase()) accept('lifetime'); else setCodeError(true); };
   const handleStartFree = () => { if (!userName.trim()) return; setTier('free'); setScreen('chat'); const intro = lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + '. Estoy aquí para la reflexión gratuita.' : 'Hello. My name is ' + userName.trim() + '. I am here for the free reflection.'; setTimeout(() => sendMessage(intro, true), 300); };
   const hasFullAccess = () => { const access = localStorage.getItem('nehama-access'); return ['beta', 'lifetime', 'scholarship', 'paid'].includes(access); };
   const launchFullJourney = () => { setTier('full'); setScreen('chat'); const intro = mode === 'couple' ? (lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + ' y estoy aquí con mi pareja, ' + partnerName.trim() + '. Nos gustaría comenzar el viaje completo juntos.' : 'Hello. My name is ' + userName.trim() + ' and I am here with my partner, ' + partnerName.trim() + '. We would like to begin the full journey together.') : (lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + '. Estoy listo para comenzar el viaje completo.' : 'Hello. My name is ' + userName.trim() + '. I am ready to begin the full journey.'); setTimeout(() => sendMessage(intro, true), 300); };
@@ -805,8 +847,15 @@ export default function NehamaApp() {
             const card = lastAi ? parseReflectionCard(lastAi.content) : null;
             if (!card) return null;
             return (
-              <div style={{ alignSelf: 'center', paddingTop: '16px', animation: 'fadeIn 0.8s ease' }}>
+              <div style={{ alignSelf: 'center', paddingTop: '16px', animation: 'fadeIn 1s ease 0.5s both' }}>
                 <ReflectionCard card={card} onSave={() => saveCardAsPNG(card)} />
+                <div style={{ animation: 'fadeIn 0.8s ease 1.5s both' }}>
+                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '13px', color: '#9BAA9F', textAlign: 'center', lineHeight: 1.6, margin: '16px 0 14px', maxWidth: '260px' }}>{t.cardSharePrompt}</p>
+                  <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+                    <button onClick={() => saveCardAsPNG(card)} style={{ flex: 1, padding: '10px', fontSize: '13px', fontFamily: "'DM Sans', sans-serif", fontWeight: 500, border: 'none', borderRadius: '6px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9' }}>{t.cardSave}</button>
+                    <button onClick={() => { if (navigator.share) { saveCardAsPNG(card); navigator.share({ title: 'Nehama', text: 'Someone who cares about you wanted you to have this.', url: 'https://nehama.vercel.app' }).catch(() => {}); } else { saveCardAsPNG(card); } }} style={{ flex: 1, padding: '10px', fontSize: '13px', fontFamily: "'DM Sans', sans-serif", fontWeight: 500, border: '1px solid #4A5D4F', borderRadius: '6px', cursor: 'pointer', background: 'transparent', color: '#4A5D4F' }}>{t.cardShare}</button>
+                  </div>
+                </div>
               </div>
             );
           })()}
