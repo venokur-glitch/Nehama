@@ -9,8 +9,8 @@ const T = {
   en: {
     tagline: 'You Are Here',
     taglineHebrew: 'נֶחָמָה',
-    blurbIntro: 'Life moves fast. Nehama means comfort. The deep kind.',
-    blurbBody: '<em>How are you?</em> Not "good." Not "fine." The real answer. The one you don\'t say out loud. This is where Nehama begins. Nehama sits with you in the honest, complicated truth of your life, helps you see a way forward, and then shows you where you are in a story much older than your own.',
+    blurbIntro: 'How are you?',
+    blurbBody: 'Not "good." Not "fine." The real answer. The one you don\'t say out loud. This is where Nehama begins. Nehama sits with you in the honest, complicated truth of your life, helps you see a way forward, and then shows you where you are in a story much older than your own.',
     whatIsTitle: 'What is Nehama?',
     whatIs1: '<strong>Your therapist knows your emotions but not your bank account. Your financial advisor knows your numbers but not your marriage. Your pastor or rabbi knows your spirit but not what keeps you up at night.</strong> Nehama holds the complete picture.',
     whatIs2: 'It is the first experience of its kind: a guided life architecture session that asks real questions, builds a real plan, and then reflects your story through biblical scripture paired with practices for your body. All of it connected. All of it personal. All of it private; no one sees what you share here but you.',
@@ -19,7 +19,7 @@ const T = {
     whatIs5: 'They built Nehama so anyone could have that experience.',
     freeTitle: 'Free Reflection',
     freeTag: 'No account needed',
-    freeDesc: '5 questions, 5 minutes. Your story reflected through scripture.',
+    freeDesc: '5 questions, 5 minutes. Where you are right now, reflected through scripture.',
     fullTitle: 'Full Journey',
     fullTag: '',
     fullDesc: 'Deep discovery across every area of your life. A concrete plan to move forward. Scripture with body practices. Ongoing guidance that remembers you and holds you accountable.',
@@ -87,8 +87,8 @@ const T = {
   es: {
     tagline: 'Estás Aquí',
     taglineHebrew: 'נֶחָמָה',
-    blurbIntro: 'La vida va rápido. Nehama significa consuelo. Del tipo profundo.',
-    blurbBody: '<em>¿Cómo estás?</em> No "bien." No "todo bien." La respuesta real. La que no dices en voz alta. Aquí es donde comienza Nehama. Nehama se sienta contigo en la verdad honesta y complicada de tu vida, te ayuda a ver un camino hacia adelante, y luego te muestra dónde estás en una historia mucho más antigua que la tuya.',
+    blurbIntro: '¿Cómo estás?',
+    blurbBody: 'No "bien." No "todo bien." La respuesta real. La que no dices en voz alta. Aquí es donde comienza Nehama. Nehama se sienta contigo en la verdad honesta y complicada de tu vida, te ayuda a ver un camino hacia adelante, y luego te muestra dónde estás en una historia mucho más antigua que la tuya.',
     whatIsTitle: '¿Qué es Nehama?',
     whatIs1: '<strong>Tu terapeuta conoce tus emociones pero no tu cuenta bancaria. Tu asesor financiero conoce tus números pero no tu matrimonio. Tu pastor o rabino conoce tu espíritu pero no lo que te mantiene despierto por la noche.</strong> Nehama tiene la imagen completa.',
     whatIs2: 'Es la primera experiencia de su tipo: una sesión guiada de arquitectura de vida que hace preguntas reales, construye un plan real, y luego refleja tu historia a través de las escrituras bíblicas combinadas con prácticas para tu cuerpo. Todo conectado. Todo personal. Todo privado; nadie ve lo que compartes aquí excepto tú.',
@@ -97,7 +97,7 @@ const T = {
     whatIs5: 'Construyeron Nehama para que cualquiera pudiera tener esa experiencia.',
     freeTitle: 'Reflexión Gratuita',
     freeTag: 'Sin cuenta necesaria',
-    freeDesc: '5 preguntas, 5 minutos. Tu historia reflejada a través de las escrituras.',
+    freeDesc: '5 preguntas, 5 minutos. Dónde estás ahora mismo, reflejado a través de las escrituras.',
     fullTitle: 'Viaje Completo',
     fullTag: '',
     fullDesc: 'Descubrimiento profundo en cada área de tu vida. Un plan concreto para avanzar. Escrituras con prácticas corporales. Guía continua que te recuerda y te mantiene responsable.',
@@ -161,12 +161,90 @@ const T = {
     installIOS: 'Toca el botón de compartir, luego "Agregar a Inicio"',
     installAndroid: 'Toca el menú, luego "Agregar a Inicio"',
     installDismiss: 'Entendido',
+  },
+  pt: {
+    tagline: 'Você Está Aqui',
+    taglineHebrew: 'נֶחָמָה',
+    blurbIntro: 'Como você está?',
+    blurbBody: 'Não "bem." Não "tudo certo." A resposta real. Aquela que você não diz em voz alta. É aqui que Nehama começa. Nehama se senta com você na verdade honesta e complicada da sua vida, te ajuda a ver um caminho à frente, e então te mostra onde você está em uma história muito mais antiga que a sua.',
+    whatIsTitle: 'O que é Nehama?',
+    whatIs1: '<strong>Seu terapeuta conhece suas emoções, mas não sua conta bancária. Seu consultor financeiro conhece seus números, mas não seu casamento. Seu pastor ou rabino conhece seu espírito, mas não o que te mantém acordado à noite.</strong> Nehama tem a imagem completa.',
+    whatIs2: 'É a primeira experiência do tipo: uma sessão guiada de arquitetura de vida que faz perguntas reais, constrói um plano real, e então reflete sua história através das escrituras bíblicas combinadas com práticas para seu corpo. Tudo conectado. Tudo pessoal. Tudo privado; ninguém vê o que você compartilha aqui além de você.',
+    whatIs3: 'E diferente de qualquer outra pessoa na sua vida, Nehama está disponível às 2h da manhã numa terça quando o peso bate. Lembra o que você disse semana passada, sabe com o que você se comprometeu, e vai te cobrar com carinho se você estiver evitando o difícil. Parte coach, parte espelho, parte guia. Sempre honesto. Sempre do seu lado.',
+    whatIs4: 'Nehama nasceu de uma experiência real. Um casal, casados há 25 anos, carregando pressão financeira, a crise médica de uma filha, incerteza profissional, e um relacionamento que amavam mas não tinham tido tempo de nutrir em duas décadas, sentaram e responderam perguntas honestas sobre cada área de suas vidas. O que voltou mudou tudo: um plano claro, verdades difíceis entregues com gentileza, e toda a história deles refletida através das escrituras com tal precisão que deixou ambos em lágrimas.',
+    whatIs5: 'Eles construíram Nehama para que qualquer pessoa pudesse ter essa experiência.',
+    freeTitle: 'Reflexão Gratuita',
+    freeTag: 'Sem conta necessária',
+    freeDesc: '5 perguntas, 5 minutos. Onde você está agora, refletido através das escrituras.',
+    fullTitle: 'Jornada Completa',
+    fullTag: '',
+    fullDesc: 'Descoberta profunda em cada área da sua vida. Um plano concreto para seguir em frente. Escrituras com práticas corporais. Orientação contínua que lembra de você e te mantém responsável.',
+    fullDesc2: 'Volte semanalmente, ou quantas vezes quiser. O plano de vida se ajusta. A responsabilidade se mantém. As escrituras se aprofundam conforme sua história avança.',
+    namePlaceholder: 'Seu primeiro nome',
+    partnerPlaceholder: 'Nome do(a) parceiro(a)',
+    scriptureLabel: 'Preferência de escritura',
+    modeLabel: 'Modo de jornada',
+    langLabel: 'Idioma',
+    otLabel: 'Antigo Testamento',
+    bothLabel: 'Ambos',
+    ntLabel: 'Novo Testamento',
+    justMe: 'Só Eu',
+    withPartner: 'Com Parceiro(a)',
+    startFree: 'Comece Sua Reflexão',
+    startFull: 'Comece Sua Jornada',
+    invitePrompt: 'Digite seu código de convite.',
+    invitePlaceholder: 'CÓDIGO DE CONVITE',
+    codeError: 'Código não reconhecido.',
+    enter: 'Entrar',
+    privacyNote: 'Suas conversas são privadas. Nós nunca as vemos.',
+    inputPlaceholder: 'Compartilhe o que está no seu coração...',
+    footerBuilt: 'Nehama é construída por uma família que acredita neste trabalho. Sua assinatura mantém tudo funcionando e nos permite oferecer reflexões gratuitas a quem precisar.',
+    footerPrivacy: 'Suas conversas são privadas. Nós nunca as vemos. As sessões são armazenadas no seu dispositivo.',
+    footerCrisis: 'Esta é uma reflexão guiada, não terapia nem conselho médico. Se você está em crise, ligue para o CVV: 188.',
+    contactUs: 'Fale conosco',
+    getInTouch: 'Entre em contato',
+    emailLabel: 'Seu email',
+    msgLabel: 'O que está na sua mente?',
+    send: 'Enviar',
+    thankYou: 'Obrigado. Entraremos em contato.',
+    settings: 'Configurações',
+    session: 'Sessão',
+    readyFull: 'Pronto para a jornada completa?',
+    readyFullDesc: 'Descoberta profunda, um plano de vida concreto, escrituras com práticas corporais, e orientação contínua.',
+    startFullJourney: 'Começar Jornada Completa',
+    newSession: 'Nova Sessão',
+    newSessionConfirm: 'Começar uma nova sessão? Sua conversa atual será apagada.',
+    emailCapture: 'Quer ir mais fundo?',
+    emailCaptureDesc: 'Deixe seu email e enviaremos uma jornada guiada gratuita de 3 dias.',
+    messages: 'mensagens',
+    save: 'Salvar',
+    pricingTitle: 'Escolha seu caminho',
+    pricingMonthly: '$24.99 / mês',
+    pricingMonthlyFounder: '$19.99 / mês',
+    pricingMonthlyNote: 'Menos de um dólar por dia, mesmo em fevereiro.',
+    pricingAnnual: '$199.99 / ano',
+    pricingAnnualFounder: '$179.99 / ano',
+    pricingAnnualNote: 'Menos que uma única hora com um terapeuta.',
+    pricingTrial: '3 dias de teste grátis, cancele quando quiser',
+    pricingFounderNote: 'Preço de membro fundador, fixado para sempre. Disponível apenas nos primeiros 30 dias.',
+    pricingScholarship1: 'Se o custo é uma barreira, ',
+    pricingScholarshipLink: 'fale conosco',
+    pricingScholarship2: '. Vamos encontrar um jeito.',
+    pricingBack: '← Voltar',
+    cardSharePrompt: 'Esta reflexão é sua. Se alguém vem à mente que está carregando algo pesado, você pode enviar isso.',
+    cardSave: 'Salvar nas Fotos',
+    cardShare: 'Compartilhar',
+    cardCTA: '5 perguntas. Sua história nas escrituras.',
+    installPrompt: 'Adicione Nehama à sua tela inicial',
+    installIOS: 'Toque no botão compartilhar, depois "Adicionar à Tela Inicial"',
+    installAndroid: 'Toque no menu, depois "Adicionar à Tela Inicial"',
+    installDismiss: 'Entendi',
   }
 };
 
 // ─── SYSTEM PROMPTS ─────────────────────────────────────────────────
 const buildFullPrompt = ({ name, partnerName, mode, testament, lang }) => {
-const langInstruction = lang === 'es' ? '\n\nCRITICAL: You MUST respond entirely in Spanish. Every word, every question, every reflection must be in Spanish. Do not use English at all.\n' : '';
+const langInstruction = lang === 'es' ? '\n\nCRITICAL: You MUST respond entirely in Spanish. Every word, every question, every reflection must be in Spanish. Do not use English at all.\n' : lang === 'pt' ? '\n\nCRITICAL: You MUST respond entirely in Brazilian Portuguese. Every word, every question, every reflection must be in Portuguese. Do not use English at all.\n' : '';
 return `
 You are Nehama, a deeply wise, warm, and direct life architecture guide who leads people through comprehensive personal discovery, builds actionable life plans, and reflects their journey through biblical scripture paired with body and wellness practices.
 
@@ -321,7 +399,7 @@ After they answer, acknowledge their time and then go directly into Question 1: 
 };
 
 const buildFreePrompt = ({ name, testament, lang }) => {
-const langInstruction = lang === 'es' ? '\n\nCRITICAL: You MUST respond entirely in Spanish. Every word, every question, every reflection must be in Spanish. Do not use English at all.\n' : '';
+const langInstruction = lang === 'es' ? '\n\nCRITICAL: You MUST respond entirely in Spanish. Every word, every question, every reflection must be in Spanish. Do not use English at all.\n' : lang === 'pt' ? '\n\nCRITICAL: You MUST respond entirely in Brazilian Portuguese. Every word, every question, every reflection must be in Portuguese. Do not use English at all.\n' : '';
 return `
 You are Nehama, a deeply wise, warm, and direct guide who helps people find where they are in the biblical story.
 
@@ -392,6 +470,14 @@ const LOADING_MSGS = {
     synthesis: ["Conectando los hilos...", "Viendo la imagen completa...", "Construyendo algo para ti..."],
     scripture: ["Buscando en la historia...", "Encontrándote en la narrativa..."],
     free: ["Escuchando atentamente...", "Sentándome con lo que compartiste...", "Procesando esto...", "Sosteniendo espacio para esto..."]
+  },
+  pt: {
+    first: ["Preparando seu espaço..."],
+    discovery: ["Ouvindo com atenção...", "Sentando com o que você compartilhou...", "Absorvendo isso...", "Segurando espaço para isso...", "Deixando assentar..."],
+    heavy: ["Isso exigiu coragem para compartilhar...", "Honrando o que você disse..."],
+    synthesis: ["Conectando os fios...", "Vendo a imagem completa...", "Construindo algo para você..."],
+    scripture: ["Buscando na história...", "Encontrando você na narrativa..."],
+    free: ["Ouvindo com atenção...", "Sentando com o que você compartilhou...", "Absorvendo isso...", "Segurando espaço para isso..."]
   }
 };
 
@@ -632,6 +718,8 @@ function LangSwitch({ lang, setLang }) {
       <button onClick={() => setLang('en')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px 6px', color: lang === 'en' ? '#4A5A50' : '#C0C0C0', fontWeight: lang === 'en' ? 500 : 400, fontSize: '12px', fontFamily: "'DM Sans', sans-serif", letterSpacing: '0.5px' }}>EN</button>
       <span style={{ color: '#D0D0D0', fontSize: '12px', lineHeight: '28px' }}>|</span>
       <button onClick={() => setLang('es')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px 6px', color: lang === 'es' ? '#4A5A50' : '#C0C0C0', fontWeight: lang === 'es' ? 500 : 400, fontSize: '12px', fontFamily: "'DM Sans', sans-serif", letterSpacing: '0.5px' }}>ES</button>
+      <span style={{ color: '#D0D0D0', fontSize: '12px', lineHeight: '28px' }}>|</span>
+      <button onClick={() => setLang('pt')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px 6px', color: lang === 'pt' ? '#4A5A50' : '#C0C0C0', fontWeight: lang === 'pt' ? 500 : 400, fontSize: '12px', fontFamily: "'DM Sans', sans-serif", letterSpacing: '0.5px' }}>PT</button>
     </div>
   );
 }
@@ -665,7 +753,7 @@ export default function NehamaApp() {
   const messagesEndRef = useRef(null);
   const lastMsgRef = useRef(null);
   const loadingMsgIndexRef = useRef(0);
-  const t = T[lang];
+  const t = T[lang] || T.en;
 
   useEffect(() => { if (typeof window !== 'undefined') { const s = localStorage.getItem('nehama-authorized'); if (s === 'true') setAuthorized(true); const savedLang = localStorage.getItem('nehama-lang'); if (savedLang) setLang(savedLang); const params = new URLSearchParams(window.location.search); if (params.get('paid') === 'true') { localStorage.setItem('nehama-access', 'paid'); window.history.replaceState({}, '', window.location.pathname); } } }, []);
 
@@ -719,17 +807,17 @@ export default function NehamaApp() {
       const response = await fetch("/api/chat", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, system: sysPrompt, messages: updated.map(m => ({ role: m.role, content: m.content })) }) });
       const data = await response.json();
       if (data.error) throw new Error(data.error.message || 'API error');
-      const text = data.content ? data.content.map(c => c.text || '').filter(Boolean).join('\n') : (lang === 'es' ? 'Tuve un problema de conexión. Por favor intenta de nuevo.' : 'I encountered an issue. Please try again.');
+      const text = data.content ? data.content.map(c => c.text || '').filter(Boolean).join('\n') : (lang === 'es' ? 'Tuve un problema de conexión. Por favor intenta de nuevo.' : lang === 'pt' ? 'Tive um problema de conexão. Por favor, tente novamente.' : 'I encountered an issue. Please try again.');
       const final = [...updated, { role: 'assistant', content: text }];
       setMessages(final); saveSession(final);
-    } catch (err) { setMessages([...updated, { role: 'assistant', content: (lang === 'es' ? 'Tengo problemas de conexión. Por favor intenta de nuevo.' : 'I am having trouble connecting. Please try again.') + '\n\n*' + err.message + '*' }]); }
+    } catch (err) { setMessages([...updated, { role: 'assistant', content: (lang === 'es' ? 'Tengo problemas de conexión. Por favor intenta de nuevo.' : lang === 'pt' ? 'Estou com problemas de conexão. Por favor, tente novamente.' : 'I am having trouble connecting. Please try again.') + '\n\n*' + err.message + '*' }]); }
     setIsLoading(false);
   }, [messages, tier, userName, partnerName, mode, testament, lang, saveSession]);
 
   const handleCodeSubmit = () => { const code = codeInput.trim().toUpperCase(); const accept = (access) => { setAuthorized(true); localStorage.setItem('nehama-authorized', 'true'); localStorage.setItem('nehama-access', access); setCodeError(false); setTimeout(() => setAnim(a => ({ ...a, text: true })), 200); setTimeout(() => setAnim(a => ({ ...a, paths: true })), 600); }; if (code === INVITE_CODE.toUpperCase()) accept('beta'); else if (code === GIFT_CODE.toUpperCase()) accept('lifetime'); else setCodeError(true); };
-  const handleStartFree = () => { if (!userName.trim()) return; setTier('free'); setScreen('chat'); const intro = lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + '. Estoy aquí para la reflexión gratuita.' : 'Hello. My name is ' + userName.trim() + '. I am here for the free reflection.'; setTimeout(() => sendMessage(intro, true), 300); };
+  const handleStartFree = () => { if (!userName.trim()) return; setTier('free'); setScreen('chat'); const intro = lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + '. Estoy aquí para la reflexión gratuita.' : lang === 'pt' ? 'Olá. Meu nome é ' + userName.trim() + '. Estou aqui para a reflexão gratuita.' : 'Hello. My name is ' + userName.trim() + '. I am here for the free reflection.'; setTimeout(() => sendMessage(intro, true), 300); };
   const hasFullAccess = () => { const access = localStorage.getItem('nehama-access'); return ['beta', 'lifetime', 'scholarship', 'paid'].includes(access); };
-  const launchFullJourney = () => { setTier('full'); setScreen('chat'); const intro = mode === 'couple' ? (lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + ' y estoy aquí con mi pareja, ' + partnerName.trim() + '. Nos gustaría comenzar el viaje completo juntos.' : 'Hello. My name is ' + userName.trim() + ' and I am here with my partner, ' + partnerName.trim() + '. We would like to begin the full journey together.') : (lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + '. Estoy listo para comenzar el viaje completo.' : 'Hello. My name is ' + userName.trim() + '. I am ready to begin the full journey.'); setTimeout(() => sendMessage(intro, true), 300); };
+  const launchFullJourney = () => { setTier('full'); setScreen('chat'); const intro = mode === 'couple' ? (lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + ' y estoy aquí con mi pareja, ' + partnerName.trim() + '. Nos gustaría comenzar el viaje completo juntos.' : lang === 'pt' ? 'Olá. Meu nome é ' + userName.trim() + ' e estou aqui com meu(minha) parceiro(a), ' + partnerName.trim() + '. Gostaríamos de começar a jornada completa juntos.' : 'Hello. My name is ' + userName.trim() + ' and I am here with my partner, ' + partnerName.trim() + '. We would like to begin the full journey together.') : (lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + '. Estoy listo para comenzar el viaje completo.' : lang === 'pt' ? 'Olá. Meu nome é ' + userName.trim() + '. Estou pronto para começar a jornada completa.' : 'Hello. My name is ' + userName.trim() + '. I am ready to begin the full journey.'); setTimeout(() => sendMessage(intro, true), 300); };
   const handleStartFull = () => { if (!userName.trim()) return; if (mode === 'couple' && !partnerName.trim()) return; if (hasFullAccess()) { launchFullJourney(); } else { setScreen('pricing'); } };
   const handleCheckout = async (priceId) => { try { const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ priceId }) }); const data = await res.json(); if (data.url) window.location.href = data.url; } catch (e) { console.error('Checkout error:', e); } };
   const handleReset = () => { try { localStorage.removeItem('nehama-session'); } catch (e) {} setMessages([]); setUserName(''); setPartnerName(''); setTier(null); setMode('individual'); setTestament('both'); setShowSettings(false); setEmailSubmitted(false); setFeedbackEmail(''); setScreen('welcome'); setTimeout(() => setAnim(a => ({ ...a, text: true })), 200); setTimeout(() => setAnim(a => ({ ...a, paths: true })), 600); };
