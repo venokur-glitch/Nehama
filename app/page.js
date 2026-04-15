@@ -85,8 +85,7 @@ const T = {
     installDismiss: 'Got it',
     privacyHead: 'We know. This is a lot to share with an app.',
     privacyBody: 'That is why we built Nehama so that your conversations are never seen by us or anyone else. They are processed in the moment to respond to you, then stored only on your device. Not on our servers. Not in a database. Not anywhere but your device. The simple truth is, we could not read your session even if we wanted to.',
-    privacySummary: 'To summarize: Your email is yours unless you choose to share it (and if you do, we will never share it with anyone else). Your payment is handled by Stripe; we never see your card. Your words stay with you.',
-    privacyClose: 'This is a safe space. The things you need to say to get the most from Nehama are the things you would only say if you knew no one was listening. No one is.',
+    privacyClose: 'The things you need to say to get the most from Nehama are the things you would only say if you know no one is listening. No one is.',
   },
   es: {
     tagline: 'Estás Aquí',
@@ -167,8 +166,7 @@ const T = {
     installDismiss: 'Entendido',
     privacyHead: 'Lo sabemos. Es mucho para compartir con una app.',
     privacyBody: 'Por eso construimos Nehama de manera que tus conversaciones nunca sean vistas por nosotros ni por nadie. Se procesan en el momento para responderte, y luego se almacenan solo en tu dispositivo. No en nuestros servidores. No en una base de datos. No en ningún lugar más que tu dispositivo. La simple verdad es que no podríamos leer tu sesión aunque quisiéramos.',
-    privacySummary: 'En resumen: Tu correo es tuyo a menos que elijas compartirlo (y si lo haces, nunca lo compartiremos con nadie más). Tu pago lo maneja Stripe; nunca vemos tu tarjeta. Tus palabras se quedan contigo.',
-    privacyClose: 'Este es un espacio seguro. Las cosas que necesitas decir para aprovechar Nehama al máximo son las cosas que solo dirías si supieras que nadie está escuchando. Nadie lo está.',
+    privacyClose: 'Las cosas que necesitas decir para aprovechar Nehama al máximo son las cosas que solo dirías si sabes que nadie está escuchando. Nadie lo está.',
   },
   pt: {
     tagline: 'Você Está Aqui',
@@ -249,8 +247,7 @@ const T = {
     installDismiss: 'Entendi',
     privacyHead: 'Sabemos. É muita coisa para compartilhar com um app.',
     privacyBody: 'Por isso construímos Nehama de forma que suas conversas nunca sejam vistas por nós ou por qualquer outra pessoa. Elas são processadas no momento para responder a você, e depois armazenadas apenas no seu dispositivo. Não nos nossos servidores. Não em um banco de dados. Em nenhum lugar além do seu dispositivo. A simples verdade é que não poderíamos ler sua sessão mesmo se quiséssemos.',
-    privacySummary: 'Resumindo: Seu email é seu, a menos que você escolha compartilhar (e se fizer isso, nunca o compartilharemos com ninguém). Seu pagamento é processado pelo Stripe; nunca vemos seu cartão. Suas palavras ficam com você.',
-    privacyClose: 'Este é um espaço seguro. As coisas que você precisa dizer para aproveitar Nehama ao máximo são as coisas que você só diria se soubesse que ninguém está ouvindo. Ninguém está.',
+    privacyClose: 'As coisas que você precisa dizer para aproveitar Nehama ao máximo são as coisas que você só diria se sabe que ninguém está ouvindo. Ninguém está.',
   }
 };
 
@@ -936,16 +933,13 @@ export default function NehamaApp() {
               <p style={{ fontSize: '14px', color: '#5A5A5A', lineHeight: 1.8, margin: '0 0 16px 0' }}>{t.whatIs3}</p>
               <p style={{ fontSize: '14px', color: '#5A5A5A', lineHeight: 1.8, margin: '0 0 16px 0' }}>{t.whatIs4}</p>
               <p style={{ fontSize: '14px', color: '#2C2C2C', lineHeight: 1.8, margin: 0, fontWeight: 500 }}>{t.whatIs5}</p>
+              <div style={{ borderTop: '1px solid rgba(0,0,0,0.04)', marginTop: '20px', paddingTop: '20px' }}>
+                <p style={{ fontSize: '14px', color: '#2C2C2C', lineHeight: 1.8, margin: '0 0 12px 0', fontStyle: 'italic' }}>{t.privacyHead}</p>
+                <p style={{ fontSize: '14px', color: '#5A5A5A', lineHeight: 1.8, margin: '0 0 12px 0' }}>{t.privacyBody}</p>
+                <p style={{ fontSize: '14px', color: '#4A5A50', lineHeight: 1.8, margin: 0, fontStyle: 'italic' }}>{t.privacyClose}</p>
+              </div>
             </div>
           )}
-        </div>
-
-        {/* Privacy */}
-        <div style={{ width: '100%', maxWidth: '480px', marginBottom: '20px', opacity: anim.paths ? 1 : 0, transition: 'opacity 0.6s 0.2s', borderTop: '1px solid rgba(0,0,0,0.04)', paddingTop: '28px' }}>
-          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '17px', color: '#2C2C2C', lineHeight: 1.7, margin: '0 0 14px 0', fontWeight: 400, fontStyle: 'italic' }}>{t.privacyHead}</p>
-          <p style={{ fontSize: '13px', color: '#5A5A5A', lineHeight: 1.8, margin: '0 0 14px 0' }}>{t.privacyBody}</p>
-          <p style={{ fontSize: '13px', color: '#5A5A5A', lineHeight: 1.8, margin: '0 0 14px 0' }}>{t.privacySummary}</p>
-          <p style={{ fontSize: '13px', color: '#4A5A50', lineHeight: 1.8, margin: 0, fontStyle: 'italic' }}>{t.privacyClose}</p>
         </div>
 
         {/* Two paths */}
