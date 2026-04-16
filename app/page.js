@@ -69,7 +69,7 @@ const T = {
     pricingAnnual: '$199.99 / year',
     pricingAnnualFounder: '$179.99 / year',
     pricingAnnualNote: 'Less than a single hour with a therapist.',
-    pricingTrial: '3-day free trial, cancel anytime',
+    pricingTrial: '7-day free trial, cancel anytime',
     pricingFounderNote: 'Founding member price, locked for life. Available for the first 30 days only.',
     pricingScholarship1: 'If the cost is a barrier, ',
     pricingScholarshipLink: 'reach out',
@@ -150,7 +150,7 @@ const T = {
     pricingAnnual: '$199.99 / año',
     pricingAnnualFounder: '$179.99 / año',
     pricingAnnualNote: 'Menos que una sola hora con un terapeuta.',
-    pricingTrial: '3 días de prueba gratis, cancela cuando quieras',
+    pricingTrial: '7 días de prueba gratis, cancela cuando quieras',
     pricingFounderNote: 'Precio de miembro fundador, fijado de por vida. Disponible solo los primeros 30 días.',
     pricingScholarship1: 'Si el costo es un obstáculo, ',
     pricingScholarshipLink: 'escríbenos',
@@ -231,7 +231,7 @@ const T = {
     pricingAnnual: '$199.99 / ano',
     pricingAnnualFounder: '$179.99 / ano',
     pricingAnnualNote: 'Menos que uma única hora com um terapeuta.',
-    pricingTrial: '3 dias de teste grátis, cancele quando quiser',
+    pricingTrial: '7 dias de teste grátis, cancele quando quiser',
     pricingFounderNote: 'Preço de membro fundador, fixado para sempre. Disponível apenas nos primeiros 30 dias.',
     pricingScholarship1: 'Se o custo é uma barreira, ',
     pricingScholarshipLink: 'fale conosco',
@@ -489,6 +489,77 @@ const LOADING_MSGS = {
     free: ["Ouvindo com atenção...", "Sentando com o que você compartilhou...", "Absorvendo isso...", "Segurando espaço para isso..."]
   }
 };
+
+// ─── GEO PRICING ────────────────────────────────────────────────────
+const PRICING = {
+  us: {
+    monthly: '9.99', annual: '79.99', foundingMonthly: '7.99', foundingAnnual: '63.99',
+    symbol: '$', code: 'USD', format: (s, a) => `${s}${a}`,
+    monthlyId: 'price_1TMyct39LzIoC52o75ibSopy',
+    annualId: 'price_1TMygD39LzIoC52oUDz4fQDh',
+  },
+  uk: {
+    monthly: '7.99', annual: '64.99', foundingMonthly: '6.39', foundingAnnual: '51.99',
+    symbol: '£', code: 'GBP', format: (s, a) => `${s}${a}`,
+    monthlyId: 'price_1TMyhe39LzIoC52ozfJFLtSq',
+    annualId: 'price_1TMyiA39LzIoC52obTRN97DF',
+  },
+  eu: {
+    monthly: '8.99', annual: '72.99', foundingMonthly: '7.19', foundingAnnual: '58.39',
+    symbol: '\u20AC', code: 'EUR', format: (s, a) => `${s}${a}`,
+    monthlyId: 'price_1TMyiV39LzIoC52oXJV9Micx',
+    annualId: 'price_1TMyik39LzIoC52oezLovAXL',
+  },
+  ca: {
+    monthly: '12.99', annual: '104.99', foundingMonthly: '10.39', foundingAnnual: '83.99',
+    symbol: 'CA$', code: 'CAD', format: (s, a) => `${s}${a}`,
+    monthlyId: 'price_1TMyiy39LzIoC52oMGcU62ZH',
+    annualId: 'price_1TMyjB39LzIoC52ooDY9Ehab',
+  },
+  au: {
+    monthly: '14.99', annual: '119.99', foundingMonthly: '11.99', foundingAnnual: '95.99',
+    symbol: 'A$', code: 'AUD', format: (s, a) => `${s}${a}`,
+    monthlyId: 'price_1TMyjO39LzIoC52oxiLwMuu5',
+    annualId: 'price_1TMyjd39LzIoC52owyF3uDLp',
+  },
+  mx: {
+    monthly: '89', annual: '699', foundingMonthly: '71', foundingAnnual: '559',
+    symbol: 'MXN $', code: 'MXN', format: (s, a) => `${s}${a}`,
+    monthlyId: 'price_1TMyjv39LzIoC52oL39TZuQy',
+    annualId: 'price_1TMyk839LzIoC52o2w8AlLJ9',
+  },
+  br: {
+    monthly: '14.90', annual: '119.90', foundingMonthly: '11.90', foundingAnnual: '95.90',
+    symbol: 'R$', code: 'BRL', format: (s, a) => `R$${a}`,
+    monthlyId: 'price_1TMykQ39LzIoC52ogpsMk6ya',
+    annualId: 'price_1TMykd39LzIoC52op3SD59zs',
+  },
+  latam: {
+    monthly: '3.99', annual: '29.99', foundingMonthly: '3.19', foundingAnnual: '23.99',
+    symbol: '$', code: 'USD', format: (s, a) => `$${a}`,
+    monthlyId: 'price_1TMym439LzIoC52oiLQN1f0m',
+    annualId: 'price_1TMymF39LzIoC52oy1nMNRZb',
+  },
+};
+
+const COUNTRY_TIER = {
+  US: 'us', GB: 'uk', CA: 'ca', AU: 'au', NZ: 'au', MX: 'mx', BR: 'br',
+  // EU countries
+  DE: 'eu', FR: 'eu', IT: 'eu', ES: 'eu', NL: 'eu', BE: 'eu', AT: 'eu', PT: 'eu',
+  IE: 'eu', FI: 'eu', GR: 'eu', LU: 'eu', MT: 'eu', SK: 'eu', SI: 'eu', EE: 'eu',
+  LV: 'eu', LT: 'eu', CY: 'eu', HR: 'eu', BG: 'eu', RO: 'eu', CZ: 'eu', DK: 'eu',
+  HU: 'eu', PL: 'eu', SE: 'eu', NO: 'eu', CH: 'eu', IS: 'eu',
+  // Tier 1 non-US (use US pricing)
+  JP: 'us', KR: 'us', SG: 'us', IL: 'us', HK: 'us', TW: 'us',
+  // LATAM Spanish-speaking
+  CO: 'latam', AR: 'latam', CL: 'latam', PE: 'latam', EC: 'latam', GT: 'latam',
+  DO: 'latam', VE: 'latam', CR: 'latam', PA: 'latam', UY: 'latam', PY: 'latam',
+  BO: 'latam', HN: 'latam', SV: 'latam', NI: 'latam', CU: 'latam',
+};
+
+function getTier(countryCode) {
+  return COUNTRY_TIER[countryCode] || 'us';
+}
 
 // ─── LOGO SVG COMPONENT ─────────────────────────────────────────────
 function LogoLines({ width = 160 }) {
@@ -759,14 +830,23 @@ export default function NehamaApp() {
   const [feedbackEmail, setFeedbackEmail] = useState('');
   const [emailSubmitted, setEmailSubmitted] = useState(false);
   const [anim, setAnim] = useState({ text: false, paths: false });
+  const [pricingTier, setPricingTier] = useState('us');
   const messagesEndRef = useRef(null);
   const lastMsgRef = useRef(null);
   const loadingMsgIndexRef = useRef(0);
   const t = T[lang] || T.en;
+  const prices = PRICING[pricingTier] || PRICING.us;
 
   useEffect(() => { if (typeof window !== 'undefined') { const s = localStorage.getItem('nehama-authorized'); if (s === 'true') setAuthorized(true); const savedLang = localStorage.getItem('nehama-lang'); if (savedLang) setLang(savedLang); const params = new URLSearchParams(window.location.search); if (params.get('paid') === 'true') { localStorage.setItem('nehama-access', 'paid'); window.history.replaceState({}, '', window.location.pathname); } } }, []);
 
   useEffect(() => { if (typeof window !== 'undefined') localStorage.setItem('nehama-lang', lang); }, [lang]);
+
+  // Geo-detect pricing tier
+  useEffect(() => {
+    fetch('/api/geo').then(r => r.json()).then(d => {
+      if (d.country) setPricingTier(getTier(d.country));
+    }).catch(() => {});
+  }, []);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -828,7 +908,7 @@ export default function NehamaApp() {
   const hasFullAccess = () => { const access = localStorage.getItem('nehama-access'); return ['beta', 'lifetime', 'scholarship', 'paid'].includes(access); };
   const launchFullJourney = () => { setTier('full'); setScreen('chat'); const intro = mode === 'couple' ? (lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + ' y estoy aquí con mi pareja, ' + partnerName.trim() + '. Nos gustaría comenzar el viaje completo juntos.' : lang === 'pt' ? 'Olá. Meu nome é ' + userName.trim() + ' e estou aqui com meu(minha) parceiro(a), ' + partnerName.trim() + '. Gostaríamos de começar a jornada completa juntos.' : 'Hello. My name is ' + userName.trim() + ' and I am here with my partner, ' + partnerName.trim() + '. We would like to begin the full journey together.') : (lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + '. Estoy listo para comenzar el viaje completo.' : lang === 'pt' ? 'Olá. Meu nome é ' + userName.trim() + '. Estou pronto para começar a jornada completa.' : 'Hello. My name is ' + userName.trim() + '. I am ready to begin the full journey.'); setTimeout(() => sendMessage(intro, true), 300); };
   const handleStartFull = () => { if (!userName.trim()) return; if (mode === 'couple' && !partnerName.trim()) return; if (hasFullAccess()) { launchFullJourney(); } else { setScreen('pricing'); } };
-  const handleCheckout = async (priceId) => { try { const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ priceId }) }); const data = await res.json(); if (data.url) window.location.href = data.url; } catch (e) { console.error('Checkout error:', e); } };
+  const handleCheckout = async (priceId, founding = true) => { try { const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ priceId, founding }) }); const data = await res.json(); if (data.url) window.location.href = data.url; } catch (e) { console.error('Checkout error:', e); } };
   const handleReset = () => { try { localStorage.removeItem('nehama-session'); } catch (e) {} setMessages([]); setUserName(''); setPartnerName(''); setTier(null); setMode('individual'); setTestament('both'); setShowSettings(false); setEmailSubmitted(false); setFeedbackEmail(''); setScreen('welcome'); setTimeout(() => setAnim(a => ({ ...a, text: true })), 200); setTimeout(() => setAnim(a => ({ ...a, paths: true })), 600); };
   const handleDownload = () => { const convo = messages.filter(m => !m.hidden).map(m => (m.role === 'user' ? 'You: ' : 'Nehama: ') + stripReflectionCard(m.content)).join('\n\n'); const d = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); const ttl = tier === 'free' ? 'Your Scriptural Reflection' : 'Your Life Architecture Session'; const doc = 'NEHAMA: YOU ARE HERE\n' + ttl + '\n' + d + '\n' + userName + (mode === 'couple' ? ' & ' + partnerName : '') + '\n\n' + '='.repeat(48) + '\n\n' + convo + '\n\n' + '='.repeat(48) + '\n\nThis is yours to keep.\n'; const b = new Blob([doc], { type: 'text/plain' }); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = 'nehama-' + (tier === 'free' ? 'reflection' : 'session') + '.txt'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(u); };
   const handleSend = () => { if (!input.trim() || isLoading) return; sendMessage(input.trim()); };
@@ -878,6 +958,8 @@ export default function NehamaApp() {
   );
 
   // ─── PRICING ─────
+  const perMonth = lang === 'es' ? '/ mes' : lang === 'pt' ? '/ mês' : '/ month';
+  const perYear = lang === 'es' ? '/ año' : lang === 'pt' ? '/ ano' : '/ year';
   if (screen === 'pricing') return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px', position: 'relative' }}>
       <LangSwitch lang={lang} setLang={setLang} />
@@ -887,9 +969,9 @@ export default function NehamaApp() {
       </div>
       <div style={{ width: '100%', maxWidth: '380px' }}>
         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '22px', color: '#2C2C2C', textAlign: 'center', marginBottom: '32px', fontWeight: 400 }}>{t.pricingTitle}</p>
-        <button onClick={() => handleCheckout('price_1TLMzp39LzIoC52o65KumTOR')} style={{ width: '100%', padding: '18px', fontSize: '16px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9', letterSpacing: '0.5px', marginBottom: '4px' }}><span style={{ textDecoration: 'line-through', opacity: 0.6, marginRight: '10px', fontSize: '14px' }}>{t.pricingMonthly}</span>{t.pricingMonthlyFounder}</button>
+        <button onClick={() => handleCheckout(prices.monthlyId, true)} style={{ width: '100%', padding: '18px', fontSize: '16px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9', letterSpacing: '0.5px', marginBottom: '4px' }}><span style={{ textDecoration: 'line-through', opacity: 0.6, marginRight: '10px', fontSize: '14px' }}>{prices.format(prices.symbol, prices.monthly)} {perMonth}</span>{prices.format(prices.symbol, prices.foundingMonthly)} {perMonth}</button>
         <p style={{ fontSize: '12px', color: '#9BAA9F', textAlign: 'center', marginBottom: '20px', fontStyle: 'italic' }}>{t.pricingMonthlyNote}</p>
-        <button onClick={() => handleCheckout('price_1TLN5z39LzIoC52oVybP0Z7o')} style={{ width: '100%', padding: '18px', fontSize: '16px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: '1px solid #4A5D4F', borderRadius: '8px', cursor: 'pointer', background: 'transparent', color: '#4A5D4F', letterSpacing: '0.5px', marginBottom: '4px' }}><span style={{ textDecoration: 'line-through', opacity: 0.5, marginRight: '10px', fontSize: '14px' }}>{t.pricingAnnual}</span>{t.pricingAnnualFounder}</button>
+        <button onClick={() => handleCheckout(prices.annualId, true)} style={{ width: '100%', padding: '18px', fontSize: '16px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: '1px solid #4A5D4F', borderRadius: '8px', cursor: 'pointer', background: 'transparent', color: '#4A5D4F', letterSpacing: '0.5px', marginBottom: '4px' }}><span style={{ textDecoration: 'line-through', opacity: 0.5, marginRight: '10px', fontSize: '14px' }}>{prices.format(prices.symbol, prices.annual)} {perYear}</span>{prices.format(prices.symbol, prices.foundingAnnual)} {perYear}</button>
         <p style={{ fontSize: '12px', color: '#9BAA9F', textAlign: 'center', marginBottom: '8px', fontStyle: 'italic' }}>{t.pricingAnnualNote}</p>
         <p style={{ fontSize: '13px', color: '#B0B0B0', textAlign: 'center', marginTop: '12px', marginBottom: '8px' }}>{t.pricingTrial}</p>
         <p style={{ fontSize: '12px', color: '#9BAA9F', textAlign: 'center', marginBottom: '28px', fontStyle: 'italic', lineHeight: 1.5 }}>{t.pricingFounderNote}</p>
