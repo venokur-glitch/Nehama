@@ -78,6 +78,11 @@ const T = {
     pricingCodePlaceholder: 'ENTER CODE',
     pricingCodeError: 'Code not recognized.',
     pricingCodeApply: 'Apply',
+    codeWelcome: 'You\'re in.',
+    codeEmailAsk: 'Leave your email so we can stay in touch. We\'ll never share it.',
+    codeEmailPlaceholder: 'your@email.com',
+    codeStart: 'Begin Your Journey',
+    codeSkip: 'Skip',
     pricingBack: '← Back',
     cardSharePrompt: 'This reflection is yours. If someone comes to mind who\'s carrying something heavy, you can send them here.',
     cardSave: 'Save to Photos',
@@ -163,6 +168,11 @@ const T = {
     pricingCodePlaceholder: 'INGRESAR CÓDIGO',
     pricingCodeError: 'Código no reconocido.',
     pricingCodeApply: 'Aplicar',
+    codeWelcome: 'Estás dentro.',
+    codeEmailAsk: 'Deja tu correo para que podamos estar en contacto. Nunca lo compartiremos.',
+    codeEmailPlaceholder: 'tu@correo.com',
+    codeStart: 'Comienza Tu Viaje',
+    codeSkip: 'Omitir',
     pricingBack: '← Atrás',
     cardSharePrompt: 'Esta reflexión es tuya. Si alguien viene a tu mente que está cargando algo pesado, puedes enviarle esto.',
     cardSave: 'Guardar en Fotos',
@@ -248,6 +258,11 @@ const T = {
     pricingCodePlaceholder: 'INSERIR CÓDIGO',
     pricingCodeError: 'Código não reconhecido.',
     pricingCodeApply: 'Aplicar',
+    codeWelcome: 'Você está dentro.',
+    codeEmailAsk: 'Deixe seu email para ficarmos em contato. Nunca o compartilharemos.',
+    codeEmailPlaceholder: 'seu@email.com',
+    codeStart: 'Comece Sua Jornada',
+    codeSkip: 'Pular',
     pricingBack: '← Voltar',
     cardSharePrompt: 'Esta reflexão é sua. Se alguém vem à mente que está carregando algo pesado, você pode enviar isso.',
     cardSave: 'Salvar nas Fotos',
@@ -845,6 +860,8 @@ export default function NehamaApp() {
   const [showContact, setShowContact] = useState(false);
   const [showInstall, setShowInstall] = useState(false);
   const [showCodeInput, setShowCodeInput] = useState(false);
+  const [codeAccepted, setCodeAccepted] = useState(false);
+  const [codeEmail, setCodeEmail] = useState('');
   const [contactEmail, setContactEmail] = useState('');
   const [contactMsg, setContactMsg] = useState('');
   const [contactSent, setContactSent] = useState(false);
@@ -924,7 +941,8 @@ export default function NehamaApp() {
     setIsLoading(false);
   }, [messages, tier, userName, partnerName, mode, testament, lang, saveSession]);
 
-  const handleCodeSubmit = () => { const code = codeInput.trim().toUpperCase(); const accept = (access) => { setAuthorized(true); localStorage.setItem('nehama-authorized', 'true'); localStorage.setItem('nehama-access', access); setCodeError(false); setCodeInput(''); setShowCodeInput(false); launchFullJourney(); }; if (code === INVITE_CODE.toUpperCase()) accept('beta'); else if (code === GIFT_CODE.toUpperCase()) accept('lifetime'); else setCodeError(true); };
+  const handleCodeSubmit = () => { const code = codeInput.trim().toUpperCase(); const accept = (access) => { setAuthorized(true); localStorage.setItem('nehama-authorized', 'true'); localStorage.setItem('nehama-access', access); setCodeError(false); setCodeInput(''); setShowCodeInput(false); setCodeAccepted(true); }; if (code === INVITE_CODE.toUpperCase()) accept('beta'); else if (code === GIFT_CODE.toUpperCase()) accept('lifetime'); else setCodeError(true); };
+  const handleCodeEmailSubmit = () => { if (codeEmail.includes('@')) { fetch('https://formspree.io/f/mdapqwqb', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: codeEmail, _subject: 'Nehama Code User Signup', access: localStorage.getItem('nehama-access') }) }); } setCodeAccepted(false); setCodeEmail(''); launchFullJourney(); };
   const handleStartFree = () => { if (!userName.trim()) return; setTier('free'); setScreen('chat'); const intro = lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + '. Estoy aquí para la reflexión gratuita.' : lang === 'pt' ? 'Olá. Meu nome é ' + userName.trim() + '. Estou aqui para a reflexão gratuita.' : 'Hello. My name is ' + userName.trim() + '. I am here for the free reflection.'; setTimeout(() => sendMessage(intro, true), 300); };
   const hasFullAccess = () => { const access = localStorage.getItem('nehama-access'); return ['beta', 'lifetime', 'scholarship', 'paid'].includes(access); };
   const launchFullJourney = () => { setTier('full'); setScreen('chat'); const intro = mode === 'couple' ? (lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + ' y estoy aquí con mi pareja, ' + partnerName.trim() + '. Nos gustaría comenzar el viaje completo juntos.' : lang === 'pt' ? 'Olá. Meu nome é ' + userName.trim() + ' e estou aqui com meu(minha) parceiro(a), ' + partnerName.trim() + '. Gostaríamos de começar a jornada completa juntos.' : 'Hello. My name is ' + userName.trim() + ' and I am here with my partner, ' + partnerName.trim() + '. We would like to begin the full journey together.') : (lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + '. Estoy listo para comenzar el viaje completo.' : lang === 'pt' ? 'Olá. Meu nome é ' + userName.trim() + '. Estou pronto para começar a jornada completa.' : 'Hello. My name is ' + userName.trim() + '. I am ready to begin the full journey.'); setTimeout(() => sendMessage(intro, true), 300); };
@@ -970,6 +988,15 @@ export default function NehamaApp() {
         <LogoLines width={100} />
       </div>
       <div style={{ width: '100%', maxWidth: '380px' }}>
+        {codeAccepted ? (<>
+          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+            <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '28px', color: '#2C2C2C', marginBottom: '12px', fontWeight: 400 }}>{t.codeWelcome}</p>
+            <p style={{ fontSize: '14px', color: '#8A8A8A', lineHeight: 1.7 }}>{t.codeEmailAsk}</p>
+          </div>
+          <input style={{ ...inputStyle, marginBottom: '12px' }} placeholder={t.codeEmailPlaceholder} type="email" value={codeEmail} onChange={e => setCodeEmail(e.target.value)} onFocus={e => e.target.style.borderColor = 'rgba(0,0,0,0.2)'} onBlur={e => e.target.style.borderColor = 'rgba(0,0,0,0.08)'} onKeyDown={e => e.key === 'Enter' && handleCodeEmailSubmit()} />
+          <button onClick={handleCodeEmailSubmit} style={{ width: '100%', padding: '14px', fontSize: '15px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9', letterSpacing: '0.5px', marginBottom: '12px' }}>{t.codeStart}</button>
+          <button onClick={() => { setCodeAccepted(false); setCodeEmail(''); launchFullJourney(); }} style={{ display: 'block', margin: '0 auto', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontSize: '13px', color: '#B0B0B0' }}>{t.codeSkip}</button>
+        </>) : (<>
         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '22px', color: '#2C2C2C', textAlign: 'center', marginBottom: '32px', fontWeight: 400 }}>{t.pricingTitle}</p>
         <button onClick={() => handleCheckout(prices.monthlyId, true)} style={{ width: '100%', padding: '18px', fontSize: '16px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9', letterSpacing: '0.5px', marginBottom: '4px' }}><span style={{ textDecoration: 'line-through', opacity: 0.6, marginRight: '10px', fontSize: '14px' }}>{prices.format(prices.symbol, prices.monthly)} {perMonth}</span>{prices.format(prices.symbol, prices.foundingMonthly)} {perMonth}</button>
         <p style={{ fontSize: '12px', color: '#9BAA9F', textAlign: 'center', marginBottom: '20px', fontStyle: 'italic' }}>{prices.dailyMonthly}</p>
@@ -991,7 +1018,8 @@ export default function NehamaApp() {
           )}
           {codeError && <p style={{ fontSize: '12px', color: '#C48282', marginTop: '8px' }}>{t.pricingCodeError}</p>}
         </div>
-        <button onClick={() => { setScreen('welcome'); setShowCodeInput(false); setCodeError(false); setCodeInput(''); setTimeout(() => setAnim(a => ({ ...a, text: true, paths: true })), 100); }} style={{ display: 'block', margin: '20px auto 0', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#B0B0B0' }}>{t.pricingBack}</button>
+        <button onClick={() => { setScreen('welcome'); setShowCodeInput(false); setCodeError(false); setCodeInput(''); setCodeAccepted(false); setCodeEmail(''); setTimeout(() => setAnim(a => ({ ...a, text: true, paths: true })), 100); }} style={{ display: 'block', margin: '20px auto 0', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#B0B0B0' }}>{t.pricingBack}</button>
+        </>)}
       </div>
       {contactModalJSX}
     </div>
