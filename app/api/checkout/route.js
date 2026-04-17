@@ -19,8 +19,8 @@ export async function POST(request) {
       subscription_data: {
         trial_period_days: 7,
       },
-      success_url: `${process.env.NEXT_PUBLIC_URL || 'https://nehama.vercel.app'}?paid=true`,
-      cancel_url: `${process.env.NEXT_PUBLIC_URL || 'https://nehama.vercel.app'}?paid=cancel`,
+      success_url: `${process.env.NEXT_PUBLIC_URL || 'https://findnehama.com'}?paid=true`,
+      cancel_url: `${process.env.NEXT_PUBLIC_URL || 'https://findnehama.com'}?paid=cancel`,
     };
 
     // During founding window, auto-apply founding coupon
