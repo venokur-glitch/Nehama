@@ -1135,7 +1135,7 @@ export default function NehamaApp() {
                   <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '13px', color: '#9BAA9F', textAlign: 'center', lineHeight: 1.6, margin: '16px 0 14px', maxWidth: '260px' }}>{t.cardSharePrompt}</p>
                   <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
                     <button onClick={() => saveCardAsPNG(card, t.cardCTA)} style={{ flex: 1, padding: '10px', fontSize: '13px', fontFamily: "'DM Sans', sans-serif", fontWeight: 500, border: 'none', borderRadius: '6px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9' }}>{t.cardSave}</button>
-                    <button onClick={() => { if (navigator.share) { navigator.share({ title: 'Nehama', text: 'Someone who cares about you wanted you to have this.', url: 'https://nehama.vercel.app' }).catch(() => {}); } else { window.open('https://nehama.vercel.app', '_blank'); } }} style={{ flex: 1, padding: '10px', fontSize: '13px', fontFamily: "'DM Sans', sans-serif", fontWeight: 500, border: '1px solid #4A5D4F', borderRadius: '6px', cursor: 'pointer', background: 'transparent', color: '#4A5D4F' }}>{t.cardShare}</button>
+                    <button onClick={() => { if (navigator.share) { navigator.share({ title: 'Nehama', text: 'Someone who cares about you wanted you to have this.', url: 'https://findnehama.com' }).catch(() => {}); } else { window.open('https://findnehama.com', '_blank'); } }} style={{ flex: 1, padding: '10px', fontSize: '13px', fontFamily: "'DM Sans', sans-serif", fontWeight: 500, border: '1px solid #4A5D4F', borderRadius: '6px', cursor: 'pointer', background: 'transparent', color: '#4A5D4F' }}>{t.cardShare}</button>
                   </div>
                 </div>
               </div>
