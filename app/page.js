@@ -495,48 +495,56 @@ const PRICING = {
   us: {
     monthly: '9.99', annual: '79.99', foundingMonthly: '7.99', foundingAnnual: '63.99',
     symbol: '$', code: 'USD', format: (s, a) => `${s}${a}`,
+    dailyMonthly: '33 cents a day.', dailyAnnual: '22 cents a day.',
     monthlyId: 'price_1TMyct39LzIoC52o75ibSopy',
     annualId: 'price_1TMygD39LzIoC52oUDz4fQDh',
   },
   uk: {
     monthly: '7.99', annual: '64.99', foundingMonthly: '6.39', foundingAnnual: '51.99',
     symbol: '£', code: 'GBP', format: (s, a) => `${s}${a}`,
+    dailyMonthly: '27 pence a day.', dailyAnnual: '18 pence a day.',
     monthlyId: 'price_1TMyhe39LzIoC52ozfJFLtSq',
     annualId: 'price_1TMyiA39LzIoC52obTRN97DF',
   },
   eu: {
     monthly: '8.99', annual: '72.99', foundingMonthly: '7.19', foundingAnnual: '58.39',
     symbol: '\u20AC', code: 'EUR', format: (s, a) => `${s}${a}`,
+    dailyMonthly: '30 cents a day.', dailyAnnual: '20 cents a day.',
     monthlyId: 'price_1TMyiV39LzIoC52oXJV9Micx',
     annualId: 'price_1TMyik39LzIoC52oezLovAXL',
   },
   ca: {
     monthly: '12.99', annual: '104.99', foundingMonthly: '10.39', foundingAnnual: '83.99',
     symbol: 'CA$', code: 'CAD', format: (s, a) => `${s}${a}`,
+    dailyMonthly: '43 cents a day.', dailyAnnual: '29 cents a day.',
     monthlyId: 'price_1TMyiy39LzIoC52oMGcU62ZH',
     annualId: 'price_1TMyjB39LzIoC52ooDY9Ehab',
   },
   au: {
     monthly: '14.99', annual: '119.99', foundingMonthly: '11.99', foundingAnnual: '95.99',
     symbol: 'A$', code: 'AUD', format: (s, a) => `${s}${a}`,
+    dailyMonthly: '50 cents a day.', dailyAnnual: '33 cents a day.',
     monthlyId: 'price_1TMyjO39LzIoC52oxiLwMuu5',
     annualId: 'price_1TMyjd39LzIoC52owyF3uDLp',
   },
   mx: {
     monthly: '89', annual: '699', foundingMonthly: '71', foundingAnnual: '559',
     symbol: 'MXN $', code: 'MXN', format: (s, a) => `${s}${a}`,
+    dailyMonthly: 'Menos de 3 pesos al d\u00EDa.', dailyAnnual: 'Menos de 2 pesos al d\u00EDa.',
     monthlyId: 'price_1TMyjv39LzIoC52oL39TZuQy',
     annualId: 'price_1TMyk839LzIoC52o2w8AlLJ9',
   },
   br: {
     monthly: '14.90', annual: '119.90', foundingMonthly: '11.90', foundingAnnual: '95.90',
     symbol: 'R$', code: 'BRL', format: (s, a) => `R$${a}`,
+    dailyMonthly: '50 centavos por dia.', dailyAnnual: '33 centavos por dia.',
     monthlyId: 'price_1TMykQ39LzIoC52ogpsMk6ya',
     annualId: 'price_1TMykd39LzIoC52op3SD59zs',
   },
   latam: {
     monthly: '3.99', annual: '29.99', foundingMonthly: '3.19', foundingAnnual: '23.99',
     symbol: '$', code: 'USD', format: (s, a) => `$${a}`,
+    dailyMonthly: '13 centavos al d\u00EDa.', dailyAnnual: '8 centavos al d\u00EDa.',
     monthlyId: 'price_1TMym439LzIoC52oiLQN1f0m',
     annualId: 'price_1TMymF39LzIoC52oy1nMNRZb',
   },
@@ -970,9 +978,9 @@ export default function NehamaApp() {
       <div style={{ width: '100%', maxWidth: '380px' }}>
         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '22px', color: '#2C2C2C', textAlign: 'center', marginBottom: '32px', fontWeight: 400 }}>{t.pricingTitle}</p>
         <button onClick={() => handleCheckout(prices.monthlyId, true)} style={{ width: '100%', padding: '18px', fontSize: '16px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9', letterSpacing: '0.5px', marginBottom: '4px' }}><span style={{ textDecoration: 'line-through', opacity: 0.6, marginRight: '10px', fontSize: '14px' }}>{prices.format(prices.symbol, prices.monthly)} {perMonth}</span>{prices.format(prices.symbol, prices.foundingMonthly)} {perMonth}</button>
-        <p style={{ fontSize: '12px', color: '#9BAA9F', textAlign: 'center', marginBottom: '20px', fontStyle: 'italic' }}>{t.pricingMonthlyNote}</p>
+        <p style={{ fontSize: '12px', color: '#9BAA9F', textAlign: 'center', marginBottom: '20px', fontStyle: 'italic' }}>{prices.dailyMonthly}</p>
         <button onClick={() => handleCheckout(prices.annualId, true)} style={{ width: '100%', padding: '18px', fontSize: '16px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: '1px solid #4A5D4F', borderRadius: '8px', cursor: 'pointer', background: 'transparent', color: '#4A5D4F', letterSpacing: '0.5px', marginBottom: '4px' }}><span style={{ textDecoration: 'line-through', opacity: 0.5, marginRight: '10px', fontSize: '14px' }}>{prices.format(prices.symbol, prices.annual)} {perYear}</span>{prices.format(prices.symbol, prices.foundingAnnual)} {perYear}</button>
-        <p style={{ fontSize: '12px', color: '#9BAA9F', textAlign: 'center', marginBottom: '8px', fontStyle: 'italic' }}>{t.pricingAnnualNote}</p>
+        <p style={{ fontSize: '12px', color: '#9BAA9F', textAlign: 'center', marginBottom: '8px', fontStyle: 'italic' }}>{prices.dailyAnnual}</p>
         <p style={{ fontSize: '13px', color: '#B0B0B0', textAlign: 'center', marginTop: '12px', marginBottom: '8px' }}>{t.pricingTrial}</p>
         <p style={{ fontSize: '12px', color: '#9BAA9F', textAlign: 'center', marginBottom: '28px', fontStyle: 'italic', lineHeight: 1.5 }}>{t.pricingFounderNote}</p>
         <div style={{ borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '20px', textAlign: 'center' }}>
