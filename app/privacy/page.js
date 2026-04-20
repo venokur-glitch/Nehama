@@ -46,14 +46,14 @@ export default function Privacy() {
   const [lang, setLang] = useState('en');
   useEffect(() => { const saved = localStorage.getItem('nehama-lang'); if (saved) setLang(saved); }, []);
   const c = content[lang];
-  const hStyle = { fontFamily: "'Cormorant Garamond', serif", fontSize: '20px', fontWeight: 400, color: '#2C2C2C', margin: '36px 0 12px 0', letterSpacing: '0.3px' };
+  const hStyle = { fontFamily: "'Cormorant Garamond', serif", fontSize: '20px', fontWeight: 400, color: '#5C3D30', margin: '36px 0 12px 0', letterSpacing: '0.3px' };
   return (
     <div style={{ minHeight: '100vh', padding: '64px 24px 48px' }}>
       <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-        <a href="/" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '18px', fontWeight: 300, color: '#8B9E8F', textDecoration: 'none', letterSpacing: '2px' }}>{c.back}</a>
-        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '36px', fontWeight: 300, color: '#2C2C2C', margin: '40px 0 8px 0', letterSpacing: '1px' }}>{c.title}</h1>
-        <p style={{ fontSize: '12px', color: '#B0B0B0', marginBottom: '40px', letterSpacing: '0.5px' }}>{c.updated}</p>
-        <div style={{ fontSize: '15px', color: '#4A4A4A', lineHeight: 1.9 }}>
+        <a href="/" style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '18px', fontWeight: 300, color: '#AE655B', textDecoration: 'none', letterSpacing: '2px' }}>{c.back}</a>
+        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '36px', fontWeight: 300, color: '#5C3D30', margin: '40px 0 8px 0', letterSpacing: '1px' }}>{c.title}</h1>
+        <p style={{ fontSize: '12px', color: '#B8A498', marginBottom: '40px', letterSpacing: '0.5px' }}>{c.updated}</p>
+        <div style={{ fontSize: '15px', color: '#5C3D30', lineHeight: 1.9 }}>
           {c.sections.map((s, i) => (
             <div key={i}>
               <h2 style={hStyle}>{s.h}</h2>
