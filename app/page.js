@@ -981,7 +981,7 @@ export default function NehamaApp() {
   const perMonth = lang === 'es' ? '/ mes' : lang === 'pt' ? '/ mês' : '/ month';
   const perYear = lang === 'es' ? '/ año' : lang === 'pt' ? '/ ano' : '/ year';
   if (screen === 'pricing') return (
-    <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px', position: 'relative' }}>
+    <div className="neh-shell" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px', position: 'relative' }}>
       <LangSwitch lang={lang} setLang={setLang} />
       <div style={{ textAlign: 'center', marginBottom: '40px' }}>
         <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '40px', fontWeight: 300, color: '#5C3D30', letterSpacing: '3px', marginBottom: '8px' }}>Nehama</div>
@@ -1027,7 +1027,7 @@ export default function NehamaApp() {
 
   // ─── WELCOME ─────
   if (screen === 'welcome') return (
-    <div style={{ minHeight: '100vh', position: 'relative', background: '#FFFFFF' }}>
+    <div className="neh-shell" style={{ minHeight: '100vh', position: 'relative', background: '#FFFFFF' }}>
       <LangSwitch lang={lang} setLang={setLang} />
 
       {/* Header */}
@@ -1162,8 +1162,8 @@ export default function NehamaApp() {
   // ─── CHAT ─────
   const phase = getPhaseInfo(messages, tier);
   return (
-    <div style={{ minHeight: '100vh' }}>
-      <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', maxWidth: '680px', margin: '0 auto' }}>
+    <div className="neh-shell" style={{ minHeight: '100vh' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', margin: '0 auto' }}>
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 24px', borderBottom: '1px solid rgba(74,46,34,0.07)', background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(12px)', position: 'sticky', top: 0, zIndex: 10 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
