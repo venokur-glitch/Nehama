@@ -601,8 +601,8 @@ function LogoLines({ width = 160 }) {
   const h = width * 0.08;
   return (
     <svg width={width} height={h + 4} viewBox={`0 0 ${width} ${h + 4}`} style={{ display: 'block', margin: '0 auto' }}>
-      <path d={`M0 ${h*0.35} C${width*0.2} 0, ${width*0.4} ${h*0.8}, ${width*0.5} ${h*0.35} C${width*0.6} 0, ${width*0.8} ${h*0.7}, ${width} ${h*0.35}`} stroke="#9BAA9F" strokeWidth="1.1" fill="none" strokeLinecap="round"/>
-      <path d={`M0 ${h*0.65} C${width*0.2} ${h}, ${width*0.4} ${h*0.2}, ${width*0.5} ${h*0.65} C${width*0.6} ${h}, ${width*0.8} ${h*0.3}, ${width} ${h*0.65}`} stroke="#9BAA9F" strokeWidth="0.6" fill="none" strokeLinecap="round" opacity="0.35"/>
+      <path d={`M0 ${h*0.35} C${width*0.2} 0, ${width*0.4} ${h*0.8}, ${width*0.5} ${h*0.35} C${width*0.6} 0, ${width*0.8} ${h*0.7}, ${width} ${h*0.35}`} stroke="#AE655B" strokeWidth="1.1" fill="none" strokeLinecap="round"/>
+      <path d={`M0 ${h*0.65} C${width*0.2} ${h}, ${width*0.4} ${h*0.2}, ${width*0.5} ${h*0.65} C${width*0.6} ${h}, ${width*0.8} ${h*0.3}, ${width} ${h*0.65}`} stroke="#AE655B" strokeWidth="0.6" fill="none" strokeLinecap="round" opacity="0.35"/>
     </svg>
   );
 }
@@ -617,9 +617,9 @@ function renderMarkdown(text) {
   let tableRows = [];
   let key = 0;
   const flush = () => { if (para.length > 0) { const c = para.join('\n'); if (c.trim()) elements.push(<p key={key++} style={{ margin: '0 0 14px 0', lineHeight: '1.8' }}>{inl(c)}</p>); para = []; } };
-  const flushTable = () => { if (tableRows.length > 0) { const h = tableRows[0], d = tableRows.slice(2); elements.push(<div key={key++} style={{ overflowX: 'auto', margin: '20px 0' }}><table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}><thead><tr>{h.map((c, i) => <th key={i} style={{ textAlign: 'left', padding: '10px 14px', borderBottom: '1px solid rgba(0,0,0,0.1)', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, fontSize: '15px', color: '#4A5D4F' }}>{inl(c.trim())}</th>)}</tr></thead><tbody>{d.map((r, ri) => <tr key={ri}>{r.map((c, ci) => <td key={ci} style={{ padding: '8px 14px', borderBottom: '1px solid rgba(0,0,0,0.04)', color: '#3D3D3D' }}>{inl(c.trim())}</td>)}</tr>)}</tbody></table></div>); tableRows = []; } };
+  const flushTable = () => { if (tableRows.length > 0) { const h = tableRows[0], d = tableRows.slice(2); elements.push(<div key={key++} style={{ overflowX: 'auto', margin: '20px 0' }}><table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}><thead><tr>{h.map((c, i) => <th key={i} style={{ textAlign: 'left', padding: '10px 14px', borderBottom: '1px solid rgba(74,46,34,0.1)', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, fontSize: '15px', color: '#5C3D30' }}>{inl(c.trim())}</th>)}</tr></thead><tbody>{d.map((r, ri) => <tr key={ri}>{r.map((c, ci) => <td key={ci} style={{ padding: '8px 14px', borderBottom: '1px solid rgba(74,46,34,0.05)', color: '#5C3D30' }}>{inl(c.trim())}</td>)}</tr>)}</tbody></table></div>); tableRows = []; } };
   const inl = (t) => { const p = []; const rx = /\*\*(.+?)\*\*/g; let m, li = 0, ix = 0; while ((m = rx.exec(t)) !== null) { if (m.index > li) p.push(t.slice(li, m.index)); p.push(<strong key={`b${ix++}`} style={{ fontWeight: 500 }}>{m[1]}</strong>); li = rx.lastIndex; } if (li < t.length) p.push(t.slice(li)); return p.length > 0 ? p : t; };
-  for (const line of lines) { const t = line.trim(); if (t.startsWith('|') && t.endsWith('|')) { if (!inTable) { flush(); inTable = true; } tableRows.push(t.split('|').filter((_, i) => i > 0 && i < t.split('|').length - 1)); continue; } else if (inTable) { inTable = false; flushTable(); } if (t.startsWith('### ')) { flush(); elements.push(<h4 key={key++} style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '17px', fontWeight: 500, color: '#4A5D4F', margin: '24px 0 8px 0', letterSpacing: '0.3px' }}>{inl(t.slice(4))}</h4>); } else if (t.startsWith('## ')) { flush(); elements.push(<h3 key={key++} style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '20px', fontWeight: 500, color: '#4A5D4F', margin: '28px 0 10px 0', letterSpacing: '0.3px' }}>{inl(t.slice(3))}</h3>); } else if (t.startsWith('# ')) { flush(); elements.push(<h2 key={key++} style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '24px', fontWeight: 500, color: '#2C2C2C', margin: '32px 0 12px 0' }}>{inl(t.slice(2))}</h2>); } else if (t.startsWith('- ') || t.startsWith('• ')) { flush(); elements.push(<div key={key++} style={{ display: 'flex', gap: '10px', margin: '4px 0 4px 4px', lineHeight: '1.8' }}><span style={{ color: '#8B9E8F', flexShrink: 0, fontSize: '10px', marginTop: '8px' }}>●</span><span>{inl(t.slice(2))}</span></div>); } else if (/^\d+\.\s/.test(t)) { flush(); const n = t.match(/^(\d+)\.\s/)[1]; elements.push(<div key={key++} style={{ display: 'flex', gap: '10px', margin: '4px 0 4px 4px', lineHeight: '1.8' }}><span style={{ color: '#8B9E8F', flexShrink: 0, fontWeight: 500, minWidth: '20px', fontFamily: "'Cormorant Garamond', serif" }}>{n}.</span><span>{inl(t.replace(/^\d+\.\s/, ''))}</span></div>); } else if (t.startsWith('> ')) { flush(); elements.push(<blockquote key={key++} style={{ borderLeft: '2px solid #8B9E8F', paddingLeft: '20px', margin: '16px 0', color: '#4A5D4F', fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontSize: '16px', lineHeight: '1.8' }}>{inl(t.slice(2))}</blockquote>); } else if (t === '') { flush(); } else { para.push(line); } }
+  for (const line of lines) { const t = line.trim(); if (t.startsWith('|') && t.endsWith('|')) { if (!inTable) { flush(); inTable = true; } tableRows.push(t.split('|').filter((_, i) => i > 0 && i < t.split('|').length - 1)); continue; } else if (inTable) { inTable = false; flushTable(); } if (t.startsWith('### ')) { flush(); elements.push(<h4 key={key++} style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '17px', fontWeight: 500, color: '#5C3D30', margin: '24px 0 8px 0', letterSpacing: '0.3px' }}>{inl(t.slice(4))}</h4>); } else if (t.startsWith('## ')) { flush(); elements.push(<h3 key={key++} style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '20px', fontWeight: 500, color: '#5C3D30', margin: '28px 0 10px 0', letterSpacing: '0.3px' }}>{inl(t.slice(3))}</h3>); } else if (t.startsWith('# ')) { flush(); elements.push(<h2 key={key++} style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '24px', fontWeight: 500, color: '#5C3D30', margin: '32px 0 12px 0' }}>{inl(t.slice(2))}</h2>); } else if (t.startsWith('- ') || t.startsWith('• ')) { flush(); elements.push(<div key={key++} style={{ display: 'flex', gap: '10px', margin: '4px 0 4px 4px', lineHeight: '1.8' }}><span style={{ color: '#AE655B', flexShrink: 0, fontSize: '10px', marginTop: '8px' }}>●</span><span>{inl(t.slice(2))}</span></div>); } else if (/^\d+\.\s/.test(t)) { flush(); const n = t.match(/^(\d+)\.\s/)[1]; elements.push(<div key={key++} style={{ display: 'flex', gap: '10px', margin: '4px 0 4px 4px', lineHeight: '1.8' }}><span style={{ color: '#AE655B', flexShrink: 0, fontWeight: 500, minWidth: '20px', fontFamily: "'Cormorant Garamond', serif" }}>{n}.</span><span>{inl(t.replace(/^\d+\.\s/, ''))}</span></div>); } else if (t.startsWith('> ')) { flush(); elements.push(<blockquote key={key++} style={{ borderLeft: '2px solid #AE655B', paddingLeft: '20px', margin: '16px 0', color: '#5C3D30', fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontSize: '16px', lineHeight: '1.8' }}>{inl(t.slice(2))}</blockquote>); } else if (t === '') { flush(); } else { para.push(line); } }
   if (inTable) flushTable(); flush(); return elements;
 }
 
@@ -637,37 +637,37 @@ function stripReflectionCard(text) {
 }
 
 const CARD_THEMES = {
-  wilderness: { bg: '#FBF7F0', accent: '#C4B5A0' },
-  growth: { bg: '#F5F8F4', accent: '#9BAA9F' },
-  grief: { bg: '#F3F5F8', accent: '#8E9FAD' },
-  breakthrough: { bg: '#FDF9EF', accent: '#C4AA78' },
-  default: { bg: '#FEFCF9', accent: '#9BAA9F' },
+  wilderness: { bg: '#FBF5F0', accent: '#C4A593' },
+  growth: { bg: '#FAF3EC', accent: '#AE655B' },
+  grief: { bg: '#F5F0EC', accent: '#9C7E72' },
+  breakthrough: { bg: '#FDF6EE', accent: '#C4986E' },
+  default: { bg: '#FFFFFF', accent: '#AE655B' },
 };
 
 function ReflectionCard({ card, onSave, cta }) {
   const theme = CARD_THEMES[card.theme] || CARD_THEMES.default;
   return (
-    <div style={{ background: theme.bg, border: '1px solid rgba(0,0,0,0.06)', borderRadius: '8px', width: 260, height: 462, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '28px 22px 28px', position: 'relative', boxShadow: '0 1px 12px rgba(0,0,0,0.05)' }}>
-      <button onClick={onSave} style={{ position: 'absolute', top: '10px', right: '10px', background: 'none', border: 'none', cursor: 'pointer', color: '#C0C0C0', fontSize: '14px', padding: '4px', lineHeight: 1 }} title="Save">↓</button>
+    <div style={{ background: theme.bg, border: '1px solid rgba(74,46,34,0.07)', borderRadius: '8px', width: 260, height: 462, display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '28px 22px 28px', position: 'relative', boxShadow: '0 1px 12px rgba(0,0,0,0.05)' }}>
+      <button onClick={onSave} style={{ position: 'absolute', top: '10px', right: '10px', background: 'none', border: 'none', cursor: 'pointer', color: '#B8A498', fontSize: '14px', padding: '4px', lineHeight: 1 }} title="Save">↓</button>
       <svg width="52" height="72" viewBox="-26 0 52 72" style={{ marginBottom: '16px', flexShrink: 0 }}>
-        <path d="M0,68 C-19,46 -24,36 -24,25 A24,24 0 1,1 24,25 C24,36 19,46 0,68 Z" fill="#9BAA9F"/>
-        <text x="0" y="21" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="7" fontWeight="600" fill="#FEFCF9" letterSpacing="1">YOU ARE</text>
-        <text x="0" y="32" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="8.5" fontWeight="600" fill="#FEFCF9" letterSpacing="3">HERE</text>
+        <path d="M0,68 C-19,46 -24,36 -24,25 A24,24 0 1,1 24,25 C24,36 19,46 0,68 Z" fill="#AE655B"/>
+        <text x="0" y="21" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="7" fontWeight="600" fill="#FFFFFF" letterSpacing="1">YOU ARE</text>
+        <text x="0" y="32" textAnchor="middle" fontFamily="'Cormorant Garamond', serif" fontSize="8.5" fontWeight="600" fill="#FFFFFF" letterSpacing="3">HERE</text>
       </svg>
-      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '16px', color: '#3A4A40', fontWeight: 400, fontStyle: 'italic', textAlign: 'center', lineHeight: 1.45, marginBottom: '14px' }}>{card.seasonStatement}</div>
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '16px', color: '#5C3D30', fontWeight: 400, fontStyle: 'italic', textAlign: 'center', lineHeight: 1.45, marginBottom: '14px' }}>{card.seasonStatement}</div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', justifyContent: 'center', width: '60%' }}>
-        <div style={{ flex: 1, height: '1px', background: '#9BAA9F', opacity: 0.5 }} />
+        <div style={{ flex: 1, height: '1px', background: '#AE655B', opacity: 0.5 }} />
         <div style={{ flex: '0 0 4px' }} />
-        <div style={{ flex: 1, height: '1px', background: '#9BAA9F', opacity: 0.5 }} />
+        <div style={{ flex: 1, height: '1px', background: '#AE655B', opacity: 0.5 }} />
       </div>
-      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '12px', color: '#6B7F72', fontWeight: 400, textAlign: 'center', lineHeight: 1.5, marginBottom: '4px', padding: '0 8px' }}>{card.verseQuote}</div>
-      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '10px', color: '#9BAA9F', textAlign: 'center', letterSpacing: '1.5px', marginBottom: '16px', flexShrink: 0 }}>{card.scripture}</div>
+      <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '12px', color: '#9C7E72', fontWeight: 400, textAlign: 'center', lineHeight: 1.5, marginBottom: '4px', padding: '0 8px' }}>{card.verseQuote}</div>
+      <div style={{ fontFamily: "'Work Sans', sans-serif", fontSize: '10px', color: '#AE655B', textAlign: 'center', letterSpacing: '1.5px', marginBottom: '16px', flexShrink: 0 }}>{card.scripture}</div>
       <div style={{ flex: 1 }} />
-      <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '12px', color: '#4A5A50', fontWeight: 500, textAlign: 'center', lineHeight: 1.5, marginBottom: '20px' }}>{card.mantra}</div>
+      <div style={{ fontFamily: "'Work Sans', sans-serif", fontSize: '12px', color: '#5C3D30', fontWeight: 500, textAlign: 'center', lineHeight: 1.5, marginBottom: '20px' }}>{card.mantra}</div>
       <div style={{ textAlign: 'center', flexShrink: 0 }}>
-        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '10px', color: '#9BAA9F', letterSpacing: '3px' }}>nehama</div>
-        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '8px', color: '#B5C0B8', marginTop: '3px' }}>findnehama.com</div>
-        <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '8px', color: '#B5C0B8', fontStyle: 'italic', marginTop: '2px' }}>{cta}</div>
+        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '10px', color: '#AE655B', letterSpacing: '3px' }}>nehama</div>
+        <div style={{ fontFamily: "'Work Sans', sans-serif", fontSize: '8px', color: '#B8A498', marginTop: '3px' }}>findnehama.com</div>
+        <div style={{ fontFamily: "'Work Sans', sans-serif", fontSize: '8px', color: '#B8A498', fontStyle: 'italic', marginTop: '2px' }}>{cta}</div>
       </div>
     </div>
   );
@@ -676,19 +676,19 @@ function ReflectionCard({ card, onSave, cta }) {
 function saveCardAsPNG(card, cta) {
   const w = 1080, h = 1920;
   const themes = {
-    wilderness: { bg: '#FBF7F0' },
-    growth: { bg: '#F5F8F4' },
-    grief: { bg: '#F3F5F8' },
-    breakthrough: { bg: '#FDF9EF' },
-    default: { bg: '#FEFCF9' },
+    wilderness: { bg: '#FBF5F0' },
+    growth: { bg: '#FAF3EC' },
+    grief: { bg: '#F5F0EC' },
+    breakthrough: { bg: '#FDF6EE' },
+    default: { bg: '#FFFFFF' },
   };
   const th = themes[card.theme] || themes.default;
   const canvas = document.createElement('canvas');
   canvas.width = w; canvas.height = h;
   const ctx = canvas.getContext('2d');
-  ctx.fillStyle = '#F0EDE8'; ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = '#F0EAE4'; ctx.fillRect(0, 0, w, h);
   const m = 36, cr = 16;
-  ctx.shadowColor = 'rgba(0,0,0,0.1)'; ctx.shadowBlur = 36; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 6;
+  ctx.shadowColor = 'rgba(74,46,34,0.1)'; ctx.shadowBlur = 36; ctx.shadowOffsetX = 0; ctx.shadowOffsetY = 6;
   ctx.fillStyle = th.bg;
   ctx.beginPath();
   ctx.moveTo(m + cr, m); ctx.lineTo(w - m - cr, m); ctx.quadraticCurveTo(w - m, m, w - m, m + cr);
@@ -707,7 +707,7 @@ function saveCardAsPNG(card, cta) {
   const pinTopY = y;
   const pinCX = cx;
   const pinCY = pinTopY + 25 * ps;
-  ctx.fillStyle = '#9BAA9F';
+  ctx.fillStyle = '#AE655B';
   ctx.beginPath();
   ctx.moveTo(pinCX, pinTopY + 68 * ps);
   ctx.bezierCurveTo(pinCX - 19*ps, pinTopY + 46*ps, pinCX - 24*ps, pinTopY + 36*ps, pinCX - 24*ps, pinTopY + 25*ps);
@@ -715,7 +715,7 @@ function saveCardAsPNG(card, cta) {
   ctx.bezierCurveTo(pinCX + 24*ps, pinTopY + 36*ps, pinCX + 19*ps, pinTopY + 46*ps, pinCX, pinTopY + 68*ps);
   ctx.closePath(); ctx.fill();
   // Pin text: YOU ARE 7*s, HERE 8.5*s letterspaced
-  ctx.fillStyle = '#FEFCF9'; ctx.font = '600 ' + Math.round(7*s) + 'px "Cormorant Garamond", serif';
+  ctx.fillStyle = '#FFFFFF'; ctx.font = '600 ' + Math.round(7*s) + 'px "Cormorant Garamond", serif';
   const yaW = ctx.measureText('YOU ARE').width;
   ctx.fillText('YOU ARE', pinCX, pinCY - 3*s);
   ctx.font = '600 ' + Math.round(8.5*s) + 'px "Cormorant Garamond", serif';
@@ -728,7 +728,7 @@ function saveCardAsPNG(card, cta) {
   y = pinTopY + 68*ps + 16*s;
   const ssLen = card.seasonStatement.length;
   const ssFs = Math.round((ssLen > 180 ? 14 : ssLen > 120 ? 15 : 16) * s);
-  ctx.fillStyle = '#3A4A40'; ctx.font = 'italic 400 ' + ssFs + 'px "Cormorant Garamond", serif';
+  ctx.fillStyle = '#5C3D30'; ctx.font = 'italic 400 ' + ssFs + 'px "Cormorant Garamond", serif';
   const ssL = wrapText(ctx, card.seasonStatement, w * 0.82);
   ssL.forEach(l => { ctx.fillText(l, cx, y); y += Math.round(ssFs * 1.45); });
   // Verse dividers + quote: in-app 12px
@@ -736,23 +736,23 @@ function saveCardAsPNG(card, cta) {
   const vqFs = Math.round(12*s);
   ctx.font = '400 ' + vqFs + 'px "Cormorant Garamond", serif';
   const vqW = ctx.measureText(card.verseQuote).width;
-  ctx.strokeStyle = '#9BAA9F'; ctx.lineWidth = 1; ctx.globalAlpha = 0.5;
+  ctx.strokeStyle = '#AE655B'; ctx.lineWidth = 1; ctx.globalAlpha = 0.5;
   const ll = Math.min(20*s, (w*0.82 - vqW)/2 - 8*s);
   if (ll > 4) {
     ctx.beginPath(); ctx.moveTo(cx - vqW/2 - ll - 8*s, y); ctx.lineTo(cx - vqW/2 - 8*s, y); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(cx + vqW/2 + 8*s, y); ctx.lineTo(cx + vqW/2 + ll + 8*s, y); ctx.stroke();
   }
   ctx.globalAlpha = 1;
-  ctx.fillStyle = '#6B7F72';
+  ctx.fillStyle = '#9C7E72';
   ctx.fillText(card.verseQuote, cx, y + 4);
-  // Scripture ref: in-app 10px DM Sans
+  // Scripture ref: in-app 10px Work Sans
   y += 4*s + vqFs*0.3;
-  ctx.fillStyle = '#9BAA9F'; ctx.font = '400 ' + Math.round(10*s) + 'px "DM Sans", sans-serif';
+  ctx.fillStyle = '#AE655B'; ctx.font = '400 ' + Math.round(10*s) + 'px "Work Sans", sans-serif';
   ctx.fillText(card.scripture, cx, y);
-  // Mantra: in-app 12px DM Sans 500, centered in remaining space
+  // Mantra: in-app 12px Work Sans 500, centered in remaining space
   y += 16*s;
   const mFs = Math.round(12*s);
-  ctx.font = '500 ' + mFs + 'px "DM Sans", sans-serif';
+  ctx.font = '500 ' + mFs + 'px "Work Sans", sans-serif';
   const mL = wrapText(ctx, card.mantra, w * 0.78);
   const mH = mL.length * Math.round(mFs * 1.5);
   // Footer: in-app ~28px from bottom
@@ -763,15 +763,15 @@ function saveCardAsPNG(card, cta) {
   const mZoneTop = y;
   const mZoneBot = fTop - 20*s;
   const mY = mZoneTop + (mZoneBot - mZoneTop - mH) / 2;
-  ctx.fillStyle = '#4A5A50'; ctx.font = '500 ' + mFs + 'px "DM Sans", sans-serif';
+  ctx.fillStyle = '#5C3D30'; ctx.font = '500 ' + mFs + 'px "Work Sans", sans-serif';
   let my = mY;
   mL.forEach(l => { ctx.fillText(l, cx, my); my += Math.round(mFs * 1.5); });
   // Footer
-  ctx.fillStyle = '#9BAA9F'; ctx.font = '400 ' + Math.round(10*s) + 'px "Cormorant Garamond", serif';
+  ctx.fillStyle = '#AE655B'; ctx.font = '400 ' + Math.round(10*s) + 'px "Cormorant Garamond", serif';
   ctx.fillText('nehama', cx, fTop);
-  ctx.fillStyle = '#B5C0B8'; ctx.font = '400 ' + Math.round(8*s) + 'px "DM Sans", sans-serif';
+  ctx.fillStyle = '#B8A498'; ctx.font = '400 ' + Math.round(8*s) + 'px "Work Sans", sans-serif';
   ctx.fillText('findnehama.com', cx, fTop + 3*s + Math.round(8*s));
-  ctx.font = 'italic 400 ' + Math.round(8*s) + 'px "DM Sans", sans-serif';
+  ctx.font = 'italic 400 ' + Math.round(8*s) + 'px "Work Sans", sans-serif';
   ctx.fillText(cta || '5 questions. Your story in scripture.', cx, fTop + 5*s + Math.round(16*s));
   canvas.toBlob(async (blob) => {
     if (navigator.share && navigator.canShare) {
@@ -812,10 +812,10 @@ function PhaseIndicator({ phase }) {
   const dots = phase.total === 1 ? 1 : phase.total;
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-      <span style={{ fontSize: '10px', fontWeight: 500, color: '#9A9A9A', letterSpacing: '1.5px', textTransform: 'uppercase' }}>{phase.label}</span>
+      <span style={{ fontSize: '10px', fontWeight: 500, color: '#AE655B', letterSpacing: '1.5px', textTransform: 'uppercase' }}>{phase.label}</span>
       <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
         {Array.from({ length: dots }).map((_, i) => (
-          <div key={i} style={{ width: i <= phase.index ? '12px' : '6px', height: '3px', borderRadius: '2px', background: i <= phase.index ? '#9BAA9F' : 'rgba(0,0,0,0.08)', transition: 'all 0.4s ease' }} />
+          <div key={i} style={{ width: i <= phase.index ? '12px' : '6px', height: '3px', borderRadius: '2px', background: i <= phase.index ? '#AE655B' : 'rgba(74,46,34,0.08)', transition: 'all 0.4s ease' }} />
         ))}
       </div>
     </div>
@@ -824,17 +824,17 @@ function PhaseIndicator({ phase }) {
 
 // ─── TOGGLE BUTTON ──────────────────────────────────────────────────
 function Tog({ active, children, onClick, small }) {
-  return <button onClick={onClick} style={{ flex: 1, padding: small ? '8px 6px' : '10px 14px', fontSize: small ? '13px' : '14px', fontFamily: "'DM Sans', sans-serif", fontWeight: active ? 500 : 400, border: 'none', cursor: 'pointer', background: active ? 'rgba(74,90,80,0.1)' : 'transparent', color: active ? '#4A5A50' : '#B0B0B0', transition: 'all 0.25s ease', letterSpacing: '0.2px' }}>{children}</button>;
+  return <button onClick={onClick} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: small ? '8px 6px' : '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: active ? '#fff' : '#AE655B', background: active ? '#5C3D30' : 'transparent', borderRadius: '999px', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{children}</button>;
 }
 
 function LangSwitch({ lang, setLang }) {
   return (
-    <div style={{ position: 'absolute', top: '20px', right: '20px', display: 'flex', gap: '2px', fontSize: '12px', fontFamily: "'DM Sans', sans-serif" }}>
-      <button onClick={() => setLang('en')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px 6px', color: lang === 'en' ? '#4A5A50' : '#C0C0C0', fontWeight: lang === 'en' ? 500 : 400, fontSize: '12px', fontFamily: "'DM Sans', sans-serif", letterSpacing: '0.5px' }}>EN</button>
-      <span style={{ color: '#D0D0D0', fontSize: '12px', lineHeight: '28px' }}>|</span>
-      <button onClick={() => setLang('es')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px 6px', color: lang === 'es' ? '#4A5A50' : '#C0C0C0', fontWeight: lang === 'es' ? 500 : 400, fontSize: '12px', fontFamily: "'DM Sans', sans-serif", letterSpacing: '0.5px' }}>ES</button>
-      <span style={{ color: '#D0D0D0', fontSize: '12px', lineHeight: '28px' }}>|</span>
-      <button onClick={() => setLang('pt')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px 6px', color: lang === 'pt' ? '#4A5A50' : '#C0C0C0', fontWeight: lang === 'pt' ? 500 : 400, fontSize: '12px', fontFamily: "'DM Sans', sans-serif", letterSpacing: '0.5px' }}>PT</button>
+    <div style={{ position: 'absolute', top: '20px', right: '20px', display: 'flex', gap: '2px', fontSize: '12px', fontFamily: "'Work Sans', sans-serif" }}>
+      <button onClick={() => setLang('en')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px 6px', color: lang === 'en' ? '#5C3D30' : '#B8A498', fontWeight: lang === 'en' ? 500 : 400, fontSize: '12px', fontFamily: "'Work Sans', sans-serif", letterSpacing: '0.5px' }}>EN</button>
+      <span style={{ color: '#B8A498', fontSize: '12px', lineHeight: '28px' }}>|</span>
+      <button onClick={() => setLang('es')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px 6px', color: lang === 'es' ? '#5C3D30' : '#B8A498', fontWeight: lang === 'es' ? 500 : 400, fontSize: '12px', fontFamily: "'Work Sans', sans-serif", letterSpacing: '0.5px' }}>ES</button>
+      <span style={{ color: '#B8A498', fontSize: '12px', lineHeight: '28px' }}>|</span>
+      <button onClick={() => setLang('pt')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px 6px', color: lang === 'pt' ? '#5C3D30' : '#B8A498', fontWeight: lang === 'pt' ? 500 : 400, fontSize: '12px', fontFamily: "'Work Sans', sans-serif", letterSpacing: '0.5px' }}>PT</button>
     </div>
   );
 }
@@ -955,24 +955,24 @@ export default function NehamaApp() {
 
   const freeSessionComplete = tier === 'free' && messages.filter(m => m.role === 'assistant').length >= 3 && messages.some(m => m.role === 'assistant' && (m.content.toLowerCase().includes('what you just shared matters') || m.content.toLowerCase().includes('lo que acabas de compartir importa') || m.content.includes('[/REFLECTION_CARD]')));
 
-  const inputStyle = { width: '100%', padding: '13px 16px', fontSize: '15px', fontFamily: "'DM Sans', sans-serif", border: '1px solid rgba(0,0,0,0.08)', borderRadius: '8px', background: '#fff', color: '#2C2C2C', outline: 'none', transition: 'border-color 0.2s', boxSizing: 'border-box' };
-  const toggleGroupStyle = { display: 'flex', borderRadius: '8px', overflow: 'hidden', border: '1px solid rgba(0,0,0,0.08)' };
-  const labelStyle = { display: 'block', fontSize: '11px', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '1.5px', color: '#9A9A9A', marginBottom: '8px', fontFamily: "'DM Sans', sans-serif" };
+  const inputStyle = { width: '100%', boxSizing: 'border-box', background: 'transparent', border: 'none', borderBottom: '1px solid rgba(74,46,34,0.07)', padding: '10px 0 12px', fontFamily: "'Work Sans', sans-serif", fontWeight: 300, fontSize: 'calc(15px * 0.96)', color: '#5C3D30', outline: 'none', transition: 'border-color 0.2s', borderRadius: 0 };
+  const toggleGroupStyle = { display: 'flex', border: '1px solid rgba(74,46,34,0.07)', borderRadius: '999px', padding: '3px', gap: '2px' };
+  const labelStyle = { display: 'block', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(10px * 0.96)', fontWeight: 500, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#AE655B', marginBottom: '10px' };
 
   // ─── CONTACT MODAL ─────
   const contactModalJSX = showContact ? (<>
-    <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.12)', zIndex: 200, backdropFilter: 'blur(4px)' }} onClick={() => { setShowContact(false); setContactSent(false); }} />
-    <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: '#FEFCF9', borderRadius: '12px', padding: '36px', width: '90%', maxWidth: '380px', zIndex: 201, boxShadow: '0 24px 48px rgba(0,0,0,0.08)' }}>
+    <div style={{ position: 'fixed', inset: 0, background: 'rgba(74,46,34,0.12)', zIndex: 200, backdropFilter: 'blur(4px)' }} onClick={() => { setShowContact(false); setContactSent(false); }} />
+    <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', background: '#FFFFFF', borderRadius: '12px', padding: '36px', width: '90%', maxWidth: '380px', zIndex: 201, boxShadow: '0 24px 48px rgba(74,46,34,0.08)' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '22px', fontWeight: 400, color: '#2C2C2C' }}>{t.getInTouch}</span>
-        <button style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px', color: '#AAAAAA', padding: '4px' }} onClick={() => { setShowContact(false); setContactSent(false); }}>×</button>
+        <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '22px', fontWeight: 400, color: '#5C3D30' }}>{t.getInTouch}</span>
+        <button style={{ background: 'none', border: 'none', cursor: 'pointer', fontSize: '20px', color: '#B8A498', padding: '4px' }} onClick={() => { setShowContact(false); setContactSent(false); }}>×</button>
       </div>
       {contactSent ? (
-        <p style={{ fontSize: '15px', color: '#4A5D4F', lineHeight: 1.6 }}>{t.thankYou}</p>
+        <p style={{ fontSize: '15px', color: '#5C3D30', lineHeight: 1.6 }}>{t.thankYou}</p>
       ) : (<>
-        <input style={{ ...inputStyle, marginBottom: '12px' }} placeholder={t.emailLabel} type="email" value={contactEmail} onChange={e => setContactEmail(e.target.value)} onFocus={e => e.target.style.borderColor = 'rgba(0,0,0,0.2)'} onBlur={e => e.target.style.borderColor = 'rgba(0,0,0,0.08)'} />
-        <textarea style={{ ...inputStyle, minHeight: '100px', resize: 'vertical', lineHeight: '1.6', marginBottom: '16px' }} placeholder={t.msgLabel} value={contactMsg} onChange={e => setContactMsg(e.target.value)} onFocus={e => e.target.style.borderColor = 'rgba(0,0,0,0.2)'} onBlur={e => e.target.style.borderColor = 'rgba(0,0,0,0.08)'} />
-        <button onClick={() => { if (contactEmail.includes('@') && contactMsg.trim()) { fetch('https://formspree.io/f/mdapqwqb', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: contactEmail, message: contactMsg, _subject: 'Nehama Contact Form' }) }); setContactSent(true); setContactEmail(''); setContactMsg(''); } }} style={{ width: '100%', padding: '13px', fontSize: '15px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9', letterSpacing: '0.5px', opacity: contactEmail.includes('@') && contactMsg.trim() ? 1 : 0.4 }}>{t.send}</button>
+        <input style={{ ...inputStyle, marginBottom: '12px' }} placeholder={t.emailLabel} type="email" value={contactEmail} onChange={e => setContactEmail(e.target.value)} onFocus={e => e.target.style.borderBottomColor = '#AE655B'} onBlur={e => e.target.style.borderBottomColor = 'rgba(74,46,34,0.07)'} />
+        <textarea style={{ width: '100%', boxSizing: 'border-box', background: '#fff', border: '1px solid rgba(74,46,34,0.07)', borderRadius: '8px', padding: '12px', fontFamily: "'Work Sans', sans-serif", fontWeight: 300, fontSize: '14px', color: '#5C3D30', outline: 'none', transition: 'border-color 0.2s', minHeight: '100px', resize: 'vertical', lineHeight: '1.6', marginBottom: '16px' }} placeholder={t.msgLabel} value={contactMsg} onChange={e => setContactMsg(e.target.value)} onFocus={e => e.target.style.borderColor = 'rgba(74,46,34,0.2)'} onBlur={e => e.target.style.borderColor = 'rgba(74,46,34,0.07)'} />
+        <button onClick={() => { if (contactEmail.includes('@') && contactMsg.trim()) { fetch('https://formspree.io/f/mdapqwqb', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: contactEmail, message: contactMsg, _subject: 'Nehama Contact Form' }) }); setContactSent(true); setContactEmail(''); setContactMsg(''); } }} style={{ width: '100%', padding: '13px', fontSize: '15px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#5C3D30', color: '#FFFFFF', letterSpacing: '0.5px', opacity: contactEmail.includes('@') && contactMsg.trim() ? 1 : 0.4 }}>{t.send}</button>
       </>)}
     </div>
   </>) : null;
@@ -984,41 +984,41 @@ export default function NehamaApp() {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px', position: 'relative' }}>
       <LangSwitch lang={lang} setLang={setLang} />
       <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '40px', fontWeight: 300, color: '#4A5A50', letterSpacing: '3px', marginBottom: '8px' }}>Nehama</div>
+        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '40px', fontWeight: 300, color: '#5C3D30', letterSpacing: '3px', marginBottom: '8px' }}>Nehama</div>
         <LogoLines width={100} />
       </div>
       <div style={{ width: '100%', maxWidth: '380px' }}>
         {codeAccepted ? (<>
           <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-            <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '28px', color: '#2C2C2C', marginBottom: '12px', fontWeight: 400 }}>{t.codeWelcome}</p>
-            <p style={{ fontSize: '14px', color: '#8A8A8A', lineHeight: 1.7 }}>{t.codeEmailAsk}</p>
+            <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '28px', color: '#5C3D30', marginBottom: '12px', fontWeight: 400 }}>{t.codeWelcome}</p>
+            <p style={{ fontSize: '14px', color: '#5C3D30', lineHeight: 1.7 }}>{t.codeEmailAsk}</p>
           </div>
-          <input style={{ ...inputStyle, marginBottom: '12px' }} placeholder={t.codeEmailPlaceholder} type="email" value={codeEmail} onChange={e => setCodeEmail(e.target.value)} onFocus={e => e.target.style.borderColor = 'rgba(0,0,0,0.2)'} onBlur={e => e.target.style.borderColor = 'rgba(0,0,0,0.08)'} onKeyDown={e => e.key === 'Enter' && handleCodeEmailSubmit()} />
-          <button onClick={handleCodeEmailSubmit} style={{ width: '100%', padding: '14px', fontSize: '15px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9', letterSpacing: '0.5px', marginBottom: '12px' }}>{t.codeStart}</button>
-          <button onClick={() => { setCodeAccepted(false); setCodeEmail(''); launchFullJourney(); }} style={{ display: 'block', margin: '0 auto', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontSize: '13px', color: '#B0B0B0' }}>{t.codeSkip}</button>
+          <input style={{ ...inputStyle, marginBottom: '12px' }} placeholder={t.codeEmailPlaceholder} type="email" value={codeEmail} onChange={e => setCodeEmail(e.target.value)} onFocus={e => e.target.style.borderBottomColor = '#AE655B'} onBlur={e => e.target.style.borderBottomColor = 'rgba(74,46,34,0.07)'} onKeyDown={e => e.key === 'Enter' && handleCodeEmailSubmit()} />
+          <button onClick={handleCodeEmailSubmit} style={{ width: '100%', padding: '14px', fontSize: '15px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#5C3D30', color: '#FFFFFF', letterSpacing: '0.5px', marginBottom: '12px' }}>{t.codeStart}</button>
+          <button onClick={() => { setCodeAccepted(false); setCodeEmail(''); launchFullJourney(); }} style={{ display: 'block', margin: '0 auto', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'Work Sans', sans-serif", fontSize: '13px', color: '#B8A498' }}>{t.codeSkip}</button>
         </>) : (<>
-        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '22px', color: '#2C2C2C', textAlign: 'center', marginBottom: '32px', fontWeight: 400 }}>{t.pricingTitle}</p>
-        <button onClick={() => handleCheckout(prices.monthlyId, true)} style={{ width: '100%', padding: '18px', fontSize: '16px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9', letterSpacing: '0.5px', marginBottom: '4px' }}><span style={{ textDecoration: 'line-through', opacity: 0.6, marginRight: '10px', fontSize: '14px' }}>{prices.format(prices.symbol, prices.monthly)} {perMonth}</span>{prices.format(prices.symbol, prices.foundingMonthly)} {perMonth}</button>
-        <p style={{ fontSize: '12px', color: '#9BAA9F', textAlign: 'center', marginBottom: '20px', fontStyle: 'italic' }}>{prices.dailyMonthly}</p>
-        <button onClick={() => handleCheckout(prices.annualId, true)} style={{ width: '100%', padding: '18px', fontSize: '16px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: '1px solid #4A5D4F', borderRadius: '8px', cursor: 'pointer', background: 'transparent', color: '#4A5D4F', letterSpacing: '0.5px', marginBottom: '4px' }}><span style={{ textDecoration: 'line-through', opacity: 0.5, marginRight: '10px', fontSize: '14px' }}>{prices.format(prices.symbol, prices.annual)} {perYear}</span>{prices.format(prices.symbol, prices.foundingAnnual)} {perYear}</button>
-        <p style={{ fontSize: '12px', color: '#9BAA9F', textAlign: 'center', marginBottom: '8px', fontStyle: 'italic' }}>{prices.dailyAnnual}</p>
-        <p style={{ fontSize: '13px', color: '#B0B0B0', textAlign: 'center', marginTop: '12px', marginBottom: '8px' }}>{t.pricingTrial}</p>
-        <p style={{ fontSize: '12px', color: '#9BAA9F', textAlign: 'center', marginBottom: '28px', fontStyle: 'italic', lineHeight: 1.5 }}>{t.pricingFounderNote}</p>
-        <div style={{ borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '20px', textAlign: 'center' }}>
-          <p style={{ fontSize: '14px', color: '#9A9A9A', lineHeight: 1.6 }}>{t.pricingScholarship1}<span style={{ color: '#4A5D4F', cursor: 'pointer', textDecoration: 'underline', textUnderlineOffset: '3px' }} onClick={() => setShowContact(true)}>{t.pricingScholarshipLink}</span>{t.pricingScholarship2}</p>
+        <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '22px', color: '#5C3D30', textAlign: 'center', marginBottom: '32px', fontWeight: 400 }}>{t.pricingTitle}</p>
+        <button onClick={() => handleCheckout(prices.monthlyId, true)} style={{ width: '100%', padding: '18px', fontSize: '16px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#5C3D30', color: '#FFFFFF', letterSpacing: '0.5px', marginBottom: '4px' }}><span style={{ textDecoration: 'line-through', opacity: 0.6, marginRight: '10px', fontSize: '14px' }}>{prices.format(prices.symbol, prices.monthly)} {perMonth}</span>{prices.format(prices.symbol, prices.foundingMonthly)} {perMonth}</button>
+        <p style={{ fontSize: '12px', color: '#AE655B', textAlign: 'center', marginBottom: '20px', fontStyle: 'italic' }}>{prices.dailyMonthly}</p>
+        <button onClick={() => handleCheckout(prices.annualId, true)} style={{ width: '100%', padding: '18px', fontSize: '16px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: '1px solid #5C3D30', borderRadius: '8px', cursor: 'pointer', background: 'transparent', color: '#5C3D30', letterSpacing: '0.5px', marginBottom: '4px' }}><span style={{ textDecoration: 'line-through', opacity: 0.5, marginRight: '10px', fontSize: '14px' }}>{prices.format(prices.symbol, prices.annual)} {perYear}</span>{prices.format(prices.symbol, prices.foundingAnnual)} {perYear}</button>
+        <p style={{ fontSize: '12px', color: '#AE655B', textAlign: 'center', marginBottom: '8px', fontStyle: 'italic' }}>{prices.dailyAnnual}</p>
+        <p style={{ fontSize: '13px', color: '#B8A498', textAlign: 'center', marginTop: '12px', marginBottom: '8px' }}>{t.pricingTrial}</p>
+        <p style={{ fontSize: '12px', color: '#AE655B', textAlign: 'center', marginBottom: '28px', fontStyle: 'italic', lineHeight: 1.5 }}>{t.pricingFounderNote}</p>
+        <div style={{ borderTop: '1px solid rgba(74,46,34,0.07)', paddingTop: '20px', textAlign: 'center' }}>
+          <p style={{ fontSize: '14px', color: '#AE655B', lineHeight: 1.6 }}>{t.pricingScholarship1}<span style={{ color: '#5C3D30', cursor: 'pointer', textDecoration: 'underline', textUnderlineOffset: '3px' }} onClick={() => setShowContact(true)}>{t.pricingScholarshipLink}</span>{t.pricingScholarship2}</p>
         </div>
         <div style={{ textAlign: 'center', marginTop: '20px' }}>
           {!showCodeInput ? (
-            <button onClick={() => setShowCodeInput(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontSize: '13px', color: '#B0B0B0', textDecoration: 'underline', textUnderlineOffset: '3px' }}>{t.pricingHaveCode}</button>
+            <button onClick={() => setShowCodeInput(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'Work Sans', sans-serif", fontSize: '13px', color: '#B8A498', textDecoration: 'underline', textUnderlineOffset: '3px' }}>{t.pricingHaveCode}</button>
           ) : (
             <div style={{ display: 'flex', gap: '8px', maxWidth: '280px', margin: '0 auto' }}>
               <input style={{ ...inputStyle, flex: 1, textAlign: 'center', fontSize: '16px', fontFamily: "'Cormorant Garamond', serif", letterSpacing: '3px', textTransform: 'uppercase' }} placeholder={t.pricingCodePlaceholder} value={codeInput} onChange={e => { setCodeInput(e.target.value); setCodeError(false); }} onKeyDown={e => e.key === 'Enter' && handleCodeSubmit()} />
-              <button onClick={handleCodeSubmit} style={{ padding: '12px 20px', fontSize: '14px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9', flexShrink: 0 }}>{t.pricingCodeApply}</button>
+              <button onClick={handleCodeSubmit} style={{ padding: '12px 20px', fontSize: '14px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#5C3D30', color: '#FFFFFF', flexShrink: 0 }}>{t.pricingCodeApply}</button>
             </div>
           )}
           {codeError && <p style={{ fontSize: '12px', color: '#C48282', marginTop: '8px' }}>{t.pricingCodeError}</p>}
         </div>
-        <button onClick={() => { setScreen('welcome'); setShowCodeInput(false); setCodeError(false); setCodeInput(''); setCodeAccepted(false); setCodeEmail(''); setTimeout(() => setAnim(a => ({ ...a, text: true, paths: true })), 100); }} style={{ display: 'block', margin: '20px auto 0', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#B0B0B0' }}>{t.pricingBack}</button>
+        <button onClick={() => { setScreen('welcome'); setShowCodeInput(false); setCodeError(false); setCodeInput(''); setCodeAccepted(false); setCodeEmail(''); setTimeout(() => setAnim(a => ({ ...a, text: true, paths: true })), 100); }} style={{ display: 'block', margin: '20px auto 0', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#B8A498' }}>{t.pricingBack}</button>
         </>)}
       </div>
       {contactModalJSX}
@@ -1027,106 +1027,133 @@ export default function NehamaApp() {
 
   // ─── WELCOME ─────
   if (screen === 'welcome') return (
-    <div style={{ minHeight: '100vh', position: 'relative' }}>
+    <div style={{ minHeight: '100vh', position: 'relative', background: '#FFFFFF' }}>
       <LangSwitch lang={lang} setLang={setLang} />
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '64px 24px 40px', minHeight: '100vh' }}>
 
-        {/* Logo */}
-        <div style={{ textAlign: 'center', marginBottom: '40px', opacity: anim.text ? 1 : 0, transform: anim.text ? 'translateY(0)' : 'translateY(16px)', transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1)' }}>
-          <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '60px', fontWeight: 300, color: '#4A5A50', letterSpacing: '5px', marginBottom: '8px' }}>Nehama</div>
-          <LogoLines width={180} />
-          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#9A9A9A', marginTop: '10px', letterSpacing: '3px', fontWeight: 300 }}>{t.tagline}</p>
+      {/* Header */}
+      <div style={{ background: '#AE655B', padding: '88px 24px 47px', textAlign: 'center', opacity: anim.text ? 1 : 0, transition: 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1)' }}>
+        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'calc(54px * 0.96)', fontWeight: 400, color: '#FFFFFF', lineHeight: 1, letterSpacing: '0.01em', marginBottom: '18px' }}>Nehama</div>
+        <div style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(10px * 0.96)', color: 'rgba(255,255,255,0.75)', letterSpacing: '0.6em', textTransform: 'uppercase', fontWeight: 400, paddingLeft: '0.6em' }}>YOU ARE HERE</div>
+      </div>
+
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 24px 40px' }}>
+
+        {/* Opening */}
+        <div style={{ maxWidth: '480px', width: '100%', padding: 'calc(56px * 1.15) 32px', textAlign: 'center', opacity: anim.text ? 1 : 0, transform: anim.text ? 'translateY(0)' : 'translateY(12px)', transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s' }}>
+          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'calc(18px * 0.96)', color: '#5C3D30', lineHeight: 1.3, margin: '0 0 16px 0', fontWeight: 400, letterSpacing: '0.01em' }}>{t.blurbIntro}</p>
+          <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(13px * 0.96)', color: '#5C3D30', lineHeight: 1.9, margin: 0, fontWeight: 300, textAlign: 'left' }} dangerouslySetInnerHTML={{ __html: t.blurbBody }} />
         </div>
 
-        {/* Blurb */}
-        <div style={{ maxWidth: '440px', textAlign: 'center', marginBottom: '48px', opacity: anim.text ? 1 : 0, transform: anim.text ? 'translateY(0)' : 'translateY(12px)', transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s' }}>
-          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '19px', color: '#2C2C2C', lineHeight: 1.7, margin: '0 0 14px 0', fontWeight: 400 }}>{t.blurbIntro}</p>
-          <p style={{ fontSize: '14px', color: '#8A8A8A', lineHeight: 1.8, margin: 0 }} dangerouslySetInnerHTML={{ __html: t.blurbBody }} />
-        </div>
+        {/* Divider */}
+        <div style={{ height: '1px', background: 'rgba(74,46,34,0.07)', maxWidth: 'calc(480px - 64px)', width: '100%' }} />
 
         {/* What is Nehama */}
-        <div style={{ width: '100%', maxWidth: '480px', marginBottom: '20px', opacity: anim.paths ? 1 : 0, transition: 'opacity 0.6s' }}>
-          <button onClick={() => setShowAbout(!showAbout)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'Cormorant Garamond', serif", fontSize: '14px', color: '#8B9E8F', fontWeight: 400, display: 'flex', alignItems: 'center', gap: '8px', margin: '0 auto', letterSpacing: '1px' }}>
-            {showAbout ? '▾' : '▸'} {t.whatIsTitle}
+        <div style={{ width: '100%', maxWidth: '480px', padding: '56px 32px', opacity: anim.paths ? 1 : 0, transition: 'opacity 0.6s' }}>
+          <button onClick={() => setShowAbout(!showAbout)} style={{ all: 'unset', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', width: '100%', cursor: 'pointer', padding: '6px 0', color: '#AE655B', textAlign: 'center' }}>
+            <span style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(10px * 0.96)', fontWeight: 500, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#AE655B' }}>{t.whatIsTitle}</span>
+            <svg width="10" height="10" viewBox="0 0 10 10" style={{ transition: 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)', transform: showAbout ? 'rotate(180deg)' : 'rotate(0deg)', color: '#AE655B' }}><path d="M2 3.5L5 6.5L8 3.5" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
           </button>
           {showAbout && (
-            <div style={{ padding: '28px 4px', marginTop: '8px', animation: 'fadeIn 0.4s ease', borderTop: '1px solid rgba(0,0,0,0.04)' }}>
-              <p style={{ fontSize: '14px', color: '#2C2C2C', lineHeight: 1.8, margin: '0 0 16px 0' }} dangerouslySetInnerHTML={{ __html: t.whatIs1 }} />
-              <p style={{ fontSize: '14px', color: '#5A5A5A', lineHeight: 1.8, margin: '0 0 16px 0' }}>{t.whatIs2}</p>
-              <p style={{ fontSize: '14px', color: '#5A5A5A', lineHeight: 1.8, margin: '0 0 16px 0' }}>{t.whatIs3}</p>
-              <p style={{ fontSize: '14px', color: '#5A5A5A', lineHeight: 1.8, margin: '0 0 16px 0' }}>{t.whatIs4}</p>
-              <p style={{ fontSize: '14px', color: '#2C2C2C', lineHeight: 1.8, margin: 0, fontWeight: 500 }}>{t.whatIs5}</p>
-              <div style={{ borderTop: '1px solid rgba(0,0,0,0.04)', marginTop: '20px', paddingTop: '20px' }}>
-                <p style={{ fontSize: '14px', color: '#2C2C2C', lineHeight: 1.8, margin: '0 0 12px 0', fontStyle: 'italic' }}>{t.privacyHead}</p>
-                <p style={{ fontSize: '14px', color: '#5A5A5A', lineHeight: 1.8, margin: '0 0 12px 0' }}>{t.privacyBody}</p>
-                <p style={{ fontSize: '14px', color: '#4A5A50', lineHeight: 1.8, margin: 0, fontStyle: 'italic' }}>{t.privacyClose}</p>
-              </div>
+            <div style={{ paddingTop: '28px', animation: 'fadeIn 0.4s ease' }}>
+              <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(13px * 0.96)', color: '#5C3D30', lineHeight: 1.9, margin: '0 0 1.15em 0', fontWeight: 300, textAlign: 'left' }} dangerouslySetInnerHTML={{ __html: t.whatIs1 }} />
+              <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(13px * 0.96)', color: '#5C3D30', lineHeight: 1.9, margin: '0 0 1.15em 0', fontWeight: 300, textAlign: 'left' }}>{t.whatIs2}</p>
+              <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(13px * 0.96)', color: '#5C3D30', lineHeight: 1.9, margin: '0 0 1.15em 0', fontWeight: 300, textAlign: 'left' }}>{t.whatIs3}</p>
+              <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(13px * 0.96)', color: '#5C3D30', lineHeight: 1.9, margin: '0 0 1.15em 0', fontWeight: 300, textAlign: 'left' }}>{t.whatIs4}</p>
+              <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(13px * 0.96)', color: '#5C3D30', lineHeight: 1.9, margin: '0 0 0 0', fontWeight: 500, textAlign: 'left' }}>{t.whatIs5}</p>
+              <div style={{ height: '1px', background: 'rgba(74,46,34,0.07)', margin: '28px 0 24px' }} />
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'calc(14px * 0.96)', color: '#5C3D30', lineHeight: 1.75, margin: '0 0 12px 0', fontStyle: 'italic', fontWeight: 400, textAlign: 'left' }}>{t.privacyHead}</p>
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'calc(14px * 0.96)', color: '#5C3D30', lineHeight: 1.75, margin: '0 0 12px 0', fontStyle: 'italic', fontWeight: 400, textAlign: 'left' }}>{t.privacyBody}</p>
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'calc(14px * 0.96)', color: '#5C3D30', lineHeight: 1.75, margin: 0, fontStyle: 'italic', fontWeight: 400, textAlign: 'left' }}>{t.privacyClose}</p>
             </div>
           )}
         </div>
 
+        {/* Divider */}
+        <div style={{ height: '1px', background: 'rgba(74,46,34,0.07)', maxWidth: 'calc(480px - 64px)', width: '100%' }} />
+
         {/* Two paths */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', width: '100%', maxWidth: '480px', opacity: anim.paths ? 1 : 0, transform: anim.paths ? 'translateY(0)' : 'translateY(16px)', transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '480px', opacity: anim.paths ? 1 : 0, transform: anim.paths ? 'translateY(0)' : 'translateY(16px)', transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)' }}>
 
           {/* FREE */}
-          <div style={{ borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '28px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '22px', fontWeight: 400, color: '#2C2C2C' }}>{t.freeTitle}</span>
-              <span style={{ fontSize: '10px', fontWeight: 500, color: '#8B9E8F', letterSpacing: '1.5px', textTransform: 'uppercase' }}>{t.freeTag}</span>
+          <div style={{ padding: '56px 32px' }}>
+            <div style={{ textAlign: 'center', marginBottom: '4px' }}>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'calc(26px * 0.96)', fontWeight: 400, color: '#5C3D30', lineHeight: 1.2 }}>{t.freeTitle}</div>
+              <div style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(10px * 0.96)', fontWeight: 400, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#AE655B', border: '1px solid rgba(74,46,34,0.07)', borderRadius: '999px', padding: '5px 10px', display: 'inline-block', marginTop: '10px' }}>{t.freeTag}</div>
             </div>
-            <p style={{ fontSize: '14px', color: '#8A8A8A', lineHeight: 1.7, margin: '0 0 20px 0' }}>{t.freeDesc}</p>
-            <input style={{ ...inputStyle, marginBottom: '12px' }} placeholder={t.namePlaceholder} value={userName} onChange={e => setUserName(e.target.value)} onFocus={e => e.target.style.borderColor = 'rgba(0,0,0,0.2)'} onBlur={e => e.target.style.borderColor = 'rgba(0,0,0,0.08)'} />
-            <label style={labelStyle}>{t.scriptureLabel}</label>
-            <div style={{ ...toggleGroupStyle, marginBottom: '16px' }}>
-              <Tog active={testament === 'old'} onClick={() => setTestament('old')}>{t.otLabel}</Tog>
-              <Tog active={testament === 'both'} onClick={() => setTestament('both')}>{t.bothLabel}</Tog>
-              <Tog active={testament === 'new'} onClick={() => setTestament('new')}>{t.ntLabel}</Tog>
+            <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(13px * 0.96)', color: '#5C3D30', lineHeight: 1.9, margin: '10px 0 22px 0', fontWeight: 300, textAlign: 'left' }}>{t.freeDesc}</p>
+            <div style={{ marginTop: '22px' }}>
+              <input style={{ width: '100%', boxSizing: 'border-box', background: 'transparent', border: 'none', borderBottom: '1px solid rgba(74,46,34,0.07)', padding: '10px 0 12px', fontFamily: "'Work Sans', sans-serif", fontWeight: 300, fontSize: 'calc(15px * 0.96)', color: '#5C3D30', outline: 'none', transition: 'border-color 0.2s', borderRadius: 0 }} placeholder={t.namePlaceholder} value={userName} onChange={e => setUserName(e.target.value)} onFocus={e => e.target.style.borderBottomColor = '#AE655B'} onBlur={e => e.target.style.borderBottomColor = 'rgba(74,46,34,0.07)'} />
             </div>
-            <button onClick={handleStartFree} style={{ width: '100%', padding: '13px', fontSize: '15px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: '1px solid #4A5D4F', borderRadius: '8px', cursor: 'pointer', background: 'transparent', color: '#4A5D4F', transition: 'all 0.25s', letterSpacing: '0.5px', opacity: userName.trim() ? 1 : 0.4 }} onMouseEnter={e => { if (userName.trim()) { e.target.style.background = '#4A5D4F'; e.target.style.color = '#FEFCF9'; }}} onMouseLeave={e => { e.target.style.background = 'transparent'; e.target.style.color = '#4A5D4F'; }}>{t.startFree}</button>
+            <div style={{ marginTop: '22px' }}>
+              <label style={{ display: 'block', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(10px * 0.96)', fontWeight: 500, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#AE655B', marginBottom: '10px' }}>{t.scriptureLabel}</label>
+              <div style={{ display: 'flex', border: '1px solid rgba(74,46,34,0.07)', borderRadius: '999px', padding: '3px', gap: '2px' }}>
+                <button onClick={() => setTestament('old')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: testament === 'old' ? '#fff' : '#AE655B', background: testament === 'old' ? '#5C3D30' : 'transparent', borderRadius: '999px', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.otLabel}</button>
+                <button onClick={() => setTestament('both')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: testament === 'both' ? '#fff' : '#AE655B', background: testament === 'both' ? '#5C3D30' : 'transparent', borderRadius: '999px', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.bothLabel}</button>
+                <button onClick={() => setTestament('new')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: testament === 'new' ? '#fff' : '#AE655B', background: testament === 'new' ? '#5C3D30' : 'transparent', borderRadius: '999px', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.ntLabel}</button>
+              </div>
+            </div>
+            <button onClick={handleStartFree} style={{ all: 'unset', display: 'block', width: '100%', boxSizing: 'border-box', textAlign: 'center', padding: '15px 20px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', cursor: 'pointer', marginTop: '36px', background: 'transparent', color: '#5C3D30', border: '1px solid #9C7E72', borderRadius: '8px', opacity: userName.trim() ? 1 : 0.4 }}>{t.startFree}</button>
           </div>
 
+          {/* Divider */}
+          <div style={{ height: '1px', background: 'rgba(74,46,34,0.07)', maxWidth: 'calc(480px - 64px)', width: '100%', margin: '0 auto' }} />
+
           {/* FULL */}
-          <div style={{ borderTop: '1px solid rgba(0,0,0,0.06)', paddingTop: '28px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
-              <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '22px', fontWeight: 400, color: '#2C2C2C' }}>{t.fullTitle}</span>
-              {t.fullTag && <span style={{ fontSize: '10px', fontWeight: 500, color: '#FEFCF9', background: '#4A5D4F', padding: '3px 10px', borderRadius: '4px', letterSpacing: '1.5px', textTransform: 'uppercase' }}>{t.fullTag}</span>}
+          <div style={{ padding: '56px 32px' }}>
+            <div style={{ textAlign: 'center', marginBottom: '4px' }}>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'calc(26px * 0.96)', fontWeight: 400, color: '#5C3D30', lineHeight: 1.2 }}>{t.fullTitle}</div>
             </div>
-            <p style={{ fontSize: '14px', color: '#5A5A5A', lineHeight: 1.7, margin: '0 0 4px 0' }}>{t.fullDesc}</p>
-            <p style={{ fontSize: '13px', color: '#9A9A9A', lineHeight: 1.6, margin: '0 0 20px 0' }}>{t.fullDesc2}</p>
-            <input style={{ ...inputStyle, marginBottom: '12px' }} placeholder={t.namePlaceholder} value={userName} onChange={e => setUserName(e.target.value)} onFocus={e => e.target.style.borderColor = 'rgba(0,0,0,0.2)'} onBlur={e => e.target.style.borderColor = 'rgba(0,0,0,0.08)'} />
-            <label style={labelStyle}>{t.modeLabel}</label>
-            <div style={{ ...toggleGroupStyle, marginBottom: '12px' }}>
-              <Tog active={mode === 'individual'} onClick={() => setMode('individual')}>{t.justMe}</Tog>
-              <Tog active={mode === 'couple'} onClick={() => setMode('couple')}>{t.withPartner}</Tog>
+            <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(13px * 0.96)', color: '#5C3D30', lineHeight: 1.9, margin: '10px 0 4px 0', fontWeight: 300, textAlign: 'left' }}>{t.fullDesc}</p>
+            <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(13px * 0.96)', color: '#AE655B', lineHeight: 1.9, margin: '0 0 22px 0', fontWeight: 300, textAlign: 'left' }}>{t.fullDesc2}</p>
+            <div style={{ marginTop: '22px' }}>
+              <input style={{ width: '100%', boxSizing: 'border-box', background: 'transparent', border: 'none', borderBottom: '1px solid rgba(74,46,34,0.07)', padding: '10px 0 12px', fontFamily: "'Work Sans', sans-serif", fontWeight: 300, fontSize: 'calc(15px * 0.96)', color: '#5C3D30', outline: 'none', transition: 'border-color 0.2s', borderRadius: 0 }} placeholder={t.namePlaceholder} value={userName} onChange={e => setUserName(e.target.value)} onFocus={e => e.target.style.borderBottomColor = '#AE655B'} onBlur={e => e.target.style.borderBottomColor = 'rgba(74,46,34,0.07)'} />
             </div>
-            {mode === 'couple' && <input style={{ ...inputStyle, marginBottom: '12px' }} placeholder={t.partnerPlaceholder} value={partnerName} onChange={e => setPartnerName(e.target.value)} onFocus={e => e.target.style.borderColor = 'rgba(0,0,0,0.2)'} onBlur={e => e.target.style.borderColor = 'rgba(0,0,0,0.08)'} />}
-            <label style={labelStyle}>{t.scriptureLabel}</label>
-            <div style={{ ...toggleGroupStyle, marginBottom: '16px' }}>
-              <Tog active={testament === 'old'} onClick={() => setTestament('old')}>{t.otLabel}</Tog>
-              <Tog active={testament === 'both'} onClick={() => setTestament('both')}>{t.bothLabel}</Tog>
-              <Tog active={testament === 'new'} onClick={() => setTestament('new')}>{t.ntLabel}</Tog>
+            <div style={{ marginTop: '22px' }}>
+              <label style={{ display: 'block', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(10px * 0.96)', fontWeight: 500, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#AE655B', marginBottom: '10px' }}>{t.modeLabel}</label>
+              <div style={{ display: 'flex', border: '1px solid rgba(74,46,34,0.07)', borderRadius: '999px', padding: '3px', gap: '2px' }}>
+                <button onClick={() => setMode('individual')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: mode === 'individual' ? '#fff' : '#AE655B', background: mode === 'individual' ? '#5C3D30' : 'transparent', borderRadius: '999px', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.justMe}</button>
+                <button onClick={() => setMode('couple')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: mode === 'couple' ? '#fff' : '#AE655B', background: mode === 'couple' ? '#5C3D30' : 'transparent', borderRadius: '999px', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.withPartner}</button>
+              </div>
             </div>
-            <button onClick={handleStartFull} style={{ width: '100%', padding: '14px', fontSize: '15px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9', letterSpacing: '0.5px', opacity: userName.trim() && (mode === 'individual' || partnerName.trim()) ? 1 : 0.4 }}>{t.startFull}</button>
+            {mode === 'couple' && <div style={{ marginTop: '22px' }}><input style={{ width: '100%', boxSizing: 'border-box', background: 'transparent', border: 'none', borderBottom: '1px solid rgba(74,46,34,0.07)', padding: '10px 0 12px', fontFamily: "'Work Sans', sans-serif", fontWeight: 300, fontSize: 'calc(15px * 0.96)', color: '#5C3D30', outline: 'none', transition: 'border-color 0.2s', borderRadius: 0 }} placeholder={t.partnerPlaceholder} value={partnerName} onChange={e => setPartnerName(e.target.value)} onFocus={e => e.target.style.borderBottomColor = '#AE655B'} onBlur={e => e.target.style.borderBottomColor = 'rgba(74,46,34,0.07)'} /></div>}
+            <div style={{ marginTop: '22px' }}>
+              <label style={{ display: 'block', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(10px * 0.96)', fontWeight: 500, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#AE655B', marginBottom: '10px' }}>{t.scriptureLabel}</label>
+              <div style={{ display: 'flex', border: '1px solid rgba(74,46,34,0.07)', borderRadius: '999px', padding: '3px', gap: '2px' }}>
+                <button onClick={() => setTestament('old')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: testament === 'old' ? '#fff' : '#AE655B', background: testament === 'old' ? '#5C3D30' : 'transparent', borderRadius: '999px', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.otLabel}</button>
+                <button onClick={() => setTestament('both')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: testament === 'both' ? '#fff' : '#AE655B', background: testament === 'both' ? '#5C3D30' : 'transparent', borderRadius: '999px', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.bothLabel}</button>
+                <button onClick={() => setTestament('new')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: testament === 'new' ? '#fff' : '#AE655B', background: testament === 'new' ? '#5C3D30' : 'transparent', borderRadius: '999px', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.ntLabel}</button>
+              </div>
+            </div>
+            <button onClick={handleStartFull} style={{ all: 'unset', display: 'block', width: '100%', boxSizing: 'border-box', textAlign: 'center', padding: '16px 20px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', cursor: 'pointer', marginTop: '36px', background: '#5C3D30', color: '#fff', borderRadius: '8px', opacity: userName.trim() && (mode === 'individual' || partnerName.trim()) ? 1 : 0.4 }}>{t.startFull}</button>
           </div>
         </div>
 
+        {/* Divider */}
+        <div style={{ height: '1px', background: 'rgba(74,46,34,0.07)', maxWidth: 'calc(480px - 64px)', width: '100%' }} />
+
         {/* Footer */}
-        <div style={{ marginTop: '48px', textAlign: 'center', maxWidth: '400px' }}>
-          <p style={{ fontSize: '12px', color: '#B0B0B0', lineHeight: 1.7, margin: '0 0 8px 0', fontStyle: 'italic' }}>{t.footerBuilt}</p>
-          <p style={{ fontSize: '11px', color: '#C8C8C8', lineHeight: 1.6, margin: '0 0 4px 0' }}>{t.footerPrivacy}</p>
-          <p style={{ fontSize: '11px', color: '#C8C8C8', lineHeight: 1.6, margin: '0 0 8px 0' }}>{t.footerCrisis}</p>
-          <p style={{ fontSize: '11px', color: '#D0D0D0', margin: '0 0 4px 0' }}><span style={{ cursor: 'pointer', color: '#B0B0B0' }} onClick={() => setShowContact(true)}>{t.contactUs}</span></p>
-          <p style={{ fontSize: '11px', color: '#D0D0D0', margin: 0 }}><a href="/terms" style={{ color: '#B0B0B0', textDecoration: 'none' }}>Terms</a><span style={{ margin: '0 10px' }}>·</span><a href="/privacy" style={{ color: '#B0B0B0', textDecoration: 'none' }}>Privacy</a></p>
+        <div style={{ maxWidth: '480px', width: '100%', padding: 'calc(56px * 0.9) 32px calc(56px * 1.2)', textAlign: 'center' }}>
+          <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'calc(12px * 0.96)', color: '#AE655B', lineHeight: 1.85, margin: '0 0 24px 0', fontStyle: 'italic', fontWeight: 400 }}>{t.footerBuilt}</p>
+          <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', color: '#B8A498', lineHeight: 1.85, margin: '0 0 16px 0', fontWeight: 300 }}>{t.footerPrivacy}</p>
+          <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', color: '#B8A498', lineHeight: 1.85, margin: '0 0 16px 0', fontWeight: 300 }}>{t.footerCrisis}</p>
+          <div style={{ marginTop: '28px', display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center', fontSize: 'calc(10px * 0.96)', letterSpacing: '0.25em', textTransform: 'uppercase' }}>
+            <span style={{ cursor: 'pointer', color: '#AE655B', borderBottom: '1px solid transparent', paddingBottom: '2px' }} onClick={() => setShowContact(true)}>{t.contactUs}</span>
+            <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+              <a href="/terms" style={{ color: '#AE655B', textDecoration: 'none', borderBottom: '1px solid transparent', paddingBottom: '2px' }}>Terms</a>
+              <span style={{ color: '#B8A498' }}>·</span>
+              <a href="/privacy" style={{ color: '#AE655B', textDecoration: 'none', borderBottom: '1px solid transparent', paddingBottom: '2px' }}>Privacy</a>
+            </div>
+          </div>
         </div>
       </div>
       {contactModalJSX}
       {showInstall && (
-        <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#4A5D4F', padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', zIndex: 100, animation: 'fadeIn 0.5s ease 2s both' }}>
+        <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: '#5C3D30', padding: '16px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', zIndex: 100, animation: 'fadeIn 0.5s ease 2s both' }}>
           <div>
-            <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#FEFCF9', margin: '0 0 4px 0', fontWeight: 500 }}>{t.installPrompt}</p>
-            <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '12px', color: 'rgba(254,252,249,0.7)', margin: 0 }}>{/iPhone|iPad|iPod/i.test(navigator.userAgent) ? t.installIOS : t.installAndroid}</p>
+            <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#FFFFFF', margin: '0 0 4px 0', fontWeight: 500 }}>{t.installPrompt}</p>
+            <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: '12px', color: 'rgba(255,255,255,0.7)', margin: 0 }}>{/iPhone|iPad|iPod/i.test(navigator.userAgent) ? t.installIOS : t.installAndroid}</p>
           </div>
-          <button onClick={() => { setShowInstall(false); localStorage.setItem('nehama-install-dismissed', 'true'); }} style={{ background: 'rgba(254,252,249,0.2)', border: 'none', borderRadius: '6px', padding: '8px 14px', cursor: 'pointer', fontFamily: "'DM Sans', sans-serif", fontSize: '12px', color: '#FEFCF9', flexShrink: 0 }}>{t.installDismiss}</button>
+          <button onClick={() => { setShowInstall(false); localStorage.setItem('nehama-install-dismissed', 'true'); }} style={{ background: 'rgba(255,255,255,0.2)', border: 'none', borderRadius: '6px', padding: '8px 14px', cursor: 'pointer', fontFamily: "'Work Sans', sans-serif", fontSize: '12px', color: '#FFFFFF', flexShrink: 0 }}>{t.installDismiss}</button>
         </div>
       )}
     </div>
@@ -1138,21 +1165,21 @@ export default function NehamaApp() {
     <div style={{ minHeight: '100vh' }}>
       <div style={{ display: 'flex', flexDirection: 'column', height: '100vh', maxWidth: '680px', margin: '0 auto' }}>
         {/* Header */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 24px', borderBottom: '1px solid rgba(0,0,0,0.04)', background: 'rgba(254,252,249,0.92)', backdropFilter: 'blur(12px)', position: 'sticky', top: 0, zIndex: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 24px', borderBottom: '1px solid rgba(74,46,34,0.07)', background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(12px)', position: 'sticky', top: 0, zIndex: 10 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '22px', fontWeight: 300, color: '#4A5A50', letterSpacing: '2px' }}>Nehama</span>
+            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '22px', fontWeight: 300, color: '#5C3D30', letterSpacing: '2px' }}>Nehama</span>
             <PhaseIndicator phase={phase} />
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-            {messages.filter(m => m.role === 'assistant').length > 0 && <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '8px', color: '#B0B0B0', fontSize: '15px' }} onClick={handleDownload} title={t.save}>↓</button>}
-            <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '8px', color: '#B0B0B0', fontSize: '18px' }} onClick={() => setShowSettings(true)}>⚙</button>
+            {messages.filter(m => m.role === 'assistant').length > 0 && <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '8px', color: '#B8A498', fontSize: '15px' }} onClick={handleDownload} title={t.save}>↓</button>}
+            <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '8px', color: '#B8A498', fontSize: '18px' }} onClick={() => setShowSettings(true)}>⚙</button>
           </div>
         </div>
 
         {/* Messages */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '32px 24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
           {(() => { const visible = messages.filter(m => !m.hidden); const lastAiIdx = visible.map((m, i) => m.role === 'assistant' ? i : -1).filter(i => i >= 0).pop(); return visible.map((msg, i) => (
-            <div key={i} ref={i === lastAiIdx ? lastMsgRef : null} style={msg.role === 'user' ? { maxWidth: '80%', alignSelf: 'flex-end', background: '#4A5D4F', color: '#FEFCF9', padding: '14px 20px', borderRadius: '16px 16px 4px 16px', fontSize: '15px', lineHeight: '1.7' } : { maxWidth: '100%', alignSelf: 'flex-start', padding: '4px 0', fontSize: '15px', lineHeight: '1.8', color: '#2C2C2C' }}>
+            <div key={i} ref={i === lastAiIdx ? lastMsgRef : null} style={msg.role === 'user' ? { maxWidth: '80%', alignSelf: 'flex-end', background: '#5C3D30', color: '#FFFFFF', padding: '14px 20px', borderRadius: '16px 16px 4px 16px', fontSize: '15px', lineHeight: '1.7' } : { maxWidth: '100%', alignSelf: 'flex-start', padding: '4px 0', fontSize: '15px', lineHeight: '1.8', color: '#5C3D30' }}>
               {msg.role === 'user' ? <div style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</div> : <div>{renderMarkdown(stripReflectionCard(msg.content))}</div>}
             </div>
           )); })()}
@@ -1165,10 +1192,10 @@ export default function NehamaApp() {
               <div style={{ alignSelf: 'center', paddingTop: '16px', animation: 'fadeIn 1s ease 0.5s both' }}>
                 <ReflectionCard card={card} onSave={() => saveCardAsPNG(card, t.cardCTA)} cta={t.cardCTA} />
                 <div style={{ animation: 'fadeIn 0.8s ease 1.5s both' }}>
-                  <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: '13px', color: '#9BAA9F', textAlign: 'center', lineHeight: 1.6, margin: '16px 0 14px', maxWidth: '260px' }}>{t.cardSharePrompt}</p>
+                  <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: '13px', color: '#AE655B', textAlign: 'center', lineHeight: 1.6, margin: '16px 0 14px', maxWidth: '260px' }}>{t.cardSharePrompt}</p>
                   <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-                    <button onClick={() => saveCardAsPNG(card, t.cardCTA)} style={{ flex: 1, padding: '10px', fontSize: '13px', fontFamily: "'DM Sans', sans-serif", fontWeight: 500, border: 'none', borderRadius: '6px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9' }}>{t.cardSave}</button>
-                    <button onClick={() => { if (navigator.share) { navigator.share({ title: 'Nehama', text: 'Someone who cares about you wanted you to have this.', url: 'https://findnehama.com' }).catch(() => {}); } else { window.open('https://findnehama.com', '_blank'); } }} style={{ flex: 1, padding: '10px', fontSize: '13px', fontFamily: "'DM Sans', sans-serif", fontWeight: 500, border: '1px solid #4A5D4F', borderRadius: '6px', cursor: 'pointer', background: 'transparent', color: '#4A5D4F' }}>{t.cardShare}</button>
+                    <button onClick={() => saveCardAsPNG(card, t.cardCTA)} style={{ flex: 1, padding: '10px', fontSize: '13px', fontFamily: "'Work Sans', sans-serif", fontWeight: 500, border: 'none', borderRadius: '6px', cursor: 'pointer', background: '#5C3D30', color: '#FFFFFF' }}>{t.cardSave}</button>
+                    <button onClick={() => { if (navigator.share) { navigator.share({ title: 'Nehama', text: 'Someone who cares about you wanted you to have this.', url: 'https://findnehama.com' }).catch(() => {}); } else { window.open('https://findnehama.com', '_blank'); } }} style={{ flex: 1, padding: '10px', fontSize: '13px', fontFamily: "'Work Sans', sans-serif", fontWeight: 500, border: '1px solid #5C3D30', borderRadius: '6px', cursor: 'pointer', background: 'transparent', color: '#5C3D30' }}>{t.cardShare}</button>
                   </div>
                 </div>
               </div>
@@ -1177,42 +1204,42 @@ export default function NehamaApp() {
 
           {isLoading && (
             <div style={{ alignSelf: 'flex-start', padding: '12px 0', display: 'flex', alignItems: 'center', gap: '14px' }}>
-              <div style={{ display: 'flex', gap: '5px' }}>{[0,1,2].map(i => <div key={i} style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#8B9E8F', animation: `pulse 1.4s ease-in-out ${i*0.2}s infinite` }} />)}</div>
-              <span style={{ fontSize: '13px', color: '#B0B0B0', fontStyle: 'italic', letterSpacing: '0.3px' }}>{loadingMsg}</span>
+              <div style={{ display: 'flex', gap: '5px' }}>{[0,1,2].map(i => <div key={i} style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#AE655B', animation: `pulse 1.4s ease-in-out ${i*0.2}s infinite` }} />)}</div>
+              <span style={{ fontSize: '13px', color: '#B8A498', fontStyle: 'italic', letterSpacing: '0.3px' }}>{loadingMsg}</span>
             </div>
           )}
 
           {freeSessionComplete && !emailSubmitted && (
-            <div style={{ alignSelf: 'flex-start', borderTop: '1px solid rgba(0,0,0,0.04)', paddingTop: '24px', width: '100%', maxWidth: '400px' }}>
-              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '17px', color: '#2C2C2C', margin: '0 0 6px 0' }}>{t.emailCapture}</p>
-              <p style={{ fontSize: '13px', color: '#9A9A9A', margin: '0 0 14px 0' }}>{t.emailCaptureDesc}</p>
+            <div style={{ alignSelf: 'flex-start', borderTop: '1px solid rgba(74,46,34,0.05)', paddingTop: '24px', width: '100%', maxWidth: '400px' }}>
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '17px', color: '#5C3D30', margin: '0 0 6px 0' }}>{t.emailCapture}</p>
+              <p style={{ fontSize: '13px', color: '#AE655B', margin: '0 0 14px 0' }}>{t.emailCaptureDesc}</p>
               <div style={{ display: 'flex', gap: '8px' }}>
-                <input style={{ ...inputStyle, flex: 1 }} placeholder="your@email.com" type="email" value={feedbackEmail} onChange={e => setFeedbackEmail(e.target.value)} onFocus={e => e.target.style.borderColor = 'rgba(0,0,0,0.2)'} onBlur={e => e.target.style.borderColor = 'rgba(0,0,0,0.08)'} />
-                <button onClick={() => { if (feedbackEmail.includes('@')) { fetch('https://formspree.io/f/mdapqwqb', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: feedbackEmail, _subject: 'Nehama Email Signup' }) }); setEmailSubmitted(true); } }} style={{ padding: '12px 24px', fontSize: '14px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9', flexShrink: 0 }}>{t.send}</button>
+                <input style={{ ...inputStyle, flex: 1 }} placeholder="your@email.com" type="email" value={feedbackEmail} onChange={e => setFeedbackEmail(e.target.value)} onFocus={e => e.target.style.borderBottomColor = '#AE655B'} onBlur={e => e.target.style.borderBottomColor = 'rgba(74,46,34,0.07)'} />
+                <button onClick={() => { if (feedbackEmail.includes('@')) { fetch('https://formspree.io/f/mdapqwqb', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: feedbackEmail, _subject: 'Nehama Email Signup' }) }); setEmailSubmitted(true); } }} style={{ padding: '12px 24px', fontSize: '14px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#5C3D30', color: '#FFFFFF', flexShrink: 0 }}>{t.send}</button>
               </div>
             </div>
           )}
-          {emailSubmitted && <p style={{ fontSize: '14px', color: '#4A5D4F', padding: '12px 0' }}>{t.thankYou}</p>}
+          {emailSubmitted && <p style={{ fontSize: '14px', color: '#5C3D30', padding: '12px 0' }}>{t.thankYou}</p>}
 
           <div ref={messagesEndRef} />
         </div>
 
         {/* Input */}
-        <div style={{ padding: '16px 24px', borderTop: '1px solid rgba(0,0,0,0.04)', background: 'rgba(254,252,249,0.95)' }}>
+        <div style={{ padding: '16px 24px', borderTop: '1px solid rgba(74,46,34,0.07)', background: 'rgba(255,255,255,0.95)' }}>
           <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end' }}>
-            <textarea style={{ flex: 1, padding: '13px 16px', fontSize: '15px', fontFamily: "'DM Sans', sans-serif", border: '1px solid rgba(0,0,0,0.08)', borderRadius: '12px', background: '#fff', color: '#2C2C2C', outline: 'none', resize: 'none', minHeight: '46px', maxHeight: '120px', lineHeight: '1.6', transition: 'border-color 0.2s' }} placeholder={t.inputPlaceholder} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKeyDown} onFocus={e => e.target.style.borderColor = 'rgba(0,0,0,0.2)'} onBlur={e => e.target.style.borderColor = 'rgba(0,0,0,0.08)'} rows={1} />
-            <button style={{ width: '46px', height: '46px', borderRadius: '10px', border: 'none', cursor: input.trim() && !isLoading ? 'pointer' : 'default', background: input.trim() && !isLoading ? '#4A5D4F' : 'rgba(0,0,0,0.06)', color: input.trim() && !isLoading ? '#FEFCF9' : '#C0C0C0', fontSize: '17px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all 0.2s' }} onClick={handleSend}>↑</button>
+            <textarea style={{ flex: 1, padding: '13px 16px', fontSize: '15px', fontFamily: "'Work Sans', sans-serif", border: '1px solid rgba(74,46,34,0.08)', borderRadius: '12px', background: '#fff', color: '#5C3D30', outline: 'none', resize: 'none', minHeight: '46px', maxHeight: '120px', lineHeight: '1.6', transition: 'border-color 0.2s' }} placeholder={t.inputPlaceholder} value={input} onChange={e => setInput(e.target.value)} onKeyDown={handleKeyDown} onFocus={e => e.target.style.borderColor = 'rgba(74,46,34,0.2)'} onBlur={e => e.target.style.borderColor = 'rgba(74,46,34,0.08)'} rows={1} />
+            <button style={{ width: '46px', height: '46px', borderRadius: '10px', border: 'none', cursor: input.trim() && !isLoading ? 'pointer' : 'default', background: input.trim() && !isLoading ? '#5C3D30' : 'rgba(74,46,34,0.07)', color: input.trim() && !isLoading ? '#FFFFFF' : '#B8A498', fontSize: '17px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, transition: 'all 0.2s' }} onClick={handleSend}>↑</button>
           </div>
         </div>
       </div>
 
       {/* Settings drawer */}
       {showSettings && <>
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.08)', zIndex: 100, backdropFilter: 'blur(4px)' }} onClick={() => setShowSettings(false)} />
-        <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: '300px', maxWidth: '85vw', background: '#FEFCF9', zIndex: 101, padding: '36px 28px', boxShadow: '-8px 0 32px rgba(0,0,0,0.06)', display: 'flex', flexDirection: 'column', gap: '32px', overflowY: 'auto' }}>
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(74,46,34,0.08)', zIndex: 100, backdropFilter: 'blur(4px)' }} onClick={() => setShowSettings(false)} />
+        <div style={{ position: 'fixed', top: 0, right: 0, bottom: 0, width: '300px', maxWidth: '85vw', background: '#FFFFFF', zIndex: 101, padding: '36px 28px', boxShadow: '-8px 0 32px rgba(74,46,34,0.07)', display: 'flex', flexDirection: 'column', gap: '32px', overflowY: 'auto' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '22px', fontWeight: 400, color: '#2C2C2C' }}>{t.settings}</span>
-            <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: '#AAAAAA', fontSize: '22px' }} onClick={() => setShowSettings(false)}>×</button>
+            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '22px', fontWeight: 400, color: '#5C3D30' }}>{t.settings}</span>
+            <button style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: '#9C7E72', fontSize: '22px' }} onClick={() => setShowSettings(false)}>×</button>
           </div>
           <div>
             <label style={labelStyle}>{t.langLabel}</label>
@@ -1231,19 +1258,19 @@ export default function NehamaApp() {
           </div>
           <div>
             <label style={labelStyle}>{t.session}</label>
-            <p style={{ fontSize: '14px', color: '#5A5A5A' }}>{userName}{mode === 'couple' ? ' & ' + partnerName : ''} · {tier === 'free' ? t.freeTitle : t.fullTitle} · {messages.filter(m => !m.hidden).length} {t.messages}</p>
+            <p style={{ fontSize: '14px', color: '#5C3D30' }}>{userName}{mode === 'couple' ? ' & ' + partnerName : ''} · {tier === 'free' ? t.freeTitle : t.fullTitle} · {messages.filter(m => !m.hidden).length} {t.messages}</p>
           </div>
           {tier === 'free' && (
-            <div style={{ borderTop: '1px solid rgba(0,0,0,0.04)', paddingTop: '20px' }}>
-              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '16px', color: '#2C2C2C', margin: '0 0 6px 0' }}>{t.readyFull}</p>
-              <p style={{ fontSize: '13px', color: '#8A8A8A', margin: '0 0 14px 0', lineHeight: 1.6 }}>{t.readyFullDesc}</p>
-              <button style={{ width: '100%', padding: '11px', fontSize: '14px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#4A5D4F', color: '#FEFCF9' }} onClick={() => { setShowSettings(false); handleReset(); }}>{t.startFullJourney}</button>
+            <div style={{ borderTop: '1px solid rgba(74,46,34,0.05)', paddingTop: '20px' }}>
+              <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '16px', color: '#5C3D30', margin: '0 0 6px 0' }}>{t.readyFull}</p>
+              <p style={{ fontSize: '13px', color: '#5C3D30', margin: '0 0 14px 0', lineHeight: 1.6 }}>{t.readyFullDesc}</p>
+              <button style={{ width: '100%', padding: '11px', fontSize: '14px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#5C3D30', color: '#FFFFFF' }} onClick={() => { setShowSettings(false); handleReset(); }}>{t.startFullJourney}</button>
             </div>
           )}
           <div>
-            <span style={{ fontSize: '12px', cursor: 'pointer', color: '#B0B0B0' }} onClick={() => { setShowSettings(false); setShowContact(true); }}>{t.contactUs}</span>
+            <span style={{ fontSize: '12px', cursor: 'pointer', color: '#B8A498' }} onClick={() => { setShowSettings(false); setShowContact(true); }}>{t.contactUs}</span>
           </div>
-          <button style={{ padding: '11px', fontSize: '13px', fontFamily: "'DM Sans', sans-serif", fontWeight: 400, border: '1px solid rgba(0,0,0,0.1)', borderRadius: '8px', cursor: 'pointer', background: 'transparent', color: '#9A9A9A', marginTop: 'auto' }} onClick={() => { if (confirm(t.newSessionConfirm)) handleReset(); }}>{t.newSession}</button>
+          <button style={{ padding: '11px', fontSize: '13px', fontFamily: "'Work Sans', sans-serif", fontWeight: 400, border: '1px solid rgba(74,46,34,0.1)', borderRadius: '8px', cursor: 'pointer', background: 'transparent', color: '#AE655B', marginTop: 'auto' }} onClick={() => { if (confirm(t.newSessionConfirm)) handleReset(); }}>{t.newSession}</button>
         </div>
       </>}
       {contactModalJSX}
