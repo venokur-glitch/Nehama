@@ -9,6 +9,26 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+@media (min-width: 540px) {
+  html, body {
+    background: #EDE8E3;
+  }
+}
+.neh-shell {
+  background: #FFFFFF;
+  width: 100%;
+  min-height: 100vh;
+}
+@media (min-width: 540px) {
+  .neh-shell {
+    max-width: 480px;
+    margin: 32px auto;
+    border-radius: 16px;
+    box-shadow: 0 4px 40px rgba(74,46,34,0.08), 0 1px 4px rgba(74,46,34,0.04);
+    min-height: auto;
+    overflow: hidden;
+  }
+}
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
