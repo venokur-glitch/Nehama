@@ -824,7 +824,7 @@ function PhaseIndicator({ phase }) {
 
 // ─── TOGGLE BUTTON ──────────────────────────────────────────────────
 function Tog({ active, children, onClick, small }) {
-  return <button onClick={onClick} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: small ? '8px 6px' : '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: active ? '#fff' : '#AE655B', background: active ? '#5C3D30' : 'transparent', borderRadius: '999px', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{children}</button>;
+  return <button onClick={onClick} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: small ? '8px 6px' : '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: active ? '#fff' : '#AE655B', background: active ? '#5C3D30' : 'transparent', borderRadius: '0', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{children}</button>;
 }
 
 function LangSwitch({ lang, setLang }) {
@@ -956,7 +956,7 @@ export default function NehamaApp() {
   const freeSessionComplete = tier === 'free' && messages.filter(m => m.role === 'assistant').length >= 3 && messages.some(m => m.role === 'assistant' && (m.content.toLowerCase().includes('what you just shared matters') || m.content.toLowerCase().includes('lo que acabas de compartir importa') || m.content.includes('[/REFLECTION_CARD]')));
 
   const inputStyle = { width: '100%', boxSizing: 'border-box', background: 'transparent', border: 'none', borderBottom: '1px solid rgba(74,46,34,0.07)', padding: '10px 0 12px', fontFamily: "'Work Sans', sans-serif", fontWeight: 300, fontSize: 'calc(15px * 0.96)', color: '#5C3D30', outline: 'none', transition: 'border-color 0.2s', borderRadius: 0 };
-  const toggleGroupStyle = { display: 'flex', border: '1px solid rgba(74,46,34,0.07)', borderRadius: '999px', padding: '3px', gap: '2px' };
+  const toggleGroupStyle = { display: 'flex', border: '1px solid rgba(74,46,34,0.07)', borderRadius: '8px', padding: '0', gap: '0', overflow: 'hidden' };
   const labelStyle = { display: 'block', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(10px * 0.96)', fontWeight: 500, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#AE655B', marginBottom: '10px' };
 
   // ─── CONTACT MODAL ─────
@@ -1039,7 +1039,7 @@ export default function NehamaApp() {
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 24px 40px' }}>
 
         {/* Opening */}
-        <div style={{ maxWidth: '480px', width: '100%', padding: 'calc(56px * 1.15) 32px', textAlign: 'center', opacity: anim.text ? 1 : 0, transform: anim.text ? 'translateY(0)' : 'translateY(12px)', transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s' }}>
+        <div style={{ maxWidth: '480px', width: '100%', padding: '28px 32px', textAlign: 'center', opacity: anim.text ? 1 : 0, transform: anim.text ? 'translateY(0)' : 'translateY(12px)', transition: 'all 1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s' }}>
           <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'calc(18px * 0.96)', color: '#5C3D30', lineHeight: 1.3, margin: '0 0 16px 0', fontWeight: 400, letterSpacing: '0.01em' }}>{t.blurbIntro}</p>
           <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(13px * 0.96)', color: '#5C3D30', lineHeight: 1.9, margin: 0, fontWeight: 300, textAlign: 'left' }} dangerouslySetInnerHTML={{ __html: t.blurbBody }} />
         </div>
@@ -1048,7 +1048,7 @@ export default function NehamaApp() {
         <div style={{ height: '1px', background: 'rgba(74,46,34,0.07)', maxWidth: 'calc(480px - 64px)', width: '100%' }} />
 
         {/* What is Nehama */}
-        <div style={{ width: '100%', maxWidth: '480px', padding: '56px 32px', opacity: anim.paths ? 1 : 0, transition: 'opacity 0.6s' }}>
+        <div style={{ width: '100%', maxWidth: '480px', padding: '20px 32px', opacity: anim.paths ? 1 : 0, transition: 'opacity 0.6s' }}>
           <button onClick={() => setShowAbout(!showAbout)} style={{ all: 'unset', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px', width: '100%', cursor: 'pointer', padding: '6px 0', color: '#AE655B', textAlign: 'center' }}>
             <span style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(10px * 0.96)', fontWeight: 500, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#AE655B' }}>{t.whatIsTitle}</span>
             <svg width="10" height="10" viewBox="0 0 10 10" style={{ transition: 'transform 0.35s cubic-bezier(0.22, 1, 0.36, 1)', transform: showAbout ? 'rotate(180deg)' : 'rotate(0deg)', color: '#AE655B' }}><path d="M2 3.5L5 6.5L8 3.5" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
@@ -1075,7 +1075,7 @@ export default function NehamaApp() {
         <div style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '480px', opacity: anim.paths ? 1 : 0, transform: anim.paths ? 'translateY(0)' : 'translateY(16px)', transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)' }}>
 
           {/* FREE */}
-          <div style={{ padding: '56px 32px' }}>
+          <div style={{ padding: '28px 32px' }}>
             <div style={{ textAlign: 'center', marginBottom: '4px' }}>
               <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'calc(26px * 0.96)', fontWeight: 400, color: '#5C3D30', lineHeight: 1.2 }}>{t.freeTitle}</div>
               <div style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(10px * 0.96)', fontWeight: 400, letterSpacing: '0.15em', textTransform: 'uppercase', color: '#AE655B', border: '1px solid rgba(74,46,34,0.07)', borderRadius: '999px', padding: '5px 10px', display: 'inline-block', marginTop: '10px' }}>{t.freeTag}</div>
@@ -1086,20 +1086,20 @@ export default function NehamaApp() {
             </div>
             <div style={{ marginTop: '22px' }}>
               <label style={{ display: 'block', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(10px * 0.96)', fontWeight: 500, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#AE655B', marginBottom: '10px' }}>{t.scriptureLabel}</label>
-              <div style={{ display: 'flex', border: '1px solid rgba(74,46,34,0.07)', borderRadius: '999px', padding: '3px', gap: '2px' }}>
-                <button onClick={() => setTestament('old')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: testament === 'old' ? '#fff' : '#AE655B', background: testament === 'old' ? '#5C3D30' : 'transparent', borderRadius: '999px', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.otLabel}</button>
-                <button onClick={() => setTestament('both')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: testament === 'both' ? '#fff' : '#AE655B', background: testament === 'both' ? '#5C3D30' : 'transparent', borderRadius: '999px', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.bothLabel}</button>
-                <button onClick={() => setTestament('new')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: testament === 'new' ? '#fff' : '#AE655B', background: testament === 'new' ? '#5C3D30' : 'transparent', borderRadius: '999px', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.ntLabel}</button>
+              <div style={{ display: 'flex', border: '1px solid rgba(74,46,34,0.07)', borderRadius: '8px', padding: '0', gap: '0', overflow: 'hidden' }}>
+                <button onClick={() => setTestament('old')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: testament === 'old' ? '#fff' : '#AE655B', background: testament === 'old' ? '#5C3D30' : 'transparent', borderRadius: '0', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.otLabel}</button>
+                <button onClick={() => setTestament('both')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: testament === 'both' ? '#fff' : '#AE655B', background: testament === 'both' ? '#5C3D30' : 'transparent', borderRadius: '0', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.bothLabel}</button>
+                <button onClick={() => setTestament('new')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: testament === 'new' ? '#fff' : '#AE655B', background: testament === 'new' ? '#5C3D30' : 'transparent', borderRadius: '0', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.ntLabel}</button>
               </div>
             </div>
-            <button onClick={handleStartFree} style={{ all: 'unset', display: 'block', width: '100%', boxSizing: 'border-box', textAlign: 'center', padding: '15px 20px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', cursor: 'pointer', marginTop: '36px', background: 'transparent', color: '#5C3D30', border: '1px solid #9C7E72', borderRadius: '8px', opacity: userName.trim() ? 1 : 0.4 }}>{t.startFree}</button>
+            <button onClick={handleStartFree} style={{ all: 'unset', display: 'block', width: '100%', boxSizing: 'border-box', textAlign: 'center', padding: '15px 20px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', cursor: 'pointer', marginTop: '36px', background: '#5C3D30', color: '#fff', border: 'none', borderRadius: '8px', opacity: userName.trim() ? 1 : 0.4 }}>{t.startFree}</button>
           </div>
 
           {/* Divider */}
           <div style={{ height: '1px', background: 'rgba(74,46,34,0.07)', maxWidth: 'calc(480px - 64px)', width: '100%', margin: '0 auto' }} />
 
           {/* FULL */}
-          <div style={{ padding: '56px 32px' }}>
+          <div style={{ padding: '28px 32px' }}>
             <div style={{ textAlign: 'center', marginBottom: '4px' }}>
               <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'calc(26px * 0.96)', fontWeight: 400, color: '#5C3D30', lineHeight: 1.2 }}>{t.fullTitle}</div>
             </div>
@@ -1110,18 +1110,18 @@ export default function NehamaApp() {
             </div>
             <div style={{ marginTop: '22px' }}>
               <label style={{ display: 'block', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(10px * 0.96)', fontWeight: 500, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#AE655B', marginBottom: '10px' }}>{t.modeLabel}</label>
-              <div style={{ display: 'flex', border: '1px solid rgba(74,46,34,0.07)', borderRadius: '999px', padding: '3px', gap: '2px' }}>
-                <button onClick={() => setMode('individual')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: mode === 'individual' ? '#fff' : '#AE655B', background: mode === 'individual' ? '#5C3D30' : 'transparent', borderRadius: '999px', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.justMe}</button>
-                <button onClick={() => setMode('couple')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: mode === 'couple' ? '#fff' : '#AE655B', background: mode === 'couple' ? '#5C3D30' : 'transparent', borderRadius: '999px', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.withPartner}</button>
+              <div style={{ display: 'flex', border: '1px solid rgba(74,46,34,0.07)', borderRadius: '8px', padding: '0', gap: '0', overflow: 'hidden' }}>
+                <button onClick={() => setMode('individual')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: mode === 'individual' ? '#fff' : '#AE655B', background: mode === 'individual' ? '#5C3D30' : 'transparent', borderRadius: '0', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.justMe}</button>
+                <button onClick={() => setMode('couple')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: mode === 'couple' ? '#fff' : '#AE655B', background: mode === 'couple' ? '#5C3D30' : 'transparent', borderRadius: '0', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.withPartner}</button>
               </div>
             </div>
             {mode === 'couple' && <div style={{ marginTop: '22px' }}><input style={{ width: '100%', boxSizing: 'border-box', background: 'transparent', border: 'none', borderBottom: '1px solid rgba(74,46,34,0.07)', padding: '10px 0 12px', fontFamily: "'Work Sans', sans-serif", fontWeight: 300, fontSize: 'calc(15px * 0.96)', color: '#5C3D30', outline: 'none', transition: 'border-color 0.2s', borderRadius: 0 }} placeholder={t.partnerPlaceholder} value={partnerName} onChange={e => setPartnerName(e.target.value)} onFocus={e => e.target.style.borderBottomColor = '#AE655B'} onBlur={e => e.target.style.borderBottomColor = 'rgba(74,46,34,0.07)'} /></div>}
             <div style={{ marginTop: '22px' }}>
               <label style={{ display: 'block', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(10px * 0.96)', fontWeight: 500, letterSpacing: '0.3em', textTransform: 'uppercase', color: '#AE655B', marginBottom: '10px' }}>{t.scriptureLabel}</label>
-              <div style={{ display: 'flex', border: '1px solid rgba(74,46,34,0.07)', borderRadius: '999px', padding: '3px', gap: '2px' }}>
-                <button onClick={() => setTestament('old')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: testament === 'old' ? '#fff' : '#AE655B', background: testament === 'old' ? '#5C3D30' : 'transparent', borderRadius: '999px', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.otLabel}</button>
-                <button onClick={() => setTestament('both')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: testament === 'both' ? '#fff' : '#AE655B', background: testament === 'both' ? '#5C3D30' : 'transparent', borderRadius: '999px', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.bothLabel}</button>
-                <button onClick={() => setTestament('new')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: testament === 'new' ? '#fff' : '#AE655B', background: testament === 'new' ? '#5C3D30' : 'transparent', borderRadius: '999px', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.ntLabel}</button>
+              <div style={{ display: 'flex', border: '1px solid rgba(74,46,34,0.07)', borderRadius: '8px', padding: '0', gap: '0', overflow: 'hidden' }}>
+                <button onClick={() => setTestament('old')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: testament === 'old' ? '#fff' : '#AE655B', background: testament === 'old' ? '#5C3D30' : 'transparent', borderRadius: '0', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.otLabel}</button>
+                <button onClick={() => setTestament('both')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: testament === 'both' ? '#fff' : '#AE655B', background: testament === 'both' ? '#5C3D30' : 'transparent', borderRadius: '0', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.bothLabel}</button>
+                <button onClick={() => setTestament('new')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: testament === 'new' ? '#fff' : '#AE655B', background: testament === 'new' ? '#5C3D30' : 'transparent', borderRadius: '0', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.ntLabel}</button>
               </div>
             </div>
             <button onClick={handleStartFull} style={{ all: 'unset', display: 'block', width: '100%', boxSizing: 'border-box', textAlign: 'center', padding: '16px 20px', fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', cursor: 'pointer', marginTop: '36px', background: '#5C3D30', color: '#fff', borderRadius: '8px', opacity: userName.trim() && (mode === 'individual' || partnerName.trim()) ? 1 : 0.4 }}>{t.startFull}</button>
@@ -1132,7 +1132,7 @@ export default function NehamaApp() {
         <div style={{ height: '1px', background: 'rgba(74,46,34,0.07)', maxWidth: 'calc(480px - 64px)', width: '100%' }} />
 
         {/* Footer */}
-        <div style={{ maxWidth: '480px', width: '100%', padding: 'calc(56px * 0.9) 32px calc(56px * 1.2)', textAlign: 'center' }}>
+        <div style={{ maxWidth: '480px', width: '100%', padding: '28px 32px 40px', textAlign: 'center' }}>
           <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'calc(12px * 0.96)', color: '#AE655B', lineHeight: 1.85, margin: '0 0 24px 0', fontStyle: 'italic', fontWeight: 400 }}>{t.footerBuilt}</p>
           <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', color: '#B8A498', lineHeight: 1.85, margin: '0 0 16px 0', fontWeight: 300 }}>{t.footerPrivacy}</p>
           <p style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(11px * 0.96)', color: '#B8A498', lineHeight: 1.85, margin: '0 0 16px 0', fontWeight: 300 }}>{t.footerCrisis}</p>
