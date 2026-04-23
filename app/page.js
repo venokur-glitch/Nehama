@@ -674,6 +674,14 @@ function ReflectionCard({ card, onSave, cta }) {
 }
 
 function saveCardAsPNG(card, cta) {
+  // Await font loading before drawing
+  Promise.all([
+    document.fonts.load('400 48px "Cormorant Garamond"'),
+    document.fonts.load('600 48px "Cormorant Garamond"'),
+    document.fonts.load('300 48px "Work Sans"'),
+    document.fonts.load('400 48px "Work Sans"'),
+    document.fonts.load('500 48px "Work Sans"'),
+  ]).then(() => {
   const w = 1080, h = 1920;
   const themes = {
     wilderness: { bg: '#FBF5F0' },
@@ -698,11 +706,10 @@ function saveCardAsPNG(card, cta) {
   ctx.closePath(); ctx.fill();
   ctx.shadowColor = 'transparent';
   ctx.textAlign = 'center';
-  // Everything scaled from in-app card (260x462) to PNG card area (~1008x1848)
   const s = (1080 - 2 * m) / 260;
   const cx = w / 2;
   let y = m + 28 * s;
-  // Pin: in-app SVG viewBox -26..26 x 0..72, path M0,68 C-19,46 -24,36 -24,25 A24,24
+  // Pin
   const ps = s;
   const pinTopY = y;
   const pinCX = cx;
@@ -714,7 +721,7 @@ function saveCardAsPNG(card, cta) {
   ctx.arc(pinCX, pinCY, 24 * ps, Math.PI, 0, false);
   ctx.bezierCurveTo(pinCX + 24*ps, pinTopY + 36*ps, pinCX + 19*ps, pinTopY + 46*ps, pinCX, pinTopY + 68*ps);
   ctx.closePath(); ctx.fill();
-  // Pin text: YOU ARE 7*s, HERE 8.5*s letterspaced
+  // Pin text
   ctx.fillStyle = '#FFFFFF'; ctx.font = '600 ' + Math.round(7*s) + 'px "Cormorant Garamond", serif';
   const yaW = ctx.measureText('YOU ARE').width;
   ctx.fillText('YOU ARE', pinCX, pinCY - 3*s);
@@ -724,38 +731,40 @@ function saveCardAsPNG(card, cta) {
   const hg = (yaW - hn) / 3;
   let hx = pinCX - yaW / 2;
   hc.forEach(c => { ctx.fillText(c, hx + ctx.measureText(c).width/2, pinCY + 7*s); hx += ctx.measureText(c).width + hg; });
-  // Season statement: in-app 16px italic
+  // Season statement
   y = pinTopY + 68*ps + 16*s;
   const ssLen = card.seasonStatement.length;
   const ssFs = Math.round((ssLen > 180 ? 14 : ssLen > 120 ? 15 : 16) * s);
   ctx.fillStyle = '#5C3D30'; ctx.font = 'italic 400 ' + ssFs + 'px "Cormorant Garamond", serif';
-  const ssL = wrapText(ctx, card.seasonStatement, w * 0.82);
+  const ssL = wrapText(ctx, card.seasonStatement, w * 0.78);
   ssL.forEach(l => { ctx.fillText(l, cx, y); y += Math.round(ssFs * 1.45); });
-  // Verse dividers + quote: in-app 12px
-  y += 14*s;
+  // Verse dividers + quote
+  y += 18*s;
   const vqFs = Math.round(12*s);
   ctx.font = '400 ' + vqFs + 'px "Cormorant Garamond", serif';
   const vqW = ctx.measureText(card.verseQuote).width;
-  ctx.strokeStyle = '#AE655B'; ctx.lineWidth = 1; ctx.globalAlpha = 0.5;
-  const ll = Math.min(20*s, (w*0.82 - vqW)/2 - 8*s);
-  if (ll > 4) {
-    ctx.beginPath(); ctx.moveTo(cx - vqW/2 - ll - 8*s, y); ctx.lineTo(cx - vqW/2 - 8*s, y); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(cx + vqW/2 + 8*s, y); ctx.lineTo(cx + vqW/2 + ll + 8*s, y); ctx.stroke();
+  // Short decorative dashes — capped at 12*s max length
+  const dashLen = Math.min(12*s, Math.max(0, (w*0.7 - vqW)/2 - 10*s));
+  if (dashLen > 4) {
+    ctx.strokeStyle = '#AE655B'; ctx.lineWidth = 1; ctx.globalAlpha = 0.4;
+    ctx.beginPath(); ctx.moveTo(cx - vqW/2 - dashLen - 10*s, y); ctx.lineTo(cx - vqW/2 - 10*s, y); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(cx + vqW/2 + 10*s, y); ctx.lineTo(cx + vqW/2 + dashLen + 10*s, y); ctx.stroke();
+    ctx.globalAlpha = 1;
   }
-  ctx.globalAlpha = 1;
+  // Verse quote text — centered vertically on the dashes
   ctx.fillStyle = '#9C7E72';
-  ctx.fillText(card.verseQuote, cx, y + 4);
-  // Scripture ref: in-app 10px Work Sans
-  y += 4*s + vqFs*0.3;
+  ctx.fillText(card.verseQuote, cx, y + Math.round(vqFs * 0.35));
+  // Scripture ref — proper gap below verse quote
+  y += vqFs + 12*s;
   ctx.fillStyle = '#AE655B'; ctx.font = '400 ' + Math.round(10*s) + 'px "Work Sans", sans-serif';
   ctx.fillText(card.scripture, cx, y);
-  // Mantra: in-app 12px Work Sans 500, centered in remaining space
-  y += 16*s;
+  // Mantra — properly loaded font at weight 500
+  y += 20*s;
   const mFs = Math.round(12*s);
   ctx.font = '500 ' + mFs + 'px "Work Sans", sans-serif';
   const mL = wrapText(ctx, card.mantra, w * 0.78);
   const mH = mL.length * Math.round(mFs * 1.5);
-  // Footer: in-app ~28px from bottom
+  // Footer position
   const fY = h - m - 28*s;
   const fH = Math.round(10*s) + Math.round(8*s)*2 + 10*s;
   const fTop = fY - fH;
@@ -787,6 +796,7 @@ function saveCardAsPNG(card, cta) {
     const a = document.createElement('a'); a.href = url; a.download = 'nehama-reflection.png';
     document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
   }, 'image/png');
+  }); // end of font loading .then()
 }
 
 function wrapText(ctx, text, maxWidth) {
