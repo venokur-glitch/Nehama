@@ -738,26 +738,59 @@ function saveCardAsPNG(card, cta) {
   ctx.fillStyle = '#5C3D30'; ctx.font = 'italic 400 ' + ssFs + 'px "Cormorant Garamond", serif';
   const ssL = wrapText(ctx, card.seasonStatement, w * 0.78);
   ssL.forEach(l => { ctx.fillText(l, cx, y); y += Math.round(ssFs * 1.45); });
-  // Verse dividers + quote — dashes and text share the same midline
+  // ---- Verse quote + optional flanking dashes (adaptive) -----------------
+  // Goal: let the verse be whatever length it needs to be and still render gracefully.
+  //  1) Auto-scale the font down if the verse is long
+  //  2) Wrap to multiple lines if it still doesn't fit
+  //  3) Only draw decorative dashes when it's a clean single line
   y += 18*s;
-  const vqFs = Math.round(12*s);
+
+  const vqLen = card.verseQuote.length;
+  // Start font size depending on length — same spirit as season statement
+  const baseVqPx = vqLen > 90 ? 10 : vqLen > 60 ? 11 : 12;
+  const vqFs = Math.round(baseVqPx * s);
+  const vqMaxW = w * 0.78; // max text width (matches other wrapped blocks)
+
   ctx.font = '400 ' + vqFs + 'px "Cormorant Garamond", serif';
-  const vqW = ctx.measureText(card.verseQuote).width;
-  // Short decorative dashes — capped at 12*s max length
-  const dashLen = Math.min(12*s, Math.max(0, (w*0.7 - vqW)/2 - 10*s));
-  if (dashLen > 4) {
-    ctx.strokeStyle = '#AE655B'; ctx.lineWidth = 1; ctx.globalAlpha = 0.4;
-    ctx.beginPath(); ctx.moveTo(cx - vqW/2 - dashLen - 10*s, y); ctx.lineTo(cx - vqW/2 - 10*s, y); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(cx + vqW/2 + 10*s, y); ctx.lineTo(cx + vqW/2 + dashLen + 10*s, y); ctx.stroke();
-    ctx.globalAlpha = 1;
+  const vqSingleLineW = ctx.measureText(card.verseQuote).width;
+
+  // Decide whether to wrap
+  let vqLines;
+  if (vqSingleLineW <= vqMaxW) {
+    vqLines = [card.verseQuote];
+  } else {
+    vqLines = wrapText(ctx, card.verseQuote, vqMaxW);
   }
-  // Verse quote text — use textBaseline 'middle' so its visual center sits on the dashes' y
+
   ctx.fillStyle = '#9C7E72';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(card.verseQuote, cx, y);
-  ctx.textBaseline = 'alphabetic'; // reset so downstream drawing is unaffected
-  // Scripture ref — proper gap below verse quote
-  y += vqFs + 12*s;
+  const vqLineHeight = Math.round(vqFs * 1.35);
+
+  if (vqLines.length === 1) {
+    // Single line: draw with optional decorative dashes flanking it
+    const lineW = ctx.measureText(vqLines[0]).width;
+    ctx.fillText(vqLines[0], cx, y);
+    // Dashes sit on the visual midline of lowercase ink (~0.28 × font-size above baseline)
+    const dashLen = Math.min(12*s, Math.max(0, (w*0.7 - lineW)/2 - 10*s));
+    if (dashLen > 6) {
+      const dashY = y - vqFs * 0.28;
+      ctx.strokeStyle = '#AE655B'; ctx.lineWidth = 1; ctx.globalAlpha = 0.4;
+      ctx.beginPath(); ctx.moveTo(cx - lineW/2 - dashLen - 10*s, dashY); ctx.lineTo(cx - lineW/2 - 10*s, dashY); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(cx + lineW/2 + 10*s, dashY); ctx.lineTo(cx + lineW/2 + dashLen + 10*s, dashY); ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+    // Advance y so the scripture ref gets its breathing room (same as before)
+    y += vqFs + 12*s;
+  } else {
+    // Multi-line: no dashes (the verse has its own visual weight), tidy line spacing
+    vqLines.forEach((l, i) => {
+      ctx.fillText(l, cx, y + i * vqLineHeight);
+    });
+    // Advance y past the last line + a proportional gap before the scripture ref
+    y += (vqLines.length - 1) * vqLineHeight + vqFs + 12*s;
+  }
+  // ---- End verse block ---------------------------------------------------
+
+  // Scripture ref
   ctx.fillStyle = '#AE655B'; ctx.font = '400 ' + Math.round(10*s) + 'px "Work Sans", sans-serif';
   ctx.fillText(card.scripture, cx, y);
   // Mantra — properly loaded font at weight 500
