@@ -1030,11 +1030,30 @@ export default function NehamaApp() {
     <div className="neh-shell" style={{ minHeight: '100vh', position: 'relative', background: '#FFFFFF' }}>
       <LangSwitch lang={lang} setLang={setLang} />
 
-      {/* Header */}
-      <div style={{ background: '#AE655B', padding: '88px 24px 47px', textAlign: 'center', opacity: anim.text ? 1 : 0, transition: 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1)' }}>
-        <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 'calc(54px * 0.96)', fontWeight: 400, color: '#FFFFFF', lineHeight: 1, letterSpacing: '0.01em', marginBottom: '18px' }}>Nehama</div>
-        <div style={{ fontFamily: "'Work Sans', sans-serif", fontSize: 'calc(10px * 0.96)', color: 'rgba(255,255,255,0.75)', letterSpacing: '0.6em', textTransform: 'uppercase', fontWeight: 400, paddingLeft: '0.6em' }}>YOU ARE HERE</div>
-      </div>
+ {/* Header */}
+<div style={{ background: '#AE655B', padding: '56px 24px 36px', textAlign: 'center', opacity: anim.text ? 1 : 0, transition: 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1)' }}>
+  <div style={{ position: 'relative', maxWidth: '440px', margin: '0 auto' }}>
+    <img
+      src="/nehama-logo.png"
+      alt="Nehama"
+      style={{ width: '100%', height: 'auto', display: 'block' }}
+    />
+    <div style={{
+      position: 'absolute',
+      left: '50%',
+      top: '58%',
+      transform: 'translate(-50%, -50%)',
+      fontFamily: "'Work Sans', sans-serif",
+      fontSize: 'calc(10px * 0.96)',
+      color: 'rgba(255,255,255,0.75)',
+      letterSpacing: '0.6em',
+      textTransform: 'uppercase',
+      fontWeight: 400,
+      paddingLeft: '0.6em',
+      whiteSpace: 'nowrap',
+    }}>YOU ARE HERE</div>
+  </div>
+</div>
 
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '0 24px 40px' }}>
 
