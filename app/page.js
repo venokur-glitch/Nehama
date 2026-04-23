@@ -738,7 +738,7 @@ function saveCardAsPNG(card, cta) {
   ctx.fillStyle = '#5C3D30'; ctx.font = 'italic 400 ' + ssFs + 'px "Cormorant Garamond", serif';
   const ssL = wrapText(ctx, card.seasonStatement, w * 0.78);
   ssL.forEach(l => { ctx.fillText(l, cx, y); y += Math.round(ssFs * 1.45); });
-  // Verse dividers + quote
+  // Verse dividers + quote — dashes and text share the same midline
   y += 18*s;
   const vqFs = Math.round(12*s);
   ctx.font = '400 ' + vqFs + 'px "Cormorant Garamond", serif';
@@ -751,9 +751,11 @@ function saveCardAsPNG(card, cta) {
     ctx.beginPath(); ctx.moveTo(cx + vqW/2 + 10*s, y); ctx.lineTo(cx + vqW/2 + dashLen + 10*s, y); ctx.stroke();
     ctx.globalAlpha = 1;
   }
-  // Verse quote text — centered vertically on the dashes
+  // Verse quote text — use textBaseline 'middle' so its visual center sits on the dashes' y
   ctx.fillStyle = '#9C7E72';
-  ctx.fillText(card.verseQuote, cx, y + Math.round(vqFs * 0.35));
+  ctx.textBaseline = 'middle';
+  ctx.fillText(card.verseQuote, cx, y);
+  ctx.textBaseline = 'alphabetic'; // reset so downstream drawing is unaffected
   // Scripture ref — proper gap below verse quote
   y += vqFs + 12*s;
   ctx.fillStyle = '#AE655B'; ctx.font = '400 ' + Math.round(10*s) + 'px "Work Sans", sans-serif';
