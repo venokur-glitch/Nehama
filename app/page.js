@@ -940,7 +940,7 @@ export default function NehamaApp() {
   const t = T[lang] || T.en;
   const prices = PRICING[pricingTier] || PRICING.us;
 
-  useEffect(() => {   if (typeof window === 'undefined') return;   const s = localStorage.getItem('nehama-authorized');   if (s === 'true') setAuthorized(true);   const savedLang = localStorage.getItem('nehama-lang');   if (savedLang) setLang(savedLang);   const params = new URLSearchParams(window.location.search);   if (params.get('paid') === 'true') {     localStorage.setItem('nehama-access', 'paid');     window.history.replaceState({}, '', window.location.pathname);     // Restore form state and auto-launch the journey     try {       const pending = localStorage.getItem('nehama-pending');       if (pending) {         const p = JSON.parse(pending);         if (p.userName) {           setUserName(p.userName);           setPartnerName(p.partnerName || '');           setMode(p.mode || 'individual');           setTestament(p.testament || 'both');           if (p.lang) setLang(p.lang);           localStorage.removeItem('nehama-pending');           // Launch journey on next tick so state has time to settle           setTimeout(() => {             setTier('full');             setScreen('chat');             const introMsg = (p.mode === 'couple')               ? ((p.lang === 'es') ? 'Hola. Mi nombre es ' + p.userName + ' y estoy aquí con mi pareja, ' + p.partnerName + '. Nos gustaría comenzar el viaje completo juntos.'                 : (p.lang === 'pt') ? 'Olá. Meu nome é ' + p.userName + ' e estou aqui com meu(minha) parceiro(a), ' + p.partnerName + '. Gostaríamos de começar a jornada completa juntos.'                 : 'Hello. My name is ' + p.userName + ' and I am here with my partner, ' + p.partnerName + '. We would like to begin the full journey together.')               : ((p.lang === 'es') ? 'Hola. Mi nombre es ' + p.userName + '. Estoy listo para comenzar el viaje completo.'                 : (p.lang === 'pt') ? 'Olá. Meu nome é ' + p.userName + '. Estou pronto para começar a jornada completa.'                 : 'Hello. My name is ' + p.userName + '. I am ready to begin the full journey.');             setTimeout(() => sendMessage(introMsg, true), 300);           }, 100);         }       }     } catch (e) {}   } }, []);
+  useEffect(() => { if (typeof window !== 'undefined') { const s = localStorage.getItem('nehama-authorized'); if (s === 'true') setAuthorized(true); const savedLang = localStorage.getItem('nehama-lang'); if (savedLang) setLang(savedLang); const params = new URLSearchParams(window.location.search); if (params.get('paid') === 'true') { localStorage.setItem('nehama-access', 'paid'); window.history.replaceState({}, '', window.location.pathname); } } }, []);
 
   useEffect(() => { if (typeof window !== 'undefined') localStorage.setItem('nehama-lang', lang); }, [lang]);
 
@@ -1019,25 +1019,7 @@ export default function NehamaApp() {
   const handleStartFree = () => { if (!userName.trim()) return; setTier('free'); setScreen('chat'); const intro = lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + '. Estoy aquí para la reflexión gratuita.' : lang === 'pt' ? 'Olá. Meu nome é ' + userName.trim() + '. Estou aqui para a reflexão gratuita.' : 'Hello. My name is ' + userName.trim() + '. I am here for the free reflection.'; setTimeout(() => sendMessage(intro, true), 300); };
   const hasFullAccess = () => { const access = localStorage.getItem('nehama-access'); return ['beta', 'lifetime', 'scholarship', 'paid'].includes(access); };
   const launchFullJourney = () => { setTier('full'); setScreen('chat'); const intro = mode === 'couple' ? (lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + ' y estoy aquí con mi pareja, ' + partnerName.trim() + '. Nos gustaría comenzar el viaje completo juntos.' : lang === 'pt' ? 'Olá. Meu nome é ' + userName.trim() + ' e estou aqui com meu(minha) parceiro(a), ' + partnerName.trim() + '. Gostaríamos de começar a jornada completa juntos.' : 'Hello. My name is ' + userName.trim() + ' and I am here with my partner, ' + partnerName.trim() + '. We would like to begin the full journey together.') : (lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + '. Estoy listo para comenzar el viaje completo.' : lang === 'pt' ? 'Olá. Meu nome é ' + userName.trim() + '. Estou pronto para começar a jornada completa.' : 'Hello. My name is ' + userName.trim() + '. I am ready to begin the full journey.'); setTimeout(() => sendMessage(intro, true), 300); };
- const handleStartFull = () => {
-  if (!userName.trim()) return;
-  if (mode === 'couple' && !partnerName.trim()) return;
-  // Save form state so we can restore it after Stripe redirect
-  try {
-    localStorage.setItem('nehama-pending', JSON.stringify({
-      userName: userName.trim(),
-      partnerName: partnerName.trim(),
-      mode,
-      testament,
-      lang,
-    }));
-  } catch (e) {}
-  if (hasFullAccess()) {
-    launchFullJourney();
-  } else {
-    setScreen('pricing');
-  }
-};
+  const handleStartFull = () => { if (!userName.trim()) return; if (mode === 'couple' && !partnerName.trim()) return; if (hasFullAccess()) { launchFullJourney(); } else { setScreen('pricing'); } };
   const handleCheckout = async (priceId, founding = true) => { try { const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ priceId, founding }) }); const data = await res.json(); if (data.url) window.location.href = data.url; } catch (e) { console.error('Checkout error:', e); } };
   const handleReset = () => { try { localStorage.removeItem('nehama-session'); } catch (e) {} setMessages([]); setUserName(''); setPartnerName(''); setTier(null); setMode('individual'); setTestament('both'); setShowSettings(false); setEmailSubmitted(false); setFeedbackEmail(''); setScreen('welcome'); setTimeout(() => setAnim(a => ({ ...a, text: true })), 200); setTimeout(() => setAnim(a => ({ ...a, paths: true })), 600); };
   const handleDownload = () => { const convo = messages.filter(m => !m.hidden).map(m => (m.role === 'user' ? 'You: ' : 'Nehama: ') + stripReflectionCard(m.content)).join('\n\n'); const d = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); const ttl = tier === 'free' ? 'Your Scriptural Reflection' : 'Your Life Architecture Session'; const doc = 'NEHAMA: YOU ARE HERE\n' + ttl + '\n' + d + '\n' + userName + (mode === 'couple' ? ' & ' + partnerName : '') + '\n\n' + '='.repeat(48) + '\n\n' + convo + '\n\n' + '='.repeat(48) + '\n\nThis is yours to keep.\n'; const b = new Blob([doc], { type: 'text/plain' }); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = 'nehama-' + (tier === 'free' ? 'reflection' : 'session') + '.txt'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(u); };
