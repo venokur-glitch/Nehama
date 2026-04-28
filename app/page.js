@@ -1308,7 +1308,7 @@ export default function NehamaApp() {
               <p style={{ fontSize: '13px', color: '#AE655B', margin: '0 0 14px 0' }}>{t.emailCaptureDesc}</p>
               <div style={{ display: 'flex', gap: '8px' }}>
                 <input style={{ ...inputStyle, flex: 1 }} placeholder="your@email.com" type="email" value={feedbackEmail} onChange={e => setFeedbackEmail(e.target.value)} onFocus={e => e.target.style.borderBottomColor = '#AE655B'} onBlur={e => e.target.style.borderBottomColor = 'rgba(74,46,34,0.07)'} />
-                <button onClick={() => { if (feedbackEmail.includes('@')) { fetch('https://formspree.io/f/mdapqwqb', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: feedbackEmail, _subject: 'Nehama Email Signup' }) }); setEmailSubmitted(true); } }} style={{ padding: '12px 24px', fontSize: '14px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#5C3D30', color: '#FFFFFF', flexShrink: 0 }}>{t.send}</button>
+                <button onClick={() => { if (feedbackEmail.includes('@')) { subscribeToMailerLite(feedbackEmail, ML_GROUP_FREE_REFLECTION); setEmailSubmitted(true); } }} style={{ padding: '12px 24px', fontSize: '14px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#5C3D30', color: '#FFFFFF', flexShrink: 0 }}>{t.send}</button>
               </div>
             </div>
           )}
