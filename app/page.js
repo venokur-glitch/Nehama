@@ -909,7 +909,7 @@ export default function NehamaApp() {
   const [authorized, setAuthorized] = useState(true);
   const [codeInput, setCodeInput] = useState('');
   const [codeError, setCodeError] = useState(false);
-  const [screen, setScreen] = useState('welcome');
+  const [screen, setScreen] = useState('booting');
   const [tier, setTier] = useState(null);
   const [mode, setMode] = useState('individual');
   const [testament, setTestament] = useState('both');
@@ -942,36 +942,76 @@ export default function NehamaApp() {
   const t = T[lang] || T.en;
   const prices = PRICING[pricingTier] || PRICING.us;
 
-  // ── Mount effect: now also restores nehama-pending after Stripe redirect (CHANGE 2 of 4) ──
+  // ── Single bootstrap effect: decides EVERYTHING on mount in one shot.
+  // Runs exactly once. Handles three cases:
+  //   1) Returning from Stripe with `?paid=true` and pending state → auto-launch full journey
+  //   2) Existing saved session → restore it
+  //   3) Fresh visit → show welcome
+  // We do NOT use a separate session-loader effect, because re-runs on flag changes
+  // were stomping on the screen state set by launchFullJourney.
   useEffect(() => {
     if (typeof window === 'undefined') return;
-    const s = localStorage.getItem('nehama-authorized');
-    if (s === 'true') setAuthorized(true);
+
+    // Restore basic prefs first (cheap, applies to all paths)
+    if (localStorage.getItem('nehama-authorized') === 'true') setAuthorized(true);
     const savedLang = localStorage.getItem('nehama-lang');
     if (savedLang) setLang(savedLang);
+
     const params = new URLSearchParams(window.location.search);
-    if (params.get('paid') === 'true') {
+    const paidStatus = params.get('paid');
+
+    // ── Case 1: Stripe paid return ─────────────────────────────────
+    if (paidStatus === 'true') {
       localStorage.setItem('nehama-access', 'paid');
       window.history.replaceState({}, '', window.location.pathname);
+
+      let pending = null;
       try {
-        const pendingRaw = localStorage.getItem('nehama-pending');
-        const pending = pendingRaw ? JSON.parse(pendingRaw) : null;
-        if (pending && pending.userName) {
-          // Wipe any prior session so we start the full journey fresh
-          localStorage.removeItem('nehama-session');
-          setUserName(pending.userName);
-          setPartnerName(pending.partnerName || '');
-          setMode(pending.mode || 'individual');
-          setTestament(pending.testament || 'both');
-          if (pending.lang) setLang(pending.lang);
-          setShouldAutoLaunch(true);
-        }
+        const raw = localStorage.getItem('nehama-pending');
+        if (raw) pending = JSON.parse(raw);
       } catch (e) {}
       localStorage.removeItem('nehama-pending');
-    } else if (params.get('paid') === 'cancel') {
+
+      if (pending && pending.userName) {
+        // Wipe any stale session so the new full journey starts fresh
+        localStorage.removeItem('nehama-session');
+        setUserName(pending.userName);
+        setPartnerName(pending.partnerName || '');
+        setMode(pending.mode || 'individual');
+        setTestament(pending.testament || 'both');
+        if (pending.lang) setLang(pending.lang);
+        setShouldAutoLaunch(true);
+        return; // Skip session-load fallback below
+      }
+      // No pending state but paid=true (rare edge case) → fall through to default
+    } else if (paidStatus === 'cancel') {
       localStorage.removeItem('nehama-pending');
       window.history.replaceState({}, '', window.location.pathname);
     }
+
+    // ── Case 2: existing saved session ─────────────────────────────
+    try {
+      const s = localStorage.getItem('nehama-session');
+      if (s) {
+        const d = JSON.parse(s);
+        if (d.messages && d.messages.length > 0) {
+          setTier(d.tier);
+          setMode(d.mode || 'individual');
+          setTestament(d.testament || 'both');
+          setLang(d.lang || 'en');
+          setUserName(d.userName || '');
+          setPartnerName(d.partnerName || '');
+          setMessages(d.messages);
+          setScreen('chat');
+          return;
+        }
+      }
+    } catch (e) {}
+
+    // ── Case 3: fresh visit → welcome ──────────────────────────────
+    setScreen('welcome');
+    setTimeout(() => setAnim(a => ({ ...a, text: true })), 200);
+    setTimeout(() => setAnim(a => ({ ...a, paths: true })), 600);
   }, []);
 
   useEffect(() => { if (typeof window !== 'undefined') localStorage.setItem('nehama-lang', lang); }, [lang]);
@@ -991,13 +1031,8 @@ export default function NehamaApp() {
     if (isMobile && !isStandalone && !dismissed && authorized) setShowInstall(true);
   }, [authorized]);
 
-  useEffect(() => {
-    if (!authorized) return;
-    // If we're auto-launching from a Stripe return, skip session reload — auto-launch handles it.
-    if (shouldAutoLaunch) return;
-    try { const s = localStorage.getItem('nehama-session'); if (s) { const d = JSON.parse(s); if (d.messages && d.messages.length > 0) { setTier(d.tier); setMode(d.mode || 'individual'); setTestament(d.testament || 'both'); setLang(d.lang || 'en'); setUserName(d.userName || ''); setPartnerName(d.partnerName || ''); setMessages(d.messages); setScreen('chat'); return; } } } catch (e) {}
-    setScreen('welcome'); setTimeout(() => setAnim(a => ({ ...a, text: true })), 200); setTimeout(() => setAnim(a => ({ ...a, paths: true })), 600);
-  }, [authorized, shouldAutoLaunch]);
+  // (Session-load logic now lives inside the bootstrap effect above,
+  //  so there is no second effect that could race with launchFullJourney.)
 
   useEffect(() => {
     const lastAi = [...messages].reverse().find(m => m.role === 'assistant');
@@ -1104,6 +1139,13 @@ export default function NehamaApp() {
     </div>
   </>) : null;
 
+  // ─── BOOTING (pre-bootstrap) ─────
+  // Render a clean blank shell until the bootstrap effect has decided where to go.
+  // Prevents a flash of welcome on the initial mount, especially during the Stripe return.
+  if (screen === 'booting') {
+    return <div className="neh-shell" style={{ minHeight: '100vh', background: '#FFFFFF' }} />;
+  }
+
   // ─── PRICING ─────
   const perMonth = lang === 'es' ? '/ mes' : lang === 'pt' ? '/ mês' : '/ month';
   const perYear = lang === 'es' ? '/ año' : lang === 'pt' ? '/ ano' : '/ year';
@@ -1153,6 +1195,11 @@ export default function NehamaApp() {
   );
 
   // ─── WELCOME ─────
+  // Guard: while we're auto-launching back from Stripe, render nothing
+  // (a clean blank shell) instead of flashing the welcome screen.
+  if (screen === 'welcome' && shouldAutoLaunch) {
+    return <div className="neh-shell" style={{ minHeight: '100vh', background: '#FFFFFF' }} />;
+  }
   if (screen === 'welcome') return (
     <div className="neh-shell" style={{ minHeight: '100vh', position: 'relative', background: '#FFFFFF' }}>
       <LangSwitch lang={lang} setLang={setLang} />
