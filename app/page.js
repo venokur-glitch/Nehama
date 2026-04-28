@@ -934,13 +934,45 @@ export default function NehamaApp() {
   const [emailSubmitted, setEmailSubmitted] = useState(false);
   const [anim, setAnim] = useState({ text: false, paths: false });
   const [pricingTier, setPricingTier] = useState('us');
+  // ── Stripe-return auto-launch flag (CHANGE 1 of 4) ───────────────
+  const [shouldAutoLaunch, setShouldAutoLaunch] = useState(false);
   const messagesEndRef = useRef(null);
   const lastMsgRef = useRef(null);
   const loadingMsgIndexRef = useRef(0);
   const t = T[lang] || T.en;
   const prices = PRICING[pricingTier] || PRICING.us;
 
-  useEffect(() => { if (typeof window !== 'undefined') { const s = localStorage.getItem('nehama-authorized'); if (s === 'true') setAuthorized(true); const savedLang = localStorage.getItem('nehama-lang'); if (savedLang) setLang(savedLang); const params = new URLSearchParams(window.location.search); if (params.get('paid') === 'true') { localStorage.setItem('nehama-access', 'paid'); window.history.replaceState({}, '', window.location.pathname); } } }, []);
+  // ── Mount effect: now also restores nehama-pending after Stripe redirect (CHANGE 2 of 4) ──
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const s = localStorage.getItem('nehama-authorized');
+    if (s === 'true') setAuthorized(true);
+    const savedLang = localStorage.getItem('nehama-lang');
+    if (savedLang) setLang(savedLang);
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('paid') === 'true') {
+      localStorage.setItem('nehama-access', 'paid');
+      window.history.replaceState({}, '', window.location.pathname);
+      try {
+        const pendingRaw = localStorage.getItem('nehama-pending');
+        const pending = pendingRaw ? JSON.parse(pendingRaw) : null;
+        if (pending && pending.userName) {
+          // Wipe any prior session so we start the full journey fresh
+          localStorage.removeItem('nehama-session');
+          setUserName(pending.userName);
+          setPartnerName(pending.partnerName || '');
+          setMode(pending.mode || 'individual');
+          setTestament(pending.testament || 'both');
+          if (pending.lang) setLang(pending.lang);
+          setShouldAutoLaunch(true);
+        }
+      } catch (e) {}
+      localStorage.removeItem('nehama-pending');
+    } else if (params.get('paid') === 'cancel') {
+      localStorage.removeItem('nehama-pending');
+      window.history.replaceState({}, '', window.location.pathname);
+    }
+  }, []);
 
   useEffect(() => { if (typeof window !== 'undefined') localStorage.setItem('nehama-lang', lang); }, [lang]);
 
@@ -961,9 +993,11 @@ export default function NehamaApp() {
 
   useEffect(() => {
     if (!authorized) return;
+    // If we're auto-launching from a Stripe return, skip session reload — auto-launch handles it.
+    if (shouldAutoLaunch) return;
     try { const s = localStorage.getItem('nehama-session'); if (s) { const d = JSON.parse(s); if (d.messages && d.messages.length > 0) { setTier(d.tier); setMode(d.mode || 'individual'); setTestament(d.testament || 'both'); setLang(d.lang || 'en'); setUserName(d.userName || ''); setPartnerName(d.partnerName || ''); setMessages(d.messages); setScreen('chat'); return; } } } catch (e) {}
     setScreen('welcome'); setTimeout(() => setAnim(a => ({ ...a, text: true })), 200); setTimeout(() => setAnim(a => ({ ...a, paths: true })), 600);
-  }, [authorized]);
+  }, [authorized, shouldAutoLaunch]);
 
   useEffect(() => {
     const lastAi = [...messages].reverse().find(m => m.role === 'assistant');
@@ -1020,11 +1054,31 @@ export default function NehamaApp() {
   const hasFullAccess = () => { const access = localStorage.getItem('nehama-access'); return ['beta', 'lifetime', 'scholarship', 'paid'].includes(access); };
   const launchFullJourney = () => { setTier('full'); setScreen('chat'); const intro = mode === 'couple' ? (lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + ' y estoy aquí con mi pareja, ' + partnerName.trim() + '. Nos gustaría comenzar el viaje completo juntos.' : lang === 'pt' ? 'Olá. Meu nome é ' + userName.trim() + ' e estou aqui com meu(minha) parceiro(a), ' + partnerName.trim() + '. Gostaríamos de começar a jornada completa juntos.' : 'Hello. My name is ' + userName.trim() + ' and I am here with my partner, ' + partnerName.trim() + '. We would like to begin the full journey together.') : (lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + '. Estoy listo para comenzar el viaje completo.' : lang === 'pt' ? 'Olá. Meu nome é ' + userName.trim() + '. Estou pronto para começar a jornada completa.' : 'Hello. My name is ' + userName.trim() + '. I am ready to begin the full journey.'); setTimeout(() => sendMessage(intro, true), 300); };
   const handleStartFull = () => { if (!userName.trim()) return; if (mode === 'couple' && !partnerName.trim()) return; if (hasFullAccess()) { launchFullJourney(); } else { setScreen('pricing'); } };
-  const handleCheckout = async (priceId, founding = true) => { try { const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ priceId, founding }) }); const data = await res.json(); if (data.url) window.location.href = data.url; } catch (e) { console.error('Checkout error:', e); } };
+  // ── handleCheckout: stash pending state before Stripe redirect (CHANGE 3 of 4) ──
+  const handleCheckout = async (priceId, founding = true) => {
+    try {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('nehama-pending', JSON.stringify({ userName, partnerName, mode, testament, lang }));
+      }
+      const res = await fetch('/api/checkout', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ priceId, founding }) });
+      const data = await res.json();
+      if (data.url) window.location.href = data.url;
+    } catch (e) { console.error('Checkout error:', e); }
+  };
   const handleReset = () => { try { localStorage.removeItem('nehama-session'); } catch (e) {} setMessages([]); setUserName(''); setPartnerName(''); setTier(null); setMode('individual'); setTestament('both'); setShowSettings(false); setEmailSubmitted(false); setFeedbackEmail(''); setScreen('welcome'); setTimeout(() => setAnim(a => ({ ...a, text: true })), 200); setTimeout(() => setAnim(a => ({ ...a, paths: true })), 600); };
   const handleDownload = () => { const convo = messages.filter(m => !m.hidden).map(m => (m.role === 'user' ? 'You: ' : 'Nehama: ') + stripReflectionCard(m.content)).join('\n\n'); const d = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }); const ttl = tier === 'free' ? 'Your Scriptural Reflection' : 'Your Life Architecture Session'; const doc = 'NEHAMA: YOU ARE HERE\n' + ttl + '\n' + d + '\n' + userName + (mode === 'couple' ? ' & ' + partnerName : '') + '\n\n' + '='.repeat(48) + '\n\n' + convo + '\n\n' + '='.repeat(48) + '\n\nThis is yours to keep.\n'; const b = new Blob([doc], { type: 'text/plain' }); const u = URL.createObjectURL(b); const a = document.createElement('a'); a.href = u; a.download = 'nehama-' + (tier === 'free' ? 'reflection' : 'session') + '.txt'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(u); };
   const handleSend = () => { if (!input.trim() || isLoading) return; sendMessage(input.trim()); };
   const handleKeyDown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); } };
+
+  // ── Auto-launch effect: fires once Stripe-pending state has been restored (CHANGE 4 of 4) ──
+  useEffect(() => {
+    if (shouldAutoLaunch && userName.trim()) {
+      setShouldAutoLaunch(false);
+      launchFullJourney();
+    }
+    // launchFullJourney is intentionally omitted from deps; we want this to fire only when the flag flips true
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shouldAutoLaunch, userName]);
 
   const freeSessionComplete = tier === 'free' && messages.filter(m => m.role === 'assistant').length >= 3 && messages.some(m => m.role === 'assistant' && (m.content.toLowerCase().includes('what you just shared matters') || m.content.toLowerCase().includes('lo que acabas de compartir importa') || m.content.includes('[/REFLECTION_CARD]')));
 
