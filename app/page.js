@@ -3,6 +3,22 @@ import { useState, useEffect, useRef, useCallback } from "react";
 
 const INVITE_CODE = "LOVE";
 const GIFT_CODE = "GIFT4U";
+const ML_GROUP_FREE_REFLECTION = "185990060575819522";
+const ML_GROUP_CODE_USER = "185990044310308281";
+
+async function subscribeToMailerLite(email, groupId, fields) {
+  try {
+    const res = await fetch("/api/subscribe", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, groupId, fields }),
+    });
+    return res.ok;
+  } catch (e) {
+    console.error("MailerLite subscribe failed:", e);
+    return false;
+  }
+}
 
 // ─── TRANSLATIONS ───────────────────────────────────────────────────
 const T = {
