@@ -1160,7 +1160,7 @@ export default function NehamaApp() {
       ) : (<>
         <input style={{ ...inputStyle, marginBottom: '12px' }} placeholder={t.emailLabel} type="email" value={contactEmail} onChange={e => setContactEmail(e.target.value)} onFocus={e => e.target.style.borderBottomColor = '#AE655B'} onBlur={e => e.target.style.borderBottomColor = 'rgba(74,46,34,0.07)'} />
         <textarea style={{ width: '100%', boxSizing: 'border-box', background: '#fff', border: '1px solid rgba(74,46,34,0.07)', borderRadius: '8px', padding: '12px', fontFamily: "avenir-next, sans-serif", fontWeight: 300, fontSize: '14px', color: '#5C3D30', outline: 'none', transition: 'border-color 0.2s', minHeight: '100px', resize: 'vertical', lineHeight: '1.6', marginBottom: '16px' }} placeholder={t.msgLabel} value={contactMsg} onChange={e => setContactMsg(e.target.value)} onFocus={e => e.target.style.borderColor = 'rgba(74,46,34,0.2)'} onBlur={e => e.target.style.borderColor = 'rgba(74,46,34,0.07)'} />
-        <button onClick={() => { if (contactEmail.includes('@') && contactMsg.trim()) { fetch('https://formspree.io/f/mdapqwqb', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: contactEmail, message: contactMsg, _subject: 'Nehama Contact Form' }) }); setContactSent(true); setContactEmail(''); setContactMsg(''); } }} style={{ width: '100%', padding: '13px', fontSize: '15px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#5C3D30', color: '#FFFFFF', letterSpacing: '0.5px', opacity: contactEmail.includes('@') && contactMsg.trim() ? 1 : 0.4 }}>{t.send}</button>
+        <button onClick={() => { if (contactEmail.includes('@') && contactMsg.trim()) { fetch('https://formspree.io/f/mdapqwqb', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: contactEmail, message: contactMsg, _subject: 'Nehama Contact Form' }) }); setContactSent(true); setContactEmail(''); setContactMsg(''); } }} style={{ width: '100%', padding: '13px', fontSize: '15px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#AE655B', color: '#FFFFFF', letterSpacing: '0.5px', opacity: contactEmail.includes('@') && contactMsg.trim() ? 1 : 0.4 }}>{t.send}</button>
       </>)}
     </div>
   </>) : null;
@@ -1179,7 +1179,7 @@ export default function NehamaApp() {
     <div className="neh-shell" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px', position: 'relative' }}>
       <LangSwitch lang={lang} setLang={setLang} />
       <div style={{ textAlign: 'center', marginBottom: '40px' }}>
-        <div style={{ fontFamily: "'Midcent Disco', serif", fontSize: '54px', fontWeight: 400, color: '#5C3D30', letterSpacing: '0px', marginBottom: '8px' }}>Nehama</div>
+        <div style={{ fontFamily: "'Midcent Disco', serif", fontSize: '54px', fontWeight: 400, color: '#AE655B', letterSpacing: '0px', marginBottom: '8px' }}>Nehama</div>
         <LogoLines width={100} />
       </div>
       <div style={{ width: '100%', maxWidth: '380px' }}>
@@ -1189,11 +1189,11 @@ export default function NehamaApp() {
             <p style={{ fontSize: '14px', color: '#5C3D30', lineHeight: 1.7 }}>{t.codeEmailAsk}</p>
           </div>
           <input style={{ ...inputStyle, marginBottom: '12px' }} placeholder={t.codeEmailPlaceholder} type="email" value={codeEmail} onChange={e => setCodeEmail(e.target.value)} onFocus={e => e.target.style.borderBottomColor = '#AE655B'} onBlur={e => e.target.style.borderBottomColor = 'rgba(74,46,34,0.07)'} onKeyDown={e => e.key === 'Enter' && handleCodeEmailSubmit()} />
-          <button onClick={handleCodeEmailSubmit} style={{ width: '100%', padding: '14px', fontSize: '15px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#5C3D30', color: '#FFFFFF', letterSpacing: '0.5px', marginBottom: '12px' }}>{t.codeStart}</button>
+          <button onClick={handleCodeEmailSubmit} style={{ width: '100%', padding: '14px', fontSize: '15px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#AE655B', color: '#FFFFFF', letterSpacing: '0.5px', marginBottom: '12px' }}>{t.codeStart}</button>
           <button onClick={() => { setCodeAccepted(false); setCodeEmail(''); launchFullJourney(); }} style={{ display: 'block', margin: '0 auto', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "avenir-next, sans-serif", fontSize: '13px', color: '#B8A498' }}>{t.codeSkip}</button>
         </>) : (<>
         <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '22px', color: '#5C3D30', textAlign: 'center', marginBottom: '32px', fontWeight: 400 }}>{t.pricingTitle}</p>
-        <button onClick={() => handleCheckout(prices.monthlyId, true)} style={{ width: '100%', padding: '18px', fontSize: '16px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#5C3D30', color: '#FFFFFF', letterSpacing: '0.5px', marginBottom: '4px' }}><span style={{ textDecoration: 'line-through', opacity: 0.6, marginRight: '10px', fontSize: '14px' }}>{prices.format(prices.symbol, prices.monthly)} {perMonth}</span>{prices.format(prices.symbol, prices.foundingMonthly)} {perMonth}</button>
+        <button onClick={() => handleCheckout(prices.monthlyId, true)} style={{ width: '100%', padding: '18px', fontSize: '16px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#AE655B', color: '#FFFFFF', letterSpacing: '0.5px', marginBottom: '4px' }}><span style={{ textDecoration: 'line-through', opacity: 0.6, marginRight: '10px', fontSize: '14px' }}>{prices.format(prices.symbol, prices.monthly)} {perMonth}</span>{prices.format(prices.symbol, prices.foundingMonthly)} {perMonth}</button>
         <p style={{ fontSize: '12px', color: '#AE655B', textAlign: 'center', marginBottom: '20px', fontStyle: 'italic' }}>{prices.dailyMonthly}</p>
         <button onClick={() => handleCheckout(prices.annualId, true)} style={{ width: '100%', padding: '18px', fontSize: '16px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: '1px solid #5C3D30', borderRadius: '8px', cursor: 'pointer', background: 'transparent', color: '#5C3D30', letterSpacing: '0.5px', marginBottom: '4px' }}><span style={{ textDecoration: 'line-through', opacity: 0.5, marginRight: '10px', fontSize: '14px' }}>{prices.format(prices.symbol, prices.annual)} {perYear}</span>{prices.format(prices.symbol, prices.foundingAnnual)} {perYear}</button>
         <p style={{ fontSize: '12px', color: '#AE655B', textAlign: 'center', marginBottom: '8px', fontStyle: 'italic' }}>{prices.dailyAnnual}</p>
@@ -1208,7 +1208,7 @@ export default function NehamaApp() {
           ) : (
             <div style={{ display: 'flex', gap: '8px', maxWidth: '280px', margin: '0 auto' }}>
               <input style={{ ...inputStyle, flex: 1, textAlign: 'center', fontSize: '16px', fontFamily: "'Cormorant Garamond', serif", letterSpacing: '3px', textTransform: 'uppercase' }} placeholder={t.pricingCodePlaceholder} value={codeInput} onChange={e => { setCodeInput(e.target.value); setCodeError(false); }} onKeyDown={e => e.key === 'Enter' && handleCodeSubmit()} />
-              <button onClick={handleCodeSubmit} style={{ padding: '12px 20px', fontSize: '14px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#5C3D30', color: '#FFFFFF', flexShrink: 0 }}>{t.pricingCodeApply}</button>
+              <button onClick={handleCodeSubmit} style={{ padding: '12px 20px', fontSize: '14px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#AE655B', color: '#FFFFFF', flexShrink: 0 }}>{t.pricingCodeApply}</button>
             </div>
           )}
           {codeError && <p style={{ fontSize: '12px', color: '#C48282', marginTop: '8px' }}>{t.pricingCodeError}</p>}
@@ -1308,7 +1308,7 @@ export default function NehamaApp() {
                 <button onClick={() => setTestament('new')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "avenir-next, sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: testament === 'new' ? '#fff' : '#AE655B', background: testament === 'new' ? '#5C3D30' : 'transparent', borderRadius: '0', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.ntLabel}</button>
               </div>
             </div>
-            <button onClick={handleStartFree} style={{ all: 'unset', display: 'block', width: '100%', boxSizing: 'border-box', textAlign: 'center', padding: '15px 20px', fontFamily: "avenir-next, sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', cursor: 'pointer', marginTop: '36px', background: '#5C3D30', color: '#fff', border: 'none', borderRadius: '8px', opacity: userName.trim() ? 1 : 0.4 }}>{t.startFree}</button>
+            <button onClick={handleStartFree} style={{ all: 'unset', display: 'block', width: '100%', boxSizing: 'border-box', textAlign: 'center', padding: '15px 20px', fontFamily: "avenir-next, sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', cursor: 'pointer', marginTop: '36px', background: '#AE655B', color: '#fff', border: 'none', borderRadius: '8px', opacity: userName.trim() ? 1 : 0.4 }}>{t.startFree}</button>
           </div>
 
           {/* Divider */}
@@ -1340,7 +1340,7 @@ export default function NehamaApp() {
                 <button onClick={() => setTestament('new')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "avenir-next, sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: testament === 'new' ? '#fff' : '#AE655B', background: testament === 'new' ? '#5C3D30' : 'transparent', borderRadius: '0', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.ntLabel}</button>
               </div>
             </div>
-            <button onClick={handleStartFull} style={{ all: 'unset', display: 'block', width: '100%', boxSizing: 'border-box', textAlign: 'center', padding: '16px 20px', fontFamily: "avenir-next, sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', cursor: 'pointer', marginTop: '36px', background: '#5C3D30', color: '#fff', borderRadius: '8px', opacity: userName.trim() && (mode === 'individual' || partnerName.trim()) ? 1 : 0.4 }}>{t.startFull}</button>
+            <button onClick={handleStartFull} style={{ all: 'unset', display: 'block', width: '100%', boxSizing: 'border-box', textAlign: 'center', padding: '16px 20px', fontFamily: "avenir-next, sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', cursor: 'pointer', marginTop: '36px', background: '#AE655B', color: '#fff', borderRadius: '8px', opacity: userName.trim() && (mode === 'individual' || partnerName.trim()) ? 1 : 0.4 }}>{t.startFull}</button>
           </div>
         </div>
 
@@ -1383,7 +1383,7 @@ export default function NehamaApp() {
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 24px', borderBottom: '1px solid rgba(74,46,34,0.07)', background: 'rgba(255,255,255,0.92)', backdropFilter: 'blur(12px)', position: 'sticky', top: 0, zIndex: 10 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-            <span style={{ fontFamily: "'Midcent Disco', serif", fontSize: '28px', fontWeight: 400, color: '#5C3D30', letterSpacing: '0px' }}>Nehama</span>
+            <span style={{ fontFamily: "'Midcent Disco', serif", fontSize: '28px', fontWeight: 400, color: '#AE655B', letterSpacing: '0px' }}>Nehama</span>
             <PhaseIndicator phase={phase} />
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
@@ -1410,7 +1410,7 @@ export default function NehamaApp() {
                 <div style={{ animation: 'fadeIn 0.8s ease 1.5s both' }}>
                   <p style={{ fontFamily: "avenir-next, sans-serif", fontSize: '13px', color: '#AE655B', textAlign: 'center', lineHeight: 1.6, margin: '16px 0 14px', maxWidth: '260px' }}>{t.cardSharePrompt}</p>
                   <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
-                    <button onClick={() => saveCardAsPNG(card, t.cardCTA)} style={{ flex: 1, padding: '10px', fontSize: '13px', fontFamily: "avenir-next, sans-serif", fontWeight: 500, border: 'none', borderRadius: '6px', cursor: 'pointer', background: '#5C3D30', color: '#FFFFFF' }}>{t.cardSave}</button>
+                    <button onClick={() => saveCardAsPNG(card, t.cardCTA)} style={{ flex: 1, padding: '10px', fontSize: '13px', fontFamily: "avenir-next, sans-serif", fontWeight: 500, border: 'none', borderRadius: '6px', cursor: 'pointer', background: '#AE655B', color: '#FFFFFF' }}>{t.cardSave}</button>
                     <button onClick={() => { if (navigator.share) { navigator.share({ title: 'Nehama', text: 'Someone who cares about you wanted you to have this.', url: 'https://findnehama.com' }).catch(() => {}); } else { window.open('https://findnehama.com', '_blank'); } }} style={{ flex: 1, padding: '10px', fontSize: '13px', fontFamily: "avenir-next, sans-serif", fontWeight: 500, border: '1px solid #5C3D30', borderRadius: '6px', cursor: 'pointer', background: 'transparent', color: '#5C3D30' }}>{t.cardShare}</button>
                   </div>
                 </div>
@@ -1431,7 +1431,7 @@ export default function NehamaApp() {
               <p style={{ fontSize: '13px', color: '#AE655B', margin: '0 0 14px 0' }}>{t.emailCaptureDesc}</p>
               <div style={{ display: 'flex', gap: '8px' }}>
                 <input style={{ ...inputStyle, flex: 1 }} placeholder="your@email.com" type="email" value={feedbackEmail} onChange={e => setFeedbackEmail(e.target.value)} onFocus={e => e.target.style.borderBottomColor = '#AE655B'} onBlur={e => e.target.style.borderBottomColor = 'rgba(74,46,34,0.07)'} />
-                <button onClick={() => { if (feedbackEmail.includes('@')) { subscribeToMailerLite(feedbackEmail, ML_GROUP_FREE_REFLECTION); setEmailSubmitted(true); } }} style={{ padding: '12px 24px', fontSize: '14px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#5C3D30', color: '#FFFFFF', flexShrink: 0 }}>{t.send}</button>
+                <button onClick={() => { if (feedbackEmail.includes('@')) { subscribeToMailerLite(feedbackEmail, ML_GROUP_FREE_REFLECTION); setEmailSubmitted(true); } }} style={{ padding: '12px 24px', fontSize: '14px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#AE655B', color: '#FFFFFF', flexShrink: 0 }}>{t.send}</button>
               </div>
             </div>
           )}
@@ -1480,7 +1480,7 @@ export default function NehamaApp() {
             <div style={{ borderTop: '1px solid rgba(74,46,34,0.05)', paddingTop: '20px' }}>
               <p style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '16px', color: '#5C3D30', margin: '0 0 6px 0' }}>{t.readyFull}</p>
               <p style={{ fontSize: '13px', color: '#5C3D30', margin: '0 0 14px 0', lineHeight: 1.6 }}>{t.readyFullDesc}</p>
-              <button style={{ width: '100%', padding: '11px', fontSize: '14px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#5C3D30', color: '#FFFFFF' }} onClick={() => { setShowSettings(false); handleReset(); }}>{t.startFullJourney}</button>
+              <button style={{ width: '100%', padding: '11px', fontSize: '14px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#AE655B', color: '#FFFFFF' }} onClick={() => { setShowSettings(false); handleReset(); }}>{t.startFullJourney}</button>
             </div>
           )}
           <div>
