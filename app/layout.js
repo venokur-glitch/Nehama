@@ -1,7 +1,7 @@
 import './globals.css';
 
 export const metadata = {
-  title: 'Nehama — You Are Here',
+  title: 'Nehama — find comfort here',
   description: 'A guided life architecture experience. Real questions, a concrete plan, your story reflected through scripture.',
 };
 
@@ -10,6 +10,16 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Work+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="https://use.typekit.net/ils6vgg.css" />
+        <style dangerouslySetInnerHTML={{ __html: `
+          @font-face {
+            font-family: 'Midcent Disco';
+            src: url('/fonts/MidcentDisco-Regular.woff2') format('woff2');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+          }
+        `}} />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
         <meta name="theme-color" content="#AE655B" />
         <link rel="manifest" href="/manifest.json" />
