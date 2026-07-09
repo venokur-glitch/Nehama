@@ -39,7 +39,7 @@ const content = {
 export default function Terms() {
   const [lang, setLang] = useState('en');
   useEffect(() => { const saved = localStorage.getItem('nehama-lang'); if (saved) setLang(saved); }, []);
-  const c = content[lang];
+  const c = content[lang] || content.en; // M2: fall back to EN so pt (or any unknown) doesn't crash the page
   const hStyle = { fontFamily: "'Cormorant Garamond', serif", fontSize: '20px', fontWeight: 400, color: '#5C3D30', margin: '36px 0 12px 0', letterSpacing: '0.3px' };
   return (
     <div style={{ minHeight: '100vh', padding: '64px 24px 48px' }}>
