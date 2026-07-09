@@ -35,7 +35,10 @@ function originAllowed(req) {
   const src = origin || referer;
   if (!src) return false; // block direct/no-referer calls (curl, bots)
   try {
-    return ALLOWED_HOSTS.includes(new URL(src).hostname);
+    const h = new URL(src).hostname;
+    const host = (req.headers.get("host") || "").split(":")[0];
+    // allow same-origin (the app calling its own API on any domain: prod, preview, etc.)
+    return ALLOWED_HOSTS.includes(h) || (!!host && h === host);
   } catch {
     return false;
   }

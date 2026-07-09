@@ -19,7 +19,7 @@ function rateLimited(ip) {
 function originAllowed(req) {
   const src = req.headers.get("origin") || req.headers.get("referer");
   if (!src) return false;
-  try { return ALLOWED_HOSTS.includes(new URL(src).hostname); } catch { return false; }
+  try { const h = new URL(src).hostname; const host = (req.headers.get("host") || "").split(":")[0]; return ALLOWED_HOSTS.includes(h) || (!!host && h === host); } catch { return false; }
 }
 const emailOk = (e) => typeof e === "string" && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e) && e.length < 254;
 
