@@ -38,4 +38,7 @@ export function readAccessCookie(req) {
 }
 
 export const ACCESS_COOKIE = 'nehama_access';
-export const ACCESS_TTL_SECONDS = 60 * 60 * 12; // 12h; refreshed on each verified return
+// 30 days so returning paying users stay signed in; recoverable anytime via
+// /api/restore-access (email -> live Stripe check). For instant revocation on
+// cancellation, add a Stripe webhook later (see HANDOFF).
+export const ACCESS_TTL_SECONDS = 60 * 60 * 24 * 30;

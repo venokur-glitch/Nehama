@@ -99,6 +99,12 @@ const T = {
     codeStart: 'Begin Your Journey',
     codeSkip: 'Skip',
     pricingBack: '← Back',
+    restorePrompt: 'Already subscribed? Restore access',
+    restorePlaceholder: 'your@email.com',
+    restoreApply: 'Restore',
+    restoreError: 'No active subscription found for that email.',
+    dataWarning: 'Your journey is saved only on this device. If you clear your browser or switch devices, it will be lost. Use the download button to keep a copy.',
+    ageConfirm: 'I am 18 or older.',
     cardSharePrompt: 'This reflection is yours. If someone comes to mind who\'s carrying something heavy, you can send them here.',
     cardSave: 'Save to Photos',
     cardShare: 'Share',
@@ -189,6 +195,12 @@ const T = {
     codeStart: 'Comienza Tu Viaje',
     codeSkip: 'Omitir',
     pricingBack: '← Atrás',
+    restorePrompt: '¿Ya tienes suscripción? Recupera tu acceso',
+    restorePlaceholder: 'tu@correo.com',
+    restoreApply: 'Recuperar',
+    restoreError: 'No se encontró una suscripción activa para ese correo.',
+    dataWarning: 'Tu viaje se guarda solo en este dispositivo. Si borras tu navegador o cambias de dispositivo, se perderá. Usa el botón de descarga para conservar una copia.',
+    ageConfirm: 'Tengo 18 años o más.',
     cardSharePrompt: 'Esta reflexión es tuya. Si alguien viene a tu mente que está cargando algo pesado, puedes enviarle esto.',
     cardSave: 'Guardar en Fotos',
     cardShare: 'Compartir',
@@ -279,6 +291,12 @@ const T = {
     codeStart: 'Comece Sua Jornada',
     codeSkip: 'Pular',
     pricingBack: '← Voltar',
+    restorePrompt: 'Já é assinante? Restaure seu acesso',
+    restorePlaceholder: 'seu@email.com',
+    restoreApply: 'Restaurar',
+    restoreError: 'Nenhuma assinatura ativa encontrada para esse email.',
+    dataWarning: 'Sua jornada é salva apenas neste dispositivo. Se você limpar o navegador ou trocar de dispositivo, ela será perdida. Use o botão de download para guardar uma cópia.',
+    ageConfirm: 'Tenho 18 anos ou mais.',
     cardSharePrompt: 'Esta reflexão é sua. Se alguém vem à mente que está carregando algo pesado, você pode enviar isso.',
     cardSave: 'Salvar nas Fotos',
     cardShare: 'Compartilhar',
@@ -712,6 +730,10 @@ export default function NehamaApp() {
   const [showCodeInput, setShowCodeInput] = useState(false);
   const [codeAccepted, setCodeAccepted] = useState(false);
   const [codeEmail, setCodeEmail] = useState('');
+  const [showRestore, setShowRestore] = useState(false);
+  const [restoreEmail, setRestoreEmail] = useState('');
+  const [restoreError, setRestoreError] = useState(false);
+  const [over18, setOver18] = useState(false);
   const [contactEmail, setContactEmail] = useState('');
   const [contactMsg, setContactMsg] = useState('');
   const [contactSent, setContactSent] = useState(false);
@@ -878,6 +900,19 @@ export default function NehamaApp() {
       } else { setCodeError(true); }
     } catch (e) { setCodeError(true); }
   };
+  const handleRestore = async () => {
+    const email = restoreEmail.trim();
+    if (!email.includes('@')) { setRestoreError(true); return; }
+    try {
+      const res = await fetch('/api/restore-access', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+      const data = await res.json();
+      if (res.ok && data.ok) {
+        localStorage.setItem('nehama-access', data.access);
+        setRestoreError(false); setShowRestore(false); setRestoreEmail('');
+        launchFullJourney();
+      } else { setRestoreError(true); }
+    } catch (e) { setRestoreError(true); }
+  };
  const handleCodeEmailSubmit = () => {
   if (codeEmail.includes('@')) {
     const access = localStorage.getItem('nehama-access') || '';
@@ -887,10 +922,10 @@ export default function NehamaApp() {
   setCodeEmail('');
   launchFullJourney();
 };
-  const handleStartFree = () => { if (!userName.trim()) return; setTier('free'); setScreen('chat'); const intro = lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + '. Estoy aquí para la reflexión gratuita.' : lang === 'pt' ? 'Olá. Meu nome é ' + userName.trim() + '. Estou aqui para a reflexão gratuita.' : 'Hello. My name is ' + userName.trim() + '. I am here for the free reflection.'; setTimeout(() => sendMessage(intro, true), 300); };
+  const handleStartFree = () => { if (!userName.trim() || !over18) return; setTier('free'); setScreen('chat'); const intro = lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + '. Estoy aquí para la reflexión gratuita.' : lang === 'pt' ? 'Olá. Meu nome é ' + userName.trim() + '. Estou aqui para a reflexão gratuita.' : 'Hello. My name is ' + userName.trim() + '. I am here for the free reflection.'; setTimeout(() => sendMessage(intro, true), 300); };
   const hasFullAccess = () => { const access = localStorage.getItem('nehama-access'); return ['beta', 'lifetime', 'scholarship', 'paid'].includes(access); };
   const launchFullJourney = () => { setTier('full'); setScreen('chat'); const intro = mode === 'couple' ? (lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + ' y estoy aquí con mi pareja, ' + partnerName.trim() + '. Nos gustaría comenzar el viaje completo juntos.' : lang === 'pt' ? 'Olá. Meu nome é ' + userName.trim() + ' e estou aqui com meu(minha) parceiro(a), ' + partnerName.trim() + '. Gostaríamos de começar a jornada completa juntos.' : 'Hello. My name is ' + userName.trim() + ' and I am here with my partner, ' + partnerName.trim() + '. We would like to begin the full journey together.') : (lang === 'es' ? 'Hola. Mi nombre es ' + userName.trim() + '. Estoy listo para comenzar el viaje completo.' : lang === 'pt' ? 'Olá. Meu nome é ' + userName.trim() + '. Estou pronto para começar a jornada completa.' : 'Hello. My name is ' + userName.trim() + '. I am ready to begin the full journey.'); setTimeout(() => sendMessage(intro, true), 300); };
-  const handleStartFull = () => { if (!userName.trim()) return; if (mode === 'couple' && !partnerName.trim()) return; if (hasFullAccess()) { launchFullJourney(); } else { setScreen('pricing'); } };
+  const handleStartFull = () => { if (!userName.trim() || !over18) return; if (mode === 'couple' && !partnerName.trim()) return; if (hasFullAccess()) { launchFullJourney(); } else { setScreen('pricing'); } };
   // ── handleCheckout: stash pending state before Stripe redirect (CHANGE 3 of 4) ──
   const handleCheckout = async (plan, founding = true) => {
     try {
@@ -989,6 +1024,17 @@ export default function NehamaApp() {
           )}
           {codeError && <p style={{ fontSize: '12px', color: '#C48282', marginTop: '8px' }}>{t.pricingCodeError}</p>}
         </div>
+        <div style={{ textAlign: 'center', marginTop: '12px' }}>
+          {!showRestore ? (
+            <button onClick={() => setShowRestore(true)} style={{ background: 'none', border: 'none', cursor: 'pointer', fontFamily: "avenir-next, sans-serif", fontSize: '13px', color: '#B8A498', textDecoration: 'underline', textUnderlineOffset: '3px' }}>{t.restorePrompt}</button>
+          ) : (
+            <div style={{ display: 'flex', gap: '8px', maxWidth: '280px', margin: '0 auto' }}>
+              <input style={{ ...inputStyle, flex: 1, textAlign: 'center', fontSize: '15px' }} placeholder={t.restorePlaceholder} type="email" value={restoreEmail} onChange={e => { setRestoreEmail(e.target.value); setRestoreError(false); }} onKeyDown={e => e.key === 'Enter' && handleRestore()} />
+              <button onClick={handleRestore} style={{ padding: '12px 20px', fontSize: '14px', fontFamily: "'Cormorant Garamond', serif", fontWeight: 500, border: 'none', borderRadius: '8px', cursor: 'pointer', background: '#5C3D30', color: '#FFFFFF', flexShrink: 0 }}>{t.restoreApply}</button>
+            </div>
+          )}
+          {restoreError && <p style={{ fontSize: '12px', color: '#C48282', marginTop: '8px' }}>{t.restoreError}</p>}
+        </div>
         <button onClick={() => { setScreen('welcome'); setShowCodeInput(false); setCodeError(false); setCodeInput(''); setCodeAccepted(false); setCodeEmail(''); setTimeout(() => setAnim(a => ({ ...a, text: true, paths: true })), 100); }} style={{ display: 'block', margin: '20px auto 0', background: 'none', border: 'none', cursor: 'pointer', fontFamily: "'Cormorant Garamond', serif", fontSize: '15px', color: '#B8A498' }}>{t.pricingBack}</button>
         </>)}
       </div>
@@ -1063,6 +1109,11 @@ export default function NehamaApp() {
         {/* Divider */}
         <div style={{ height: '1px', background: 'rgba(74,46,34,0.07)', maxWidth: 'calc(480px - 64px)', width: '100%' }} />
 
+        {/* Age confirmation (18+) */}
+        <div style={{ maxWidth: '480px', width: '100%', padding: '4px 32px 0', display: 'flex', alignItems: 'center', gap: '10px', opacity: anim.paths ? 1 : 0, transition: 'opacity 0.6s' }}>
+          <input id="ageok" type="checkbox" checked={over18} onChange={e => setOver18(e.target.checked)} style={{ width: '16px', height: '16px', accentColor: '#AE655B', cursor: 'pointer', flexShrink: 0 }} />
+          <label htmlFor="ageok" style={{ fontFamily: "avenir-next, sans-serif", fontSize: 'calc(12px * 0.96)', color: '#5C3D30', cursor: 'pointer' }}>{t.ageConfirm}</label>
+        </div>
         {/* Two paths */}
         <div style={{ display: 'flex', flexDirection: 'column', width: '100%', maxWidth: '480px', opacity: anim.paths ? 1 : 0, transform: anim.paths ? 'translateY(0)' : 'translateY(16px)', transition: 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)' }}>
 
@@ -1084,7 +1135,7 @@ export default function NehamaApp() {
                 <button onClick={() => setTestament('new')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "avenir-next, sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: testament === 'new' ? '#fff' : '#AE655B', background: testament === 'new' ? '#5C3D30' : 'transparent', borderRadius: '0', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.ntLabel}</button>
               </div>
             </div>
-            <button onClick={handleStartFree} style={{ all: 'unset', display: 'block', width: '100%', boxSizing: 'border-box', textAlign: 'center', padding: '15px 20px', fontFamily: "avenir-next, sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', cursor: 'pointer', marginTop: '36px', background: '#AE655B', color: '#fff', border: 'none', borderRadius: '8px', opacity: userName.trim() ? 1 : 0.4 }}>{t.startFree}</button>
+            <button onClick={handleStartFree} disabled={!userName.trim() || !over18} style={{ all: 'unset', display: 'block', width: '100%', boxSizing: 'border-box', textAlign: 'center', padding: '15px 20px', fontFamily: "avenir-next, sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', cursor: 'pointer', marginTop: '36px', background: '#AE655B', color: '#fff', border: 'none', borderRadius: '8px', opacity: userName.trim() && over18 ? 1 : 0.4 }}>{t.startFree}</button>
           </div>
 
           {/* Divider */}
@@ -1116,7 +1167,7 @@ export default function NehamaApp() {
                 <button onClick={() => setTestament('new')} style={{ all: 'unset', flex: 1, textAlign: 'center', cursor: 'pointer', padding: '10px', fontFamily: "avenir-next, sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 400, letterSpacing: '0.08em', color: testament === 'new' ? '#fff' : '#AE655B', background: testament === 'new' ? '#5C3D30' : 'transparent', borderRadius: '0', transition: 'background 0.25s, color 0.25s', lineHeight: 1 }}>{t.ntLabel}</button>
               </div>
             </div>
-            <button onClick={handleStartFull} style={{ all: 'unset', display: 'block', width: '100%', boxSizing: 'border-box', textAlign: 'center', padding: '16px 20px', fontFamily: "avenir-next, sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', cursor: 'pointer', marginTop: '36px', background: '#AE655B', color: '#fff', borderRadius: '8px', opacity: userName.trim() && (mode === 'individual' || partnerName.trim()) ? 1 : 0.4 }}>{t.startFull}</button>
+            <button onClick={handleStartFull} disabled={!userName.trim() || (mode === 'couple' && !partnerName.trim()) || !over18} style={{ all: 'unset', display: 'block', width: '100%', boxSizing: 'border-box', textAlign: 'center', padding: '16px 20px', fontFamily: "avenir-next, sans-serif", fontSize: 'calc(11px * 0.96)', fontWeight: 500, letterSpacing: '0.25em', textTransform: 'uppercase', cursor: 'pointer', marginTop: '36px', background: '#AE655B', color: '#fff', borderRadius: '8px', opacity: userName.trim() && (mode === 'individual' || partnerName.trim()) && over18 ? 1 : 0.4 }}>{t.startFull}</button>
           </div>
         </div>
 
@@ -1252,6 +1303,7 @@ export default function NehamaApp() {
           <div>
             <label style={labelStyle}>{t.session}</label>
             <p style={{ fontSize: '14px', color: '#5C3D30' }}>{userName}{mode === 'couple' ? ' & ' + partnerName : ''} · {tier === 'free' ? t.freeTitle : t.fullTitle} · {messages.filter(m => !m.hidden).length} {t.messages}</p>
+            <p style={{ fontSize: '12px', color: '#B8A498', marginTop: '10px', lineHeight: 1.5 }}>{t.dataWarning}</p>
           </div>
           {tier === 'free' && (
             <div style={{ borderTop: '1px solid rgba(74,46,34,0.05)', paddingTop: '20px' }}>
