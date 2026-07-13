@@ -11,7 +11,11 @@ import { verifyToken, readAccessCookie } from "../_lib/access";
 // ─────────────────────────────────────────────────────────────────────────
 
 const MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-5";
-const MAX_TOKENS = 1000;
+// Sonnet 5 spends part of its output budget on internal reasoning, so the old
+// 1000 ceiling (fine for Sonnet 4) starved the visible reflection and cut it
+// off before the [REFLECTION_CARD] block. 8000 leaves ample room for the full
+// reflection + the card in both the free and full journeys.
+const MAX_TOKENS = 8000;
 const ALLOWED_HOSTS = ["findnehama.com", "www.findnehama.com", "nehama.app", "www.nehama.app"];
 
 // Best-effort in-memory rate limit. NOTE: serverless instances don't share
