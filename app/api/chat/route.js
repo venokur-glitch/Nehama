@@ -104,6 +104,17 @@ export async function POST(req) {
         ? buildFreePrompt({ name, testament, lang, country })
         : buildFullPrompt({ name, partnerName, mode, testament, lang, country });
 
+    // Prompt caching (cost only; output is unchanged). Mark the system prompt
+    // (identical across a session's turns) and the conversation prefix as
+    // cacheable. Within a session, the resent prompt + history bill at ~0.1x
+    // on cache reads. Cache TTL is ~5 min, which covers an active session.
+    const cachedSystem = [{ type: "text", text: system, cache_control: { type: "ephemeral" } }];
+    const apiMessages = messages.map((m) => ({ role: m.role, content: m.content }));
+    if (apiMessages.length > 0) {
+      const last = apiMessages[apiMessages.length - 1];
+      last.content = [{ type: "text", text: String(last.content), cache_control: { type: "ephemeral" } }];
+    }
+
     const anthropicRes = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
       headers: {
@@ -114,8 +125,8 @@ export async function POST(req) {
       body: JSON.stringify({
         model: MODEL,
         max_tokens: MAX_TOKENS,
-        system,
-        messages: messages.map((m) => ({ role: m.role, content: m.content })),
+        system: cachedSystem,
+        messages: apiMessages,
       }),
     });
 
