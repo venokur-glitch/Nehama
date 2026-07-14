@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { buildFullPrompt, buildFreePrompt } from "./prompts";
 import { verifyToken, readAccessCookie } from "../_lib/access";
+import { isRateLimited } from "../_lib/ratelimit";
 
 // ── Fixes red-team Blockers 0, 1, 2 and High-1 ───────────────────────────
 //  B0: model is set here (server-side), no longer a stale client constant.
@@ -18,20 +19,10 @@ const MODEL = process.env.ANTHROPIC_MODEL || "claude-sonnet-5";
 const MAX_TOKENS = 8000;
 const ALLOWED_HOSTS = ["findnehama.com", "www.findnehama.com", "nehama.app", "www.nehama.app"];
 
-// Best-effort in-memory rate limit. NOTE: serverless instances don't share
-// memory, so this is a floor, not a ceiling. For real protection back this
-// with Vercel KV / Upstash Redis (see HANDOFF doc). Keyed per IP.
-const WINDOW_MS = 60_000;
-const MAX_PER_WINDOW = 15;
-const hits = new Map();
-function rateLimited(ip) {
-  const now = Date.now();
-  const arr = (hits.get(ip) || []).filter((t) => now - t < WINDOW_MS);
-  arr.push(now);
-  hits.set(ip, arr);
-  if (hits.size > 5000) hits.clear(); // crude memory cap
-  return arr.length > MAX_PER_WINDOW;
-}
+// Rate limiting via the shared limiter (Vercel KV when configured, in-memory
+// fallback otherwise): 15 requests / 60s per IP.
+const RL_MAX = 15;
+const RL_WINDOW_SEC = 60;
 
 function originAllowed(req) {
   const origin = req.headers.get("origin");
@@ -58,7 +49,7 @@ export async function POST(req) {
       (req.headers.get("x-forwarded-for") || "").split(",")[0].trim() ||
       req.headers.get("x-real-ip") ||
       "unknown";
-    if (rateLimited(ip)) {
+    if (await isRateLimited(`chat:${ip}`, RL_MAX, RL_WINDOW_SEC)) {
       return NextResponse.json({ error: { message: "Too many requests. Please slow down." } }, { status: 429 });
     }
 

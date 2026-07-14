@@ -321,7 +321,8 @@ const LOADING_MSGS = {
     heavy: ["That took courage to share...", "Honoring what you said..."],
     synthesis: ["Connecting the threads...", "Seeing the full picture...", "Building something for you..."],
     scripture: ["Searching the story...", "Finding you in the narrative..."],
-    free: ["Listening carefully...", "Sitting with what you shared...", "Taking this in...", "Holding space for this..."]
+    free: ["Listening carefully...", "Sitting with what you shared...", "Taking this in...", "Holding space for this..."],
+    patience: ["Composing your reflection...", "This can take up to a minute. It is worth the wait.", "Finding you in the story...", "Staying with this...", "Almost there..."]
   },
   es: {
     first: ["Preparando tu espacio..."],
@@ -329,7 +330,8 @@ const LOADING_MSGS = {
     heavy: ["Eso tomó valentía compartir...", "Honrando lo que dijiste..."],
     synthesis: ["Conectando los hilos...", "Viendo la imagen completa...", "Construyendo algo para ti..."],
     scripture: ["Buscando en la historia...", "Encontrándote en la narrativa..."],
-    free: ["Escuchando atentamente...", "Sentándome con lo que compartiste...", "Procesando esto...", "Sosteniendo espacio para esto..."]
+    free: ["Escuchando atentamente...", "Sentándome con lo que compartiste...", "Procesando esto...", "Sosteniendo espacio para esto..."],
+    patience: ["Componiendo tu reflexión...", "Esto puede tardar hasta un minuto. Vale la pena.", "Encontrándote en la historia...", "Quedándome con esto...", "Ya casi..."]
   },
   pt: {
     first: ["Preparando seu espaço..."],
@@ -337,7 +339,8 @@ const LOADING_MSGS = {
     heavy: ["Isso exigiu coragem para compartilhar...", "Honrando o que você disse..."],
     synthesis: ["Conectando os fios...", "Vendo a imagem completa...", "Construindo algo para você..."],
     scripture: ["Buscando na história...", "Encontrando você na narrativa..."],
-    free: ["Ouvindo com atenção...", "Sentando com o que você compartilhou...", "Absorvendo isso...", "Segurando espaço para isso..."]
+    free: ["Ouvindo com atenção...", "Sentando com o que você compartilhou...", "Absorvendo isso...", "Segurando espaço para isso..."],
+    patience: ["Compondo sua reflexão...", "Isto pode levar até um minuto. Vale a pena.", "Encontrando você na história...", "Ficando com isso...", "Quase lá..."]
   }
 };
 
@@ -827,6 +830,16 @@ export default function NehamaApp() {
 
   useEffect(() => { if (typeof window !== 'undefined') localStorage.setItem('nehama-lang', lang); }, [lang]);
   useEffect(() => { if (typeof document !== 'undefined') document.documentElement.lang = lang; }, [lang]);
+  // Lightweight loading UX: while a response generates (Sonnet 5 can take ~30-60s),
+  // rotate reassuring, expectation-setting messages so the wait doesn't feel frozen.
+  useEffect(() => {
+    if (!isLoading) return;
+    const pool = (LOADING_MSGS[lang] || LOADING_MSGS.en).patience || [];
+    if (!pool.length) return;
+    let i = 0;
+    const id = setInterval(() => { i = (i + 1) % pool.length; setLoadingMsg(pool[i]); }, 6000);
+    return () => clearInterval(id);
+  }, [isLoading, lang]);
 
   // Geo-detect pricing tier
   useEffect(() => {
